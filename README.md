@@ -28,5 +28,55 @@ Log some stuff
 var log = log4js.getLogger('myLogger');
 log.info('This is a log');
 
-// outputs "03-24-2016 12:00:18,670|myLogger:anonymous:3|This is a log"
+// output: "03-24-2016 12:00:18,670|myLogger:anonymous:3|This is a log"
+```
+
+## Layout
+
+log4js2 allows for you to format your logs similarly to Log4j, documented [here](https://logging.apache.org/log4j/2.x/manual/layouts.html). Keep in mind that some of the layout tags are expensive, and should only be used in a development environment - such as *%method* and *%line*.
+
+There are also a few layouts that are not included currently (or may never be):
+
+1. Callers
+2. Encoders
+3. Equals
+4. Highlight
+5. Marker
+6. Nano Time
+7. Not Empty
+8. Replace
+9. Style
+10. Threads/Thread Context Maps
+
+```javascript
+log4js.configure({
+    tagLayout : '%d{MM-dd-yyyy HH:mm:ss,S} [%level] %logger.%M:%line - %message',
+    // ...
+});
+
+var log = log4js.getLogger('myLogger');
+log.warn('This is a log {}', 'with parameters');
+
+// output: 03-24-2016 16:04:41,440 [WARN] myLogger.anonymous:15 - This is a log with parameters
+
+```
+
+## Showing Method Names
+
+In order to make the **%method** tag word, you must call from named function, like so:
+
+```javascript
+function callerFunction() {
+    log.info('This is within a name function');
+}
+// output: 03-24-2016 16:17:50,360 [INFO] myLogger.callerFunction:3 - This is within a name function
+```
+
+Otherwise, non-named functions will simply display an 'anonymous' placeholder:
+
+```javascript
+var callerFunction = function () {
+    log.info('This is an anonymous function');
+};
+// outputs: 03-24-2016 16:19:42,373 [INFO] myLogger.anonymous:3 - This is an anonymous function
 ```
