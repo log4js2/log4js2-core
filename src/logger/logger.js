@@ -15,7 +15,7 @@ export function Logger(context, appenderObj) {
 	let logSequence_ = 1;
 
 	/**
-	 * @function
+	 * @functionlog.
 	 *
 	 * @param {function} func
 	 *
@@ -120,7 +120,8 @@ export function Logger(context, appenderObj) {
 
 			if (i === 0) {
 				loggingEvent.message = args[i];
-				messageStubs = (/\{\}/g).exec(loggingEvent.message).length;
+				var stubs = (/\{\}/g).exec(loggingEvent.message);
+				messageStubs = (stubs instanceof Array) ? stubs.length : 0;
 			} else if (messageStubs > 0) {
 				loggingEvent.message = loggingEvent.message.replace(/\{\}/, args[i]);
 				messageStubs--;
