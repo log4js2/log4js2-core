@@ -26,5 +26,5 @@ Log some stuff
 
 ```javascript
 var log = log4js.getLogger('myLogger');
-log.info("This is a log');
+log.info('This is a log');
 ```
