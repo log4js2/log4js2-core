@@ -17,7 +17,7 @@ export function Logger(context, appenderObj) {
 	function getFunctionName_(func) {
 
 		if (typeof func !== 'function') {
-			return 'unknown';
+			return 'anonymous';
 		}
 
 		let functionName = func.toString();
@@ -126,7 +126,7 @@ export function Logger(context, appenderObj) {
 
 		let details = {
 			column : '?',
-			filename : 'unknown',
+			filename : 'anonymous',
 			line : '?'
 		};
 		if (error.stack != undefined) {
