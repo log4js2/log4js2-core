@@ -1,3 +1,10 @@
+/**
+ * log4js <https://github.com/anigenero/log4js>
+ *
+ * Copyright 2016-present Robin Schultz <http://cunae.com>
+ * Released under the MIT License
+ */
+
 export const OFF = 0;
 export const FATAL = 100;
 export const ERROR = 200;

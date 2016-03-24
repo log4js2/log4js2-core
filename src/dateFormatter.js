@@ -1,3 +1,10 @@
+/**
+ * log4js <https://github.com/anigenero/log4js>
+ *
+ * Copyright 2016-present Robin Schultz <http://cunae.com>
+ * Released under the MIT License
+ */
+
 let i18n = {
 	dayNames : [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sunday", "Monday",
 		"Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
@@ -6,9 +13,9 @@ let i18n = {
 		"July", "August", "September", "October", "November", "December" ]
 };
 
-let token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g;
-let timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g;
-let timezoneClip = /[^-+\dA-Z]/g;
+const TOKEN = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g;
+const TIMEZONE = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g;
+const TIMEZONE_CLIP = /[^-+\dA-Z]/g;
 
 /**
  * Pads numbers in the date format
@@ -82,11 +89,11 @@ export function dateFormat (date, mask, utc) {
 		tt : H < 12 ? "am" : "pm",
 		T : H < 12 ? "A" : "P",
 		TT : H < 12 ? "AM" : "PM",
-		Z : utc ? "UTC" : (String(date).match(timezone) || [ "" ]).pop().replace(timezoneClip, ""),
+		Z : utc ? "UTC" : (String(date).match(TIMEZONE) || [ "" ]).pop().replace(TIMEZONE_CLIP, ""),
 		o : (o > 0 ? "-" : "+") + pad(Math.floor(Math.abs(o) / 60) * 100 + Math.abs(o) % 60, 4)
 	};
 
-	return mask.replace(token, function($0) {
+	return mask.replace(TOKEN, function($0) {
 		return $0 in flags ? flags[$0] : $0.slice(1, $0.length - 1);
 	});
 

@@ -1,3 +1,10 @@
+/**
+ * log4js <https://github.com/anigenero/log4js>
+ *
+ * Copyright 2016 Robin Schultz <http://cunae.com>
+ * Released under the MIT License
+ */
+
 import * as formatter from './formatter';
 import { Logger } from './logger/logger';
 import * as LogLevel from './const/logLevel';

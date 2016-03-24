@@ -1,3 +1,10 @@
+/**
+ * log4js <https://github.com/anigenero/log4js>
+ *
+ * Copyright 2016-present Robin Schultz <http://cunae.com>
+ * Released under the MIT License
+ */
+
 import * as logLevel from '../const/logLevel';
 
 export function Logger(context, appenderObj) {

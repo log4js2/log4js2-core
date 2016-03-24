@@ -3,6 +3,7 @@ module.exports = function(grunt) {
 	require("load-grunt-tasks")(grunt);
 	
 	grunt.initConfig({
+	    pkg : grunt.file.readJSON('package.json'),
 	    eslint : {
 	        options : {},
 	        files : [ 'src/*/**.js' ]
@@ -26,9 +27,14 @@ module.exports = function(grunt) {
 	    },
 	    uglify : {
 	        options : {
+	            banner : '/*! <%= pkg.name %> - v<%= pkg.version %>\n'
+	                + '* log4js <https://github.com/anigenero/log4js>\n'
+	                + '* Copyright 2016 <%= pkg.author.name %> <http://cunae.com>\n'
+	                + '* Released under the MIT License\n'
+	                + '*/',
 	            mangle : true,
-	            sourceMap : true,
-	            sourceMapName : 'dist/log4js.min.map'
+	            preserveComments : 'some',
+	            sourceMap : true
 	        },
 	        my_target : {
 		        files : {
