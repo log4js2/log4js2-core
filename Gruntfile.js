@@ -27,8 +27,7 @@ module.exports = function(grunt) {
 	    },
 	    uglify : {
 	        options : {
-	            banner : '/*! <%= pkg.name %> - v<%= pkg.version %>\n'
-	                + '* log4js <https://github.com/anigenero/log4js>\n'
+	            banner : '/*! <%= pkg.name %> - v<%= pkg.version %> <https://github.com/anigenero/log4js>\n'
 	                + '* Copyright 2016 <%= pkg.author.name %> <http://cunae.com>\n'
 	                + '* Released under the MIT License\n'
 	                + '*/',

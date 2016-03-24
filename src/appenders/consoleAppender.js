@@ -12,29 +12,24 @@ export function ConsoleAppender() {
 
 	/** @type {string} */
 	let tagLayout_ = '%m';
-
 	/** @type {number} */
 	let logLevel_ = LogLevel.INFO;
 
 	/**
 	 * @function
-	 * @memberOf consoleAppender
 	 *
 	 * @param {LOG_EVENT} loggingEvent
 	 */
 	function append(loggingEvent) {
-
 		if (loggingEvent.level <= logLevel_) {
 			appendToConsole_(loggingEvent);
 		}
-
 	}
 
 	/**
+	 * @private
 	 * @function
-	 * @memberOf consoleAppender
 	 *
-	 * @param {number} logLevel
 	 * @param {LOG_EVENT} loggingEvent
 	 */
 	function appendToConsole_(loggingEvent) {
@@ -42,7 +37,7 @@ export function ConsoleAppender() {
 		let message = formatter.format(tagLayout_, loggingEvent);
 
 		if (loggingEvent.level == LogLevel.ERROR) {
-			console.error(message);
+			console.error(message, (loggingEvent.error || null));
 		} else if (loggingEvent.level == LogLevel.WARN) {
 			console.warn(message);
 		} else if (loggingEvent.level == LogLevel.INFO) {
@@ -58,7 +53,6 @@ export function ConsoleAppender() {
 	 * Gets the name of the logger
 	 *
 	 * @function
-	 * @memberOf consoleAppender
 	 *
 	 * @return {string}
 	 */
@@ -70,7 +64,6 @@ export function ConsoleAppender() {
 	 * Returns true if the appender is active, else false
 	 *
 	 * @function
-	 * @memberOf consoleAppender
 	 *
 	 * @param {number} level
 	 *
@@ -82,7 +75,15 @@ export function ConsoleAppender() {
 
 	/**
 	 * @function
-	 * @memberOf consoleAppender
+	 *
+	 * @return {number}
+	 */
+	function getLogLevel() {
+		return logLevel_;
+	}
+
+	/**
+	 * @function
 	 *
 	 * @param {number} logLevel
 	 */
@@ -92,7 +93,6 @@ export function ConsoleAppender() {
 
 	/**
 	 * @function
-	 * @memberOf consoleAppender
 	 *
 	 * @param {string} tagLayout
 	 */
@@ -104,6 +104,7 @@ export function ConsoleAppender() {
 		append : append,
 		getName : getName,
 		isActive : isActive,
+		getLogLevel : getLogLevel,
 		setLogLevel : setLogLevel,
 		setTagLayout : setTagLayout
 	};

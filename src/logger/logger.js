@@ -9,8 +9,8 @@ import * as logLevel from '../const/logLevel';
 
 export function Logger(context, appenderObj) {
 
+	/** @typeof {number} */
 	let relative_ = (new Date()).getTime();
-
 	/** @typeof {number} */
 	let logSequence_ = 1;
 
@@ -57,37 +57,37 @@ export function Logger(context, appenderObj) {
 	/**
 	 * Logs an error event
 	 */
-	function error() {
+	this.error = function() {
 		appenderObj.append(constructLogEvent_(logLevel.ERROR, arguments));
-	}
+	};
 
 	/**
 	 * Logs a warning
 	 */
-	function warn() {
+	this.warn = function() {
 		appenderObj.append(constructLogEvent_(logLevel.WARN, arguments));
-	}
+	};
 
 	/**
 	 * Logs an info level event
 	 */
-	function info() {
+	this.info = function() {
 		appenderObj.append(constructLogEvent_(logLevel.INFO, arguments));
-	}
+	};
 
 	/**
 	 * Logs a debug event
 	 */
-	function debug() {
+	this.debug = function() {
 		appenderObj.append(constructLogEvent_(logLevel.DEBUG, arguments));
-	}
+	};
 
 	/**
 	 * Logs a trace event
 	 */
-	function trace() {
+	this.trace = function() {
 		appenderObj.append(constructLogEvent_(logLevel.TRACE, arguments));
-	}
+	};
 
 	/**
 	 * @function
@@ -115,14 +115,21 @@ export function Logger(context, appenderObj) {
 			sequence : logSequence_++
 		};
 
+		let messageStubs = 0;
 		for (let i = 0; i < args.length; i++) {
-			if (typeof args[i] == 'string') {
-				loggingEvent.message += args[i];
+
+			if (i === 0) {
+				loggingEvent.message = args[i];
+				messageStubs = (/\{\}/g).exec(loggingEvent.message).length;
+			} else if (messageStubs > 0) {
+				loggingEvent.message = loggingEvent.message.replace(/\{\}/, args[i]);
+				messageStubs--;
 			} else if (args[i] instanceof Error) {
 				loggingEvent.error = args[i];
 			} else {
 				loggingEvent.properties = args[i];
 			}
+
 		}
 
 		return loggingEvent;
@@ -163,12 +170,6 @@ export function Logger(context, appenderObj) {
 		return 'unknown';
 	}
 
-	return {
-		'error' : error,
-		'debug' : debug,
-		'warn' : warn,
-		'info' : info,
-		'trace' : trace
-	};
+	return this;
 
 }

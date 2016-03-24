@@ -20,12 +20,23 @@ import * as consoleAppender from './appenders/consoleAppender';
 var APPENDER;
 
 /**
+ * @typedef {{ allowAppenderInjection : boolean, appenders : Array.<APPENDER>,
+ * 			application : Object, loggers : Array.<LOGGER>, tagLayout : string }}
+ */
+var CONFIG_PARAMS;
+
+/**
  * Holds the definition for the log event object
  *
  * @typedef {{ error : Error, message : string, properties : Object,
  *          timestamp : string }}
  */
 var LOG_EVENT;
+
+/**
+ * @typedef {{ logLevel : number }}
+ */
+var LOGGER;
 
 /** @type {Array.<APPENDER>} */
 var appenders_ = [];
@@ -48,9 +59,7 @@ export {LogLevel};
 export function configure(config) {
 
 	if (finalized_) {
-		append(LogLevel.ERROR, {
-			message: 'Could not configure. LogUtility already in use'
-		});
+		append(LogLevel.ERROR, 'Could not configure. LogUtility already in use');
 		return;
 	}
 
@@ -61,8 +70,12 @@ export function configure(config) {
 		if (config.tagLayout) {
 			formatter.preCompile(config.tagLayout);
 			for (var logKey in loggers_) {
-				for (var key in loggers_[logKey]) {
-					loggers_[logKey][key].setTagLayout(config.tagLayout);
+				if (loggers_.hasOwnProperty(logKey)) {
+					for (var key in loggers_[logKey]) {
+						if (loggers_[logKey].hasOwnProperty(key)) {
+							loggers_[logKey][key].setTagLayout(config.tagLayout);
+						}
+					}
 				}
 			}
 		}
@@ -74,10 +87,6 @@ export function configure(config) {
 }
 
 var configureAppenders_ = function (appenders, callback) {
-
-	if (!(typeof define != 'undefined' && define.amd != undefined) && !(typeof module != 'undefined' && module.exports)) {
-		return;
-	}
 
 	if (appenders instanceof Array) {
 		var count = appenders.length;
@@ -160,7 +169,7 @@ var validateAppender_ = function (appender) {
 
 	var appenderMethods = ['append', 'getName', 'isActive', 'setLogLevel', 'setTagLayout'];
 	for (var key in appenderMethods) {
-		if (appenderObj[appenderMethods[key]] == undefined ||
+		if (appenderMethods.hasOwnProperty(key) && appenderObj[appenderMethods[key]] == undefined ||
 			typeof appenderObj[appenderMethods[key]] != 'function') {
 			throw new Error('Invalid appender: missing method: ' + appenderMethods[key]);
 		}
@@ -178,11 +187,12 @@ var validateAppender_ = function (appender) {
  * @function
  *
  * @param {Object} loggingEvent
+ * @param {Object|number|string} arguments
  */
 export function append(loggingEvent) {
 
-	finalizeConfiguration_();
-	validateLevel_(loggingEvent.level);
+	// finalize the configuration to make sure no other appenders are injected (if set)
+	finalized_ = true;
 
 	var loggers;
 	if (loggers_[loggingEvent.logger]) {
@@ -207,21 +217,15 @@ export function append(loggingEvent) {
  * @param {number} level
  */
 var validateLevel_ = function (level) {
+
 	for (var key in LogLevel) {
 		if (level === LogLevel[key]) {
 			return;
 		}
 	}
-	throw new Error('Invalid log level: ' + level);
-};
 
-/**
- * Finalizes the configuration so that it can't be modified
- * @private
- * @function
- */
-var finalizeConfiguration_ = function () {
-	finalized_ = true;
+	throw new Error('Invalid log level: ' + level);
+
 };
 
 /**
@@ -239,10 +243,10 @@ export function getApplicationInfo() {
 /**
  * Handles creating the logger and returning it
  * @param {string} context
- * @return {logger}
+ * @return {Logger}
  */
 export function getLogger(context) {
-	return Logger(context, {
+	return new Logger(context, {
 		append: append
 	});
 }
@@ -252,12 +256,19 @@ export function getLogger(context) {
  * @param {number} logLevel
  */
 export function setLogLevel(logLevel) {
+
 	validateLevel_(logLevel);
+
 	for (var logKey in loggers_) {
-		for (var key in loggers_[logKey]) {
-			loggers_[logKey][key].setLogLevel(logLevel);
+		if (loggers_.hasOwnProperty(logKey)) {
+			for (var key in loggers_[logKey]) {
+				if (loggers_[logKey].hasOwnProperty(key)) {
+					loggers_[logKey][key].setLogLevel(logLevel);
+				}
+			}
 		}
 	}
+
 }
 
 addAppender(consoleAppender.ConsoleAppender);

@@ -44,8 +44,9 @@ export function dateFormat (date, mask, utc) {
 
 	// Passing date through Date applies Date.parse, if necessary
 	date = date ? new Date(date) : new Date;
-	if (isNaN(date))
+	if (isNaN(date)) {
 		throw SyntaxError("invalid date");
+	}
 
 	mask = String(mask || 'yyyy-mm-dd HH:MM:ss,S');
 
