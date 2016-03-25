@@ -56,7 +56,7 @@ module.exports = function(grunt) {
 	            context : __dirname,
 	            output : {
 	                path : 'dist/',
-	                library : '<%= pkg.name %>',
+	                library : 'log4js',
 	                libraryTarget : 'umd'
 	            }
 	        },
@@ -77,5 +77,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-webpack');
 	
 	grunt.registerTask('build', [ 'eslint', 'babel:cjs', 'webpack', 'uglify', 'mochaTest' ]);
-	
+
 };

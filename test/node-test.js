@@ -1,4 +1,4 @@
-var log4js = require('../dist/log4js2');
+var log4js = require('../dist/cjs/logManager');
 
 log4js.configure({
     tagLayout : '%d{MM-dd-yyyy HH:mm:ss,S} [%level] %logger:%M:%line|%message',
