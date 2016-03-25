@@ -6,6 +6,7 @@
  */
 
 import { dateFormat } from './dateFormatter';
+import * as utility from './utility';
 import * as logLevel from './const/logLevel';
 
 /** @type {Object} */
@@ -144,7 +145,7 @@ var formatLogMessage_ = function(logEvent, params) {
  * @return {string}
  */
 var formatMethodName_ = function(logEvent, params) {
-	return getFunctionName_(logEvent.method);
+	return utility.getFunctionName(logEvent.method);
 };
 
 /**
@@ -434,27 +435,6 @@ function getFileDetails_(logEvent) {
 		logEvent.lineNumber = '?';
 
 	}
-
-}
-
-/**
- * @function
- *
- * @param {function} func
- *
- * @return {string}
- */
-function getFunctionName_(func) {
-
-	if (typeof func !== 'function') {
-		return 'anonymous';
-	}
-
-	let functionName = func.toString();
-	functionName = functionName.substring('function '.length);
-	functionName = functionName.substring(0, functionName.indexOf('('));
-
-	return (functionName !== '') ? functionName : 'anonymous';
 
 }
 
