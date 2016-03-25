@@ -93,23 +93,22 @@ export function Logger(context, appenderObj) {
 	 * @function
 	 *
 	 * @param {number} level
-	 * @param {Array} arguments
+	 * @param {Array} args
 	 *
 	 * @return {LOG_EVENT}
 	 */
 	function constructLogEvent_(level, args) {
 
 		let error = new Error();
-
-		let details = getFileDetails_(error);
 		let loggingEvent = {
 			error : null,
-			file : details.filename,
+			logErrorStack : error,
+			file : null,
 			level : level,
-			lineNumber : details.line,
+			lineNumber : null,
 			logger : logContext_,
 			message : '',
-			method : getFunctionName_(args.callee.caller),
+			method : args.callee.caller,
 			properties : undefined,
 			relative : (new Date()).getTime() - relative_,
 			sequence : logSequence_++
@@ -135,40 +134,6 @@ export function Logger(context, appenderObj) {
 
 		return loggingEvent;
 
-	}
-
-	function getFileDetails_(error) {
-
-		let details = {
-			column : '?',
-			filename : 'anonymous',
-			line : '?'
-		};
-		if (error.stack != undefined) {
-
-			let parts = error.stack.split(/\n/g);
-			let file = parts[3];
-			file = file.replace(/at (.*\(|)(file|http|https|)(\:|)(\/|)*/, '');
-			file = file.replace(')', '');
-			file = file.replace((typeof location !== 'undefined') ? location.host : '', '').trim();
-
-			let fileParts = file.split(/\:/g);
-
-			details.column = fileParts.pop();
-			details.line = fileParts.pop();
-
-			if (typeof define !== 'undefined') {
-				let path = require('path');
-				let appDir = path.dirname(require.main.filename);
-				details.filename = fileParts.join(':').replace(appDir, '').replace(/(\\|\/)/, '');
-			} else {
-				details.filename = fileParts.join(':');
-			}
-
-			return details;
-
-		}
-		return 'unknown';
 	}
 
 	return this;

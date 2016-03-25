@@ -69,6 +69,9 @@ var formatException_ = function(logEvent, params) {
  *
  */
 var formatFile_ = function(logEvent, params) {
+	if (logEvent.file === null) {
+		getFileDetails_(logEvent);
+	}
 	return logEvent.file;
 };
 
@@ -82,6 +85,9 @@ var formatFile_ = function(logEvent, params) {
  * @return {string}
  */
 var formatLineNumber_ = function(logEvent, params) {
+	if (logEvent.lineNumber === null) {
+		getFileDetails_(logEvent);
+	}
 	return '' + logEvent.lineNumber;
 };
 
@@ -138,7 +144,7 @@ var formatLogMessage_ = function(logEvent, params) {
  * @return {string}
  */
 var formatMethodName_ = function(logEvent, params) {
-	return logEvent.method;
+	return getFunctionName_(logEvent.method);
 };
 
 /**
@@ -397,6 +403,60 @@ var formatLogEvent_ = function(formatter, logEvent) {
 	return message.trim();
 
 };
+
+function getFileDetails_(logEvent) {
+
+	if (logEvent.logErrorStack !== undefined) {
+
+		let parts = logEvent.logErrorStack.stack.split(/\n/g);
+		let file = parts[3];
+		file = file.replace(/at (.*\(|)(file|http|https|)(\:|)(\/|)*/, '');
+		file = file.replace(')', '');
+		file = file.replace((typeof location !== 'undefined') ? location.host : '', '').trim();
+
+		let fileParts = file.split(/\:/g);
+
+		logEvent.column = fileParts.pop();
+		logEvent.lineNumber = fileParts.pop();
+
+		if (typeof define !== 'undefined') {
+			let path = require('path');
+			let appDir = path.dirname(require.main.filename);
+			logEvent.filename = fileParts.join(':').replace(appDir, '').replace(/(\\|\/)/, '');
+		} else {
+			logEvent.filename = fileParts.join(':');
+		}
+
+	} else {
+
+		logEvent.column = '?';
+		logEvent.filename = 'anonymous';
+		logEvent.lineNumber = '?';
+
+	}
+
+}
+
+/**
+ * @function
+ *
+ * @param {function} func
+ *
+ * @return {string}
+ */
+function getFunctionName_(func) {
+
+	if (typeof func !== 'function') {
+		return 'anonymous';
+	}
+
+	let functionName = func.toString();
+	functionName = functionName.substring('function '.length);
+	functionName = functionName.substring(0, functionName.indexOf('('));
+
+	return (functionName !== '') ? functionName : 'anonymous';
+
+}
 
 /**
  * @function
