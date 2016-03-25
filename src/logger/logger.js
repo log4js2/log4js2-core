@@ -79,8 +79,11 @@ export function Logger(context, appenderObj) {
 	 */
 	function constructLogEvent_(level, args) {
 
+		let logTime = new Date();
 		let error = new Error();
+
 		let loggingEvent = {
+			date : logTime,
 			error : null,
 			logErrorStack : error,
 			file : null,
@@ -90,7 +93,7 @@ export function Logger(context, appenderObj) {
 			message : '',
 			method : args.callee.caller,
 			properties : undefined,
-			relative : (new Date()).getTime() - relative_,
+			relative : logTime.getTime() - relative_,
 			sequence : logSequence_++
 		};
 

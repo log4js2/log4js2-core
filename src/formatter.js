@@ -35,7 +35,7 @@ var formatLogger_ = function(logEvent, params) {
  * @return {string}
  */
 var formatDate_ = function(logEvent, params) {
-	return dateFormat(new Date(), params[0]);
+	return dateFormat(logEvent.date, params[0]);
 };
 
 /**

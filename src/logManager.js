@@ -28,7 +28,7 @@ var CONFIG_PARAMS;
 /**
  * Holds the definition for the log event object
  *
- * @typedef {{ error : Error, message : string, properties : Object,
+ * @typedef {{ date : Date, error : Error, message : string, properties : Object,
  *          timestamp : string }}
  */
 var LOG_EVENT;
