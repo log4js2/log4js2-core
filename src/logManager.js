@@ -38,10 +38,20 @@ var LOG_EVENT;
  */
 var LOGGER;
 
+/** @const */
+const DEFAULT_CONFIG = {
+	tagLayout : '%d{HH:mm:ss} [%level] %logger - %message',
+	appenders : [ 'consoleAppender' ],
+	loggers : [ {
+		logLevel : LogLevel.INFO
+	} ],
+	allowAppenderInjection : true
+};
+
 /** @type {Array.<APPENDER>} */
 var appenders_ = [];
-/** @type {CONFIG_PARAMS} */
-var configuration_ = {};
+/** @type {?CONFIG_PARAMS} */
+var configuration_ = null;
 /** @type {boolean} */
 var finalized_ = false;
 /** @type {Object} */
@@ -175,7 +185,7 @@ var validateAppender_ = function (appender) {
 		}
 	}
 
-	if (configuration_.tagLayout) {
+	if (configuration_ instanceof Object && configuration_.tagLayout) {
 		appenderObj.setTagLayout(configuration_.tagLayout);
 	}
 
@@ -187,7 +197,6 @@ var validateAppender_ = function (appender) {
  * @function
  *
  * @param {Object} loggingEvent
- * @param {Object|number|string} arguments
  */
 export function append(loggingEvent) {
 
@@ -246,9 +255,16 @@ export function getApplicationInfo() {
  * @return {Logger}
  */
 export function getLogger(context) {
+
+	// we need to initialize if we haven't
+	if (configuration_ === null) {
+		configure(DEFAULT_CONFIG);
+	}
+
 	return new Logger(context, {
 		append: append
 	});
+
 }
 
 /**

@@ -5,6 +5,7 @@
  * Released under the MIT License
  */
 
+import * as utility from '../utility';
 import * as logLevel from '../const/logLevel';
 
 export function Logger(context, appenderObj) {
@@ -14,34 +15,13 @@ export function Logger(context, appenderObj) {
 	/** @typeof {number} */
 	let logSequence_ = 1;
 
-	/**
-	 * @functionlog.
-	 *
-	 * @param {function} func
-	 *
-	 * @return {string}
-	 */
-	function getFunctionName_(func) {
-
-		if (typeof func !== 'function') {
-			return 'anonymous';
-		}
-
-		let functionName = func.toString();
-		functionName = functionName.substring('function '.length);
-		functionName = functionName.substring(0, functionName.indexOf('('));
-
-		return (functionName !== '') ? functionName : 'anonymous';
-
-	}
-
 	// Get the context
 	if (typeof context != 'string') {
 
 		if (typeof context == 'function') {
-			context = getFunctionName_(context);
+			context = utility.getFunctionName(context);
 		} else if (typeof context == 'object') {
-			context = getFunctionName_(context.constructor);
+			context = utility.getFunctionName(context.constructor);
 			if (context == 'Object') {
 				context = 'anonymous';
 			}
@@ -119,7 +99,7 @@ export function Logger(context, appenderObj) {
 
 			if (i === 0) {
 				loggingEvent.message = args[i];
-				var stubs = (/\{\}/g).exec(loggingEvent.message);
+				let stubs = (/\{\}/g).exec(loggingEvent.message);
 				messageStubs = (stubs instanceof Array) ? stubs.length : 0;
 			} else if (messageStubs > 0) {
 				loggingEvent.message = loggingEvent.message.replace(/\{\}/, args[i]);
