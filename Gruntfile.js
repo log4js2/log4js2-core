@@ -25,9 +25,19 @@ module.exports = function(grunt) {
 		        } ]
 	        }
 	    },
+	    mochaTest : {
+		    test : {
+		        options : {
+		            reporter : 'spec',
+		            quiet : false,
+		            clearRequireCache : false
+		        },
+		        src : [ 'test/**/*.js' ]
+		    }
+	    },
 	    uglify : {
 	        options : {
-	            banner : '/*! <%= pkg.name %> - v<%= pkg.version %> <https://github.com/anigenero/log4js>\n'
+	            banner : '/*! <%= pkg.name %> - v<%= pkg.version %> <<%= pkg.repository.url %>>\n'
 	                + '* Copyright 2016 <%= pkg.author.name %> <http://cunae.com>\n'
 	                + '* Released under the MIT License\n'
 	                + '*/',
@@ -37,7 +47,7 @@ module.exports = function(grunt) {
 	        },
 	        my_target : {
 		        files : {
-			        'dist/log4js.min.js' : [ 'dist/log4js.js' ]
+			        'dist/<%= pkg.name %>.min.js' : [ 'dist/<%= pkg.name %>.js' ]
 		        }
 	        }
 	    },
@@ -46,14 +56,14 @@ module.exports = function(grunt) {
 	            context : __dirname,
 	            output : {
 	                path : 'dist/',
-	                library : 'log4js',
+	                library : '<%= pkg.name %>',
 	                libraryTarget : 'umd'
 	            }
 	        },
 	        log4js : {
 	            entry : './dist/cjs/logManager.js',
 	            output : {
-		            filename : 'log4js.js'
+		            filename : '<%= pkg.name %>.js'
 	            }
 	        }
 	    }
@@ -63,8 +73,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-eslint');
+	grunt.loadNpmTasks('grunt-mocha-test');
 	grunt.loadNpmTasks('grunt-webpack');
 	
-	grunt.registerTask('build', [ 'eslint', 'babel:cjs', 'webpack', 'uglify' ]);
+	grunt.registerTask('build', [ 'eslint', 'babel:cjs', 'webpack', 'uglify', 'mochaTest' ]);
 	
 };
