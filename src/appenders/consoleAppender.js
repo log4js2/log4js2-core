@@ -37,7 +37,7 @@ export function ConsoleAppender() {
 		let message = formatter.format(tagLayout_, loggingEvent);
 
 		if (loggingEvent.level == LogLevel.ERROR) {
-			console.error(message, (loggingEvent.error || null));
+			console.error(message);
 		} else if (loggingEvent.level == LogLevel.WARN) {
 			console.warn(message);
 		} else if (loggingEvent.level == LogLevel.INFO) {

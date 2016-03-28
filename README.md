@@ -3,16 +3,29 @@ A fast, lightweight (~12KB compressed) JavaScript logger with no runtime depende
 
 ## Setup
 
-Simply require the log4js 
+Simply require the log4js2 module.
 
 ```javascript
 var log4js = require('log4js2');
 ```
 
-Or, for HTML implementations, place the log4js distirbution in your HTML ```<head>``` tag.
+Or, for HTML implementations, place the log4js distribution in your HTML ```<head>``` tag.
 
 ```html
 <script type="text/javascript" src="log4js2.min.js"></script>
+```
+
+Then, log some stuff!!
+
+```javascript
+
+// create the logger
+var log = log4js.getLogger('myLogger');
+
+// log an event
+log.info('This is a log');
+
+// output: "03-24-2016 12:00:18,670|myLogger:anonymous:3|This is a log"
 ```
 
 ## Configuration
@@ -30,23 +43,49 @@ log4js.configure({
 });
 ```
 
-Log some stuff
+### Configuration Options
+
+#### allowAppenderInjection
+Type: `Boolean`
+Default: `false`
+
+Turn on or off the ability to inject appenders. If set to false, no appenders can be added after the first log. This may be useful if you need to add an appender during runtime.
+
+#### appenders
+Type: `Array.<String>`
+Default: `[ 'consoleAppender' ]`
+
+Sets the appenders for the given log configuration. Packaged with log4js2 is the console appender. You can develop your own appenders to add more functionality.
+
+#### loggers
+Type: `Array.<Object>`
+Default: `[{ tag : 'main', logLevel : log4js.LogLevel.INFO }]`
+
+Sets the loggers for log4js2. The `tag` property specifies what logger the appender pertains to (see below), and the `logLevel` specifies the logging level (use `log4js.LogLevel`).
 
 ```javascript
+log4js.configure({
+    // ...
+    loggers : [ {
+	    logLevel : log4js.LogLevel.INFO
+    }, {
+		tag : 'debugLogger',
+		logLevel : log4js.LogLevel.DEBUG
+	} ]
+});
 
-// create the logger
 var log = log4js.getLogger('myLogger');
+var debugLog = log4js.getLogger('debugLogger');
 
-// log an event
-log.info('This is a log');
-
-// output: "03-24-2016 12:00:18,670|myLogger:anonymous:3|This is a log"
+log.debug('This message will not show');
+debugLog.debug('This message will show');
 ```
 
-## Layout
+#### tagLayout
+Type: `String`
+Default: `"%d{HH:mm:ss} [%level] %logger - %message"`
 
-log4js2 allows for you to format your logs similarly to Log4j2, documented [here](https://logging.apache.org/log4j/2.x/manual/layouts.html). Keep in mind that some of the layout tags are relatively more expensive, and should only really be used in a development environment - such as *%method* and *%line*.
-
+Sets the tagging layout for the logs. Refer to [Apache's Log4j2 documentation](https://logging.apache.org/log4j/2.x/manual/layouts.html) for how to set the tag layout. Keep in mind that some of the layout tags are relatively more expensive, and should only really be used in a development environment - such as *%method* and *%line*.
 There are also a few layouts that are not implemented with log4js2:
 
 1. Callers
@@ -73,7 +112,7 @@ log.warn('This is a log {}', 'with parameters');
 
 ```
 
-### Note: Showing Method Names
+###### Note: Showing Method Names
 
 In order to make the **%method** tag word, you must call from named function, like so:
 
@@ -92,3 +131,22 @@ var callerFunction = function () {
 };
 // outputs: 03-24-2016 16:19:42,373 [INFO] myLogger.anonymous:3 - This is an anonymous function
 ```
+
+## log4js
+
+#### addAppender(appender)
+*appender* `Object` 
+
+Adds an appender (see configuration). The configuration option allowAppenderInjection must be set to true for this to work.
+
+#### getLogger(logger)
+*logger* `String [optional]`
+
+Gets a logger instance. If the logger is not set, the logger name will be pulled from the containing named instance it was created in (anonymous if unnamed).
+
+#### setLogLevel(logLevel, logger)
+
+*logLevel* `Number` *(use log4js.LogLevel)*
+*logger* `String [optional]`
+
+Sets the log level for a specific logger, or all loggers (if logger is not set).

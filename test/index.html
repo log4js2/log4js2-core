@@ -8,16 +8,17 @@
 <body>
 
     <script type="text/javascript">
+
         log4js.configure({
             tagLayout : '%d{MM-dd-yyyy HH:mm:ss,S} [%level] %logger:%M:%line|%message',
             appenders : [ 'consoleAppender' ],
             loggers : [ {
-                logLevel : log4js.LogLevel.INFO
+                logLevel : log4js.LogLevel.TRACE
             } ],
             allowAppenderInjection : true
         });
 
-        var log = log4js.getLogger();
+        var log = log4js.getLogger('myLogger');
 
         function namedFunctionLogging() {
 

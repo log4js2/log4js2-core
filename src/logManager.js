@@ -198,7 +198,7 @@ var validateAppender_ = function (appender) {
  *
  * @param {Object} loggingEvent
  */
-export function append(loggingEvent) {
+function append(loggingEvent) {
 
 	// finalize the configuration to make sure no other appenders are injected (if set)
 	finalized_ = true;
@@ -238,18 +238,6 @@ var validateLevel_ = function (level) {
 };
 
 /**
- * Gets the application information from the configuration
- * @return {Object}
- */
-export function getApplicationInfo() {
-	if (configuration_.application != null) {
-		return configuration_.application;
-	} else {
-		return null;
-	}
-}
-
-/**
  * Handles creating the logger and returning it
  * @param {string} context
  * @return {Logger}
@@ -268,21 +256,30 @@ export function getLogger(context) {
 }
 
 /**
- * Sets the log level for all loggers
+ * Sets the log level for all loggers, or specified logger
  * @param {number} logLevel
+ * @param {string=} logger
  */
-export function setLogLevel(logLevel) {
+export function setLogLevel(logLevel, logger) {
 
 	validateLevel_(logLevel);
 
-	for (var logKey in loggers_) {
-		if (loggers_.hasOwnProperty(logKey)) {
-			for (var key in loggers_[logKey]) {
-				if (loggers_[logKey].hasOwnProperty(key)) {
-					loggers_[logKey][key].setLogLevel(logLevel);
+	if (logger !== undefined) {
+		if (loggers_[logger]) {
+			loggers_[logger].setLogLevel(logLevel);
+		}
+	} else {
+
+		for (var logKey in loggers_) {
+			if (loggers_.hasOwnProperty(logKey)) {
+				for (var key in loggers_[logKey]) {
+					if (loggers_[logKey].hasOwnProperty(key)) {
+						loggers_[logKey][key].setLogLevel(logLevel);
+					}
 				}
 			}
 		}
+
 	}
 
 }
