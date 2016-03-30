@@ -80,7 +80,14 @@ export function Logger(context, appenderObj) {
 	function constructLogEvent_(level, args) {
 
 		let logTime = new Date();
-		let error = new Error();
+		let error = null;
+
+		// this looks horrible, but this is the only way to catch the stack for IE to later parse the stack
+		try {
+			throw new Error();
+		} catch (e) {
+			error = e;
+		}
 
 		let loggingEvent = {
 			date : logTime,
