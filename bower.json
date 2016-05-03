@@ -1,0 +1,32 @@
+{
+  "name": "log4js2",
+  "version": "0.1.1",
+  "homepage": "https://github.com/anigenero/log4js2",
+  "authors": [
+    "Robin Schultz <developer@cunae.com>"
+  ],
+  "description": "A fast JavaScript logger with no runtime dependencies that is designed to mirror Apache Log4j 2 functionality",
+  "main": "dist/log4js2.min.js",
+  "moduleType": [
+    "amd",
+    "es6",
+    "node"
+  ],
+  "keywords": [
+    "logger",
+    "log4j",
+    "log4j2",
+    "log4js",
+    "log",
+    "console"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "_components",
+    "test",
+    "tests"
+  ]
+}
