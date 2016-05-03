@@ -1,6 +1,18 @@
 # log4js2
 A fast, lightweight (~12KB compressed) JavaScript logger with no runtime dependencies that is designed to mirror Apache Log4j 2 functionality.
 
+##Install
+
+You can install log4js2 from either bower or npm.
+
+```bash
+bower install log4js2 --save
+```
+
+```bash
+npm install log4js2 --save
+```
+
 ## Setup
 
 Simply require the log4js2 module.
