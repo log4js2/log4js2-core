@@ -1,15 +1,20 @@
 /**
  * log4js <https://github.com/anigenero/log4js>
  *
- * Copyright 2016-present Robin Schultz <http://cunae.com>
+ * Copyright 2016-present Robin Schultz <http://anigenero.com>
  * Released under the MIT License
  */
 
-export const OFF = 0;
-export const FATAL = 100;
-export const ERROR = 200;
-export const WARN = 300;
-export const INFO = 400;
-export const DEBUG = 500;
-export const TRACE = 600;
-export const ALL = 2147483647;
+/**
+ * @type {{OFF: number, FATAL: number, ERROR: number, WARN: number, INFO: number, DEBUG: number, TRACE: number, ALL: number}}
+ */
+export const LogLevel = {
+    'OFF' : 0,
+    'FATAL' : 100,
+    'ERROR' : 200,
+    'WARN' : 300,
+    'INFO' : 400,
+    'DEBUG' : 500,
+    'TRACE' : 600,
+    'ALL' : 2147483647
+};

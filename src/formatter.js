@@ -1,27 +1,29 @@
 /**
  * log4js <https://github.com/anigenero/log4js>
  *
- * Copyright 2016-present Robin Schultz <http://cunae.com>
+ * Copyright 2016-present Robin Schultz <http://anigenero.com>
  * Released under the MIT License
  */
 
-import { dateFormat } from './dateFormatter';
+import {dateFormat} from './dateFormatter';
 import * as utility from './utility';
-import * as logLevel from './const/logLevel';
+import {LogLevel} from './const/logLevel';
+
+/** @const */
+const _COMMAND_REGEX = /%([a-z,A-Z]+)(?=\{|)/;
 
 /** @type {Object} */
-var compiledLayouts_ = {};
+let _compiledLayouts = {};
 
 /**
  * @function
  * @memberOf formatter
  *
  * @param {LOG_EVENT} logEvent
- * @param {Array.<string>} params
  *
  * @return {string}
  */
-var formatLogger_ = function(logEvent, params) {
+let _formatLogger = function (logEvent) {
 	return logEvent.logger;
 };
 
@@ -34,7 +36,7 @@ var formatLogger_ = function(logEvent, params) {
  *
  * @return {string}
  */
-var formatDate_ = function(logEvent, params) {
+let _formatDate = function (logEvent, params) {
 	return dateFormat(logEvent.date, params[0]);
 };
 
@@ -43,37 +45,47 @@ var formatDate_ = function(logEvent, params) {
  * @memberOf formatter
  *
  * @param {LOG_EVENT} logEvent
- * @param {Array.<string>} params
  *
  * @return {string}
  */
-var formatException_ = function(logEvent, params) {
-	var message = '';
-	if (logEvent.error != null) {
+let _formatException = function (logEvent) {
+
+    let message = '';
+
+    if (logEvent.error != null) {
 
 		if (logEvent.error.stack != undefined) {
-			var stacks = logEvent.error.stack.split(/\n/g);
-			for ( var key in stacks) {
-				message += '\t' + stacks[key] + '\n';
-			}
+			let stacks = logEvent.error.stack.split(/\n/g);
+            stacks.forEach(function (stack) {
+                message += `\t${stack}\n`;
+            });
 		} else if (logEvent.error.message != null && logEvent.error.message != '') {
-			message += '\t';
-			message += logEvent.error.name + ': ' + logEvent.error.message;
-			message += '\n';
+			message += `\t${logEvent.error.name}: ${logEvent.error.message}\n`;
 		}
 
 	}
+
 	return message;
+
 };
 
 /**
+ * Formats the file (e.g. test.js) to the file
  *
+ * @private
+ * @function
+ * @memberOf formatter
+ *
+ * @param {LOG_EVENT} logEvent
  */
-var formatFile_ = function(logEvent, params) {
-	if (logEvent.file === null) {
-		getFileDetails_(logEvent);
+let _formatFile = function (logEvent) {
+
+    if (!logEvent.file) {
+		_getFileDetails(logEvent);
 	}
+
 	return logEvent.file;
+
 };
 
 /**
@@ -81,15 +93,17 @@ var formatFile_ = function(logEvent, params) {
  * @memberOf formatter
  *
  * @param {LOG_EVENT} logEvent
- * @param {Array.<string>} params
  *
  * @return {string}
  */
-var formatLineNumber_ = function(logEvent, params) {
-	if (logEvent.lineNumber === null) {
-		getFileDetails_(logEvent);
+let _formatLineNumber = function (logEvent) {
+
+    if (!logEvent.lineNumber) {
+		_getFileDetails(logEvent);
 	}
-	return '' + logEvent.lineNumber;
+
+	return `${logEvent.lineNumber}`;
+
 };
 
 /**
@@ -101,12 +115,12 @@ var formatLineNumber_ = function(logEvent, params) {
  *
  * @return {string}
  */
-var formatMapMessage_ = function(logEvent, params) {
-	var message = null;
+let _formatMapMessage = function (logEvent, params) {
+	let message = null;
 	if (logEvent.properties) {
 
 		message = [];
-		for ( var key in logEvent.properties) {
+		for (let key in logEvent.properties) {
 			if (params[0]) {
 				if (params[0] == key) {
 					message.push(logEvent.properties[key]);
@@ -127,11 +141,10 @@ var formatMapMessage_ = function(logEvent, params) {
  * @memberOf formatter
  *
  * @param {LOG_EVENT} logEvent
- * @param {Array.<string>} params
  *
  * @return {string}
  */
-var formatLogMessage_ = function(logEvent, params) {
+let _formatLogMessage = function (logEvent) {
 	return logEvent.message;
 };
 
@@ -140,24 +153,19 @@ var formatLogMessage_ = function(logEvent, params) {
  * @memberOf formatter
  *
  * @param {LOG_EVENT} logEvent
- * @param {Array.<string>} params
  *
  * @return {string}
  */
-var formatMethodName_ = function(logEvent, params) {
+let _formatMethodName = function (logEvent) {
 	return utility.getFunctionName(logEvent.method);
 };
 
 /**
+ * @private
  * @function
  * @memberOf formatter
- *
- * @param {LOG_EVENT} logEvent
- * @param {Array.<string>} params
- *
- * @return {string}
  */
-var formatLineSeparator_ = function(logEvent, params) {
+let _formatLineSeparator = function () {
 	return '\n';
 };
 
@@ -166,24 +174,29 @@ var formatLineSeparator_ = function(logEvent, params) {
  * @memberOf formatter
  *
  * @param {LOG_EVENT} logEvent
- * @param {Array.<string>} params
  *
  * @return {string}
  */
-var formatLevel_ = function(logEvent, params) {
-	if (logEvent.level == logLevel.FATAL) {
-		return 'FATAL';
-	} else if (logEvent.level == logLevel.ERROR) {
-		return 'ERROR';
-	} else if (logEvent.level == logLevel.WARN) {
-		return 'WARN';
-	} else if (logEvent.level == logLevel.INFO) {
-		return 'INFO';
-	} else if (logEvent.level == logLevel.DEBUG) {
-		return 'DEBUG';
-	} else if (logEvent.level == logLevel.TRACE) {
-		return 'TRACE';
-	}
+let _formatLevel = function (logEvent) {
+
+    switch (logEvent.level) {
+
+        case LogLevel.FATAL:
+            return 'FATAL';
+        case LogLevel.ERROR:
+            return 'ERROR';
+        case LogLevel.WARN:
+            return 'WARN';
+        case LogLevel.INFO:
+            return 'INFO';
+        case LogLevel.DEBUG:
+            return 'DEBUG';
+        case LogLevel.TRACE:
+        default:
+            return 'TRACE';
+
+    }
+
 };
 
 /**
@@ -191,11 +204,10 @@ var formatLevel_ = function(logEvent, params) {
  * @memberOf formatter
  *
  * @param {LOG_EVENT} logEvent
- * @param {Array.<string>} params
  *
  * @return {string}
  */
-var formatRelative_ = function(logEvent, params) {
+let _formatRelative = function (logEvent) {
 	return '' + logEvent.relative;
 };
 
@@ -204,69 +216,73 @@ var formatRelative_ = function(logEvent, params) {
  * @memberOf formatter
  *
  * @param {LOG_EVENT} logEvent
- * @param {Array.<string>} params
  *
  * @return {string}
  */
-var formatSequenceNumber_ = function(logEvent, params) {
+let formatSequenceNumber_ = function (logEvent) {
 	return '' + logEvent.sequence;
 };
 
-var formatters_ = {
-	'c|logger' : formatLogger_,
-	'd|date' : formatDate_,
-	'ex|exception|throwable' : formatException_,
-	'F|file' : formatFile_,
-	'K|map|MAP' : formatMapMessage_,
-	'L|line' : formatLineNumber_,
-	'm|msg|message' : formatLogMessage_,
-	'M|method' : formatMethodName_,
-	'n' : formatLineSeparator_,
-	'p|level' : formatLevel_,
-	'r|relative' : formatRelative_,
+let _formatters = {
+	'c|logger' : _formatLogger,
+	'd|date' : _formatDate,
+	'ex|exception|throwable' : _formatException,
+	'F|file' : _formatFile,
+	'K|map|MAP' : _formatMapMessage,
+	'L|line' : _formatLineNumber,
+	'm|msg|message' : _formatLogMessage,
+	'M|method' : _formatMethodName,
+	'n' : _formatLineSeparator,
+	'p|level' : _formatLevel,
+	'r|relative' : _formatRelative,
 	'sn|sequenceNumber' : formatSequenceNumber_
 };
 
 /**
+ * Get the compiled layout for the specified layout string. If the compiled layout does not
+ * exist, then we want to create it.
+ *
  * @function
  * @memberOf formatter
  *
  * @param {string} layout
  *
- * @return {string}
+ * @return {Array.<string|function>}
  */
-var getCompiledLayout_ = function(layout) {
+let _getCompiledLayout = function (layout) {
 
-	if (compiledLayouts_[layout] != undefined) {
-		return compiledLayouts_[layout];
+	if (_compiledLayouts[layout]) {
+		return _compiledLayouts[layout];
 	}
 
-	return compileLayout_(layout);
+	return _compileLayout(layout);
 
 };
 
 /**
+ * Compiles a layout into an array. The array contains functions
+ *
  * @function
  * @memberOf formatter
  *
  * @param {string} layout
  *
- * @return {string}
+ * @return {Array.<string|function>}
  */
-var compileLayout_ = function(layout) {
+let _compileLayout = function (layout) {
 
-	var index = layout.indexOf('%');
-	var currentFormatString = '';
-	var formatter = [];
+	let index = layout.indexOf('%');
+	let currentFormatString = '';
+	let formatArray = [];
 
 	if (index != 0) {
-		formatter.push(layout.substring(0, index));
+		formatArray.push(layout.substring(0, index));
 	}
 
 	do {
 
-		var startIndex = index;
-		var endIndex = index = layout.indexOf('%', index + 1);
+		let startIndex = index;
+		let endIndex = index = layout.indexOf('%', index + 1);
 
 		if (endIndex < 0) {
 			currentFormatString = layout.substring(startIndex);
@@ -274,13 +290,14 @@ var compileLayout_ = function(layout) {
 			currentFormatString = layout.substring(startIndex, endIndex);
 		}
 
-		formatter.push(getFormatterObject_(currentFormatString));
+		formatArray.push(_getFormatterObject(currentFormatString));
 
 	} while (index > -1);
 
-	compiledLayouts_[layout] = formatter;
+    // set the format array to the specified compiled layout
+	_compiledLayouts[layout] = formatArray;
 
-	return formatter;
+	return formatArray;
 
 };
 
@@ -290,23 +307,22 @@ var compileLayout_ = function(layout) {
  *
  * @param {string} formatString
  *
- * @return {?string}
+ * @return {Object|string}
  */
-var getFormatterObject_ = function(formatString) {
+let _getFormatterObject = function (formatString) {
 
-	var commandRegex = /%([a-z,A-Z]+)(?=\{|)/;
-	var result = commandRegex.exec(formatString);
+	let result = _COMMAND_REGEX.exec(formatString);
 	if (result != null && result.length == 2) {
 
-		var formatter = getFormatterFunction_(result[1]);
-		if (formatter == null) {
+		let formatter = _getFormatterFunction(result[1]);
+		if (!formatter) {
 			return null;
 		}
 
-		var params = getFormatterParams_(formatString);
+		let params = _getLayoutTagParams(formatString);
 
-		var after = '';
-		var endIndex = formatString.lastIndexOf('}');
+		let after = '';
+		let endIndex = formatString.lastIndexOf('}');
 		if (endIndex != -1) {
 			after = formatString.substring(endIndex + 1);
 		} else {
@@ -314,9 +330,9 @@ var getFormatterObject_ = function(formatString) {
 		}
 
 		return {
-			formatter : formatter,
-			params : params,
-			after : after
+			'formatter' : formatter,
+			'params' : params,
+			'after' : after
 		};
 
 	}
@@ -333,13 +349,13 @@ var getFormatterObject_ = function(formatString) {
  *
  * @return {?string}
  */
-var getFormatterFunction_ = function(command) {
+let _getFormatterFunction = function (command) {
 
-	var regex;
-	for ( var key in formatters_) {
+	let regex;
+	for (let key in _formatters) {
 		regex = new RegExp('^' + key + '$');
-		if (regex.exec(command) != null) {
-			return formatters_[key];
+		if (regex.exec(command)) {
+			return _formatters[key];
 		}
 	}
 
@@ -348,19 +364,22 @@ var getFormatterFunction_ = function(command) {
 };
 
 /**
+ * Gets the layout tag params associated with the layout tag. So, for example, '%d{yyyy-MM-dd}`
+ * would output an array of ['yyyy-MM-dd']
+ *
  * @private
  * @function
  *
  * @param {string} command
  *
- * @return {string}
+ * @return {Array.<string>}
  */
-var getFormatterParams_ = function(command) {
+let _getLayoutTagParams = function (command) {
 
-	var params = [];
-	var result = command.match(/\{([^\}]*)(?=\})/g);
+	let params = [];
+	let result = command.match(/\{([^}]*)(?=})/g);
 	if (result != null) {
-		for (var i = 0; i < result.length; i++) {
+		for (let i = 0; i < result.length; i++) {
 			params.push(result[i].substring(1));
 		}
 	}
@@ -370,6 +389,8 @@ var getFormatterParams_ = function(command) {
 };
 
 /**
+ * Handles formatting the log event using the specified formatter array
+ *
  * @private
  * @function
  *
@@ -378,12 +399,12 @@ var getFormatterParams_ = function(command) {
  *
  * @return {string}
  */
-var formatLogEvent_ = function(formatter, logEvent) {
+let _formatLogEvent = function (formatter, logEvent) {
 
-	var response;
-	var message = '';
-	var count = formatter.length;
-	for (var i = 0; i < count; i++) {
+	let response;
+	let message = '';
+	let count = formatter.length;
+	for (let i = 0; i < count; i++) {
 		if (formatter[i] !== null) {
 
 			if (formatter[i] instanceof Object) {
@@ -405,13 +426,21 @@ var formatLogEvent_ = function(formatter, logEvent) {
 
 };
 
-function getFileDetails_(logEvent) {
+/**
+ *
+ * @private
+ * @function
+ * @memberOf formatter
+ *
+ * @param {LOG_EVENT} logEvent
+ */
+let _getFileDetails = function (logEvent) {
 
-	if (logEvent.logErrorStack !== undefined) {
+	if (logEvent.logErrorStack) {
 
 		let parts = logEvent.logErrorStack.stack.split(/\n/g);
 		let file = parts[3];
-		file = file.replace(/at (.*\(|)(file|http|https|)(\:|)(\/|)*/, '');
+		file = file.replace(/at (.*\(|)(file|http|https|)(:|)(\/|)*/, '');
 		file = file.replace(')', '');
 		file = file.replace((typeof location !== 'undefined') ? location.host : '', '').trim();
 
@@ -436,7 +465,7 @@ function getFileDetails_(logEvent) {
 
 	}
 
-}
+};
 
 /**
  * @function
@@ -447,7 +476,7 @@ function getFileDetails_(logEvent) {
  * @return {string}
  */
 export function preCompile(layout) {
-	getCompiledLayout_(layout);
+	_getCompiledLayout(layout);
 }
 
 /**
@@ -460,5 +489,5 @@ export function preCompile(layout) {
  * @return {string}
  */
 export function format(layout, logEvent) {
-	return formatLogEvent_(getCompiledLayout_(layout), logEvent);
+	return _formatLogEvent(_getCompiledLayout(layout), logEvent);
 }

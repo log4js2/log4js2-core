@@ -42,11 +42,12 @@ log.info('This is a log');
 
 ## Configuration
 
-Configure log4js using the configure() method. This must be the first thing you do. Otherwise, the first log you commit will not allow updates from this function
+Configure log4js using the configure() method. This must be the first thing you do. Otherwise, 
+the first log you commit will not allow updates from this function
 
 ```javascript
 log4js.configure({
-    tagLayout : '%d{MM-dd-yyyy HH:mm:ss,S}|%logger:%M:%line|%message',
+    layout : '%d{MM-dd-yyyy HH:mm:ss,S}|%logger:%M:%line|%message',
     appenders : [ 'consoleAppender' ],
     loggers : [ {
         logLevel : log4js.LogLevel.INFO
@@ -61,19 +62,23 @@ log4js.configure({
 Type: `Boolean`
 Default: `false`
 
-Turn on or off the ability to inject appenders. If set to false, no appenders can be added after the first log. This may be useful if you need to add an appender during runtime.
+Turn on or off the ability to inject appenders. If set to false, no appenders can be added after 
+the first log. This may be useful if you need to add an appender during runtime.
 
 #### appenders
 Type: `Array.<String>`
 Default: `[ 'consoleAppender' ]`
 
-Sets the appenders for the given log configuration. Packaged with log4js2 is the console appender. You can develop your own appenders to add more functionality.
+Sets the appenders for the given log configuration. Packaged with log4js2 is the console appender
+. You can develop your own appenders to add more functionality.
 
 #### loggers
 Type: `Array.<Object>`
 Default: `[{ tag : 'main', logLevel : log4js.LogLevel.INFO }]`
 
-Sets the loggers for log4js2. The `tag` property specifies what logger the appender pertains to (see below), and the `logLevel` specifies the logging level (use `log4js.LogLevel`).
+Sets the loggers for log4js2. The `tag` property specifies what logger the appender pertains to 
+(see below), and the `logLevel` specifies the logging level (use `log4js.LogLevel`). You can also
+set a logger-specific layout using the `layout` property. 
 
 ```javascript
 log4js.configure({
@@ -93,12 +98,15 @@ log.debug('This message will not show');
 debugLog.debug('This message will show');
 ```
 
-#### tagLayout
+#### layout
 Type: `String`
 Default: `"%d{HH:mm:ss} [%level] %logger - %message"`
 
-Sets the tagging layout for the logs. Refer to [Apache's Log4j2 documentation](https://logging.apache.org/log4j/2.x/manual/layouts.html) for how to set the tag layout. Keep in mind that some of the layout tags are relatively more expensive, and should only really be used in a development environment - such as *%method* and *%line*.
-There are also a few layouts that are not implemented with log4js2:
+Sets the tagging layout for the logs. Refer to 
+[Apache's Log4j2 documentation](https://logging.apache.org/log4j/2.x/manual/layouts.html) for how
+to set the tag layout. Keep in mind that some of the layout tags are relatively more expensive, 
+and should only really be used in a development environment - such as *%method* and *%line*.
+There are also a few layouts that are not yet implemented with log4js2:
 
 1. Callers
 2. Encoders
@@ -113,7 +121,7 @@ There are also a few layouts that are not implemented with log4js2:
 
 ```javascript
 log4js.configure({
-    tagLayout : '%d{MM-dd-yyyy HH:mm:ss,S} [%level] %logger.%M:%line - %message',
+    layout : '%d{MM-dd-yyyy HH:mm:ss,S} [%level] %logger.%M:%line - %message',
     // ...
 });
 
@@ -144,17 +152,44 @@ var callerFunction = function () {
 // outputs: 03-24-2016 16:19:42,373 [INFO] myLogger.anonymous:3 - This is an anonymous function
 ```
 
+## Custom Appenders
+You can output logs to a specific location or methodology using a custom appender. In ES6, you 
+just need to extend `LogAppender`. If you cannot utilize ES6, then simply create a function that 
+returns an object with the methods specified in the `LogAppender` class.
+
+```javascript
+class MyAppender extends log4js.LogAppender {
+
+    static get name() {
+        return 'myappender';
+    }
+    
+    append(logEvent) {
+        let result = log4js.formatter.format(logEvent);
+        // ... handle formatted result
+    }
+    
+    // ... override methods
+    
+}
+
+log4js.addAppender(MyAppender); // register the appender
+
+```
+
 ## log4js
 
 #### addAppender(appender)
 *appender* `Object` 
 
-Adds an appender (see configuration). The configuration option allowAppenderInjection must be set to true for this to work.
+Adds an appender (see configuration). The configuration option allowAppenderInjection must be set
+ to true for this to work.
 
 #### getLogger(logger)
 *logger* `String [optional]`
 
-Gets a logger instance. If the logger is not set, the logger name will be pulled from the containing named instance it was created in (anonymous if unnamed).
+Gets a logger instance. If the logger is not set, the logger name will be pulled from the
+containing named instance it was created in (anonymous if unnamed).
 
 #### setLogLevel(logLevel, logger)
 
