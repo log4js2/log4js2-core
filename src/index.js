@@ -56,6 +56,7 @@ let _loggers = {};
  * Configures the logger
  *
  * @function
+ * @memberOf log4js
  *
  * @params {CONFIG_PARAMS} config
  */
@@ -85,17 +86,11 @@ export function configure(config) {
 
         formatter.preCompile(config.layout);
 
-        for (let logKey in _loggers) {
-
-            if (_loggers.hasOwnProperty(logKey)) {
-                for (let key in _loggers[logKey]) {
-                    if (_loggers[logKey].hasOwnProperty(key)) {
-                        _loggers[logKey][key].setLayout(config.layout);
-                    }
-                }
-            }
-
-        }
+        _loggers.forEach(function (logger) {
+           logger.forEach(function (appender) {
+               appender.setLayout(config.layout);
+           });
+        });
 
     }
 
@@ -104,10 +99,12 @@ export function configure(config) {
 }
 
 /**
+ * Configures appenders
+ *
  * @private
  * @function
  *
- * @param appenders
+ * @param {Array.<LogAppender|function>} appenders
  */
 let _configureAppenders = function (appenders) {
 
@@ -136,6 +133,8 @@ let _configureAppenders = function (appenders) {
 };
 
 /**
+ * Configures the loggers
+ *
  * @private
  * @function
  *
@@ -156,14 +155,14 @@ let _configureLoggers = function (loggers) {
         logger.tag = logger.tag || _MAIN_LOGGER;
         logger.logLevel = logger.logLevel || LogLevel.ERROR;
 
-        _loggers[logger.tag] = _getLoggers(logger.logLevel, logger.layout);
+        _loggers[logger.tag] = _getAppendersForLogger(logger.logLevel, logger.layout);
 
     });
 
 };
 
 /**
- * Gets the loggers that match the given pattern and log level
+ * Gets the appenders for the level and layout
  *
  * @private
  * @function
@@ -173,7 +172,7 @@ let _configureLoggers = function (loggers) {
  *
  * @returns {Array}
  */
-let _getLoggers = function (logLevel, layout) {
+let _getAppendersForLogger = function (logLevel, layout) {
 
     let logger;
     let appenderList = [];
@@ -199,6 +198,7 @@ let _getLoggers = function (logLevel, layout) {
  * appended
  *
  * @function
+ * @memberOf log4js
  *
  * @params {LogAppender} appender
  */
@@ -252,6 +252,7 @@ let _validateAppender = function (appender) {
 /**
  * Appends the log event
  *
+ * @private
  * @function
  *
  * @param {Object} loggingEvent
@@ -272,7 +273,12 @@ function _append(loggingEvent) {
 
 /**
  * Handles creating the logger and returning it
+ *
+ * @function
+ * @memberOf log4js
+ *
  * @param {function|string} context
+ *
  * @return {Logger}
  */
 export function getLogger(context) {
@@ -310,7 +316,11 @@ export function getLogger(context) {
 
 
 /**
- * Sets the log level for all loggers, or specified logger
+ * Sets the log level for all appenders of a logger, or specified logger
+ *
+ * @function
+ * @memberOf log4js
+ *
  * @param {number} logLevel
  * @param {string=} logger
  */
@@ -318,22 +328,16 @@ export function setLogLevel(logLevel, logger) {
 
     if (logLevel instanceof Number) {
 
-        if (logger !== undefined) {
+        if (logger) {
             if (_loggers[logger]) {
                 _loggers[logger].setLogLevel(logLevel);
             }
         } else {
-
-            for (let logKey in _loggers) {
-                if (_loggers.hasOwnProperty(logKey)) {
-                    for (let key in _loggers[logKey]) {
-                        if (_loggers[logKey].hasOwnProperty(key)) {
-                            _loggers[logKey][key].setLogLevel(logLevel);
-                        }
-                    }
-                }
-            }
-
+            _loggers.forEach(function (logger) {
+                logger.forEach(function (appender) {
+                   appender.setLogLevel(logLevel);
+                });
+            });
         }
 
     }
@@ -344,4 +348,3 @@ addAppender(ConsoleAppender);
 
 export { LogLevel };
 export { LogAppender };
-export { formatter };

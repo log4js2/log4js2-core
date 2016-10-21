@@ -95,10 +95,8 @@ gulp.task('compress', ['webpack-es5'], function () {
 });
 
 gulp.task('test', function () {
-
     return gulp.src('./test/*.js')
         .pipe(mocha());
-
 });
 
 
@@ -108,6 +106,6 @@ gulp.task('clean', function() {
 });
 
 gulp.task('build', ['clean'], function(callback) {
-    runSequence(['lint', 'babel-es5', 'webpack-es5', 'babel-es6', 'webpack-es6', 'compress'], 'test', callback);
+    runSequence(['lint', 'babel-es5', 'webpack-es5', 'babel-es6', 'webpack-es6', 'compress'], callback);
 });
 

@@ -27,6 +27,9 @@ export function Logger(context, appenderObj) {
 
 	/**
 	 * Logs an error event
+     *
+     * @function
+     * @memberOf Logger
 	 */
 	this.error = function () {
 		appenderObj.append(_constructLogEvent(LogLevel.ERROR, arguments));
@@ -34,6 +37,9 @@ export function Logger(context, appenderObj) {
 
 	/**
 	 * Logs a warning
+     *
+     * @function
+     * @memberOf Logger
 	 */
 	this.warn = function () {
 		appenderObj.append(_constructLogEvent(LogLevel.WARN, arguments));
@@ -41,6 +47,9 @@ export function Logger(context, appenderObj) {
 
 	/**
 	 * Logs an info level event
+     *
+     * @function
+     * @memberOf Logger
 	 */
 	this.info = function () {
 		appenderObj.append(_constructLogEvent(LogLevel.INFO, arguments));
@@ -48,6 +57,9 @@ export function Logger(context, appenderObj) {
 
 	/**
 	 * Logs a debug event
+     *
+     * @function
+     * @memberOf Logger
 	 */
 	this.debug = function () {
 		appenderObj.append(_constructLogEvent(LogLevel.DEBUG, arguments));
@@ -55,6 +67,9 @@ export function Logger(context, appenderObj) {
 
 	/**
 	 * Logs a trace event
+     *
+     * @function
+     * @memberOf Logger
 	 */
 	this.trace = function () {
 		appenderObj.append(_constructLogEvent(LogLevel.TRACE, arguments));
@@ -64,7 +79,7 @@ export function Logger(context, appenderObj) {
 	 * @function
 	 *
 	 * @param {number} level
-	 * @param {Array} arguments
+	 * @param {Array.<Object>} args
 	 *
 	 * @return {LOG_EVENT}
 	 */
@@ -118,9 +133,12 @@ export function Logger(context, appenderObj) {
 	}
 
     /**
+     * Returns whether or not the script is in strict mode
+     *
+     * @private
+     * @function
      *
      * @returns {boolean}
-     * @private
      */
 	let _isStrict = function () {
         return !this;
