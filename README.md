@@ -1,9 +1,19 @@
 # log4js2
-A fast, lightweight (~12KB compressed) JavaScript logger with no runtime dependencies that is designed to mirror Apache Log4j 2 functionality.
+log4js2 came about because of the lack of logging frameworks that did anything beyond a simple 
+`console.log`. This library is designed to mirror Apache Log4j 2 functionality (to the best 
+ability that a JavaScript framework can), while remaining fast, lightweight (~14KB compressed), 
+and void of any external dependencies. It can also serve as a drop-in replacement for log4js, 
+since the namespace and functions are mostly similar.
 
-##Install
+## Installing & Building
 
-You can install log4js2 from either bower or npm.
+If you're building from source, simply run
+
+```bash
+npm install && npm run build
+```
+
+Or, you can install log4js2 from either bower or npm.
 
 ```bash
 bower install log4js2 --save
@@ -180,10 +190,16 @@ log4js.addAppender(MyAppender); // register the appender
 ## log4js
 
 #### addAppender(appender)
-*appender* `Object` 
+*appender* `LogAppender|function` 
 
-Adds an appender (see configuration). The configuration option allowAppenderInjection must be set
- to true for this to work.
+Adds an appender to the log4js2 registry. This must be called before the first log, otherwise the 
+configuration option `allowAppenderInjection` must be set to `true`.
+
+#### configure(configuration)
+*configuration* `Object`
+
+Sets the configuration. If no configuration is set before the first log, then the default 
+configuration will be used. See configuration for options.
 
 #### getLogger(logger)
 *logger* `String [optional]`
