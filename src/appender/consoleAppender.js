@@ -28,7 +28,7 @@ export class ConsoleAppender extends LogAppender {
 	 * @private
 	 * @function
 	 *
-	 * @param {LOG_EVENT} loggingEvent
+	 * @param {LOG_EVENT} logEvent
 	 */
 	_appendToConsole(logEvent) {
 

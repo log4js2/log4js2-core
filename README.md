@@ -175,7 +175,7 @@ class MyAppender extends log4js.LogAppender {
     }
     
     append(logEvent) {
-        let result = log4js.formatter.format(logEvent);
+        let result = this.format(logEvent);
         // ... handle formatted result
     }
     
