@@ -1,14 +1,14 @@
 {
   "name": "log4js2",
-  "version": "0.1.2",
+  "version": "1.0.0-beta1",
   "scripts": {
     "build": "gulp build",
     "test": "gulp test"
   },
   "author": {
     "name": "Robin Schultz",
-    "email": "developer@cunae.com",
-    "url": "http://cunae.com/"
+    "email": "robin@cunae.com",
+    "url": "http://anigenero.com/"
   },
   "repository": {
     "type": "git",
