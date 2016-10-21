@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/anigenero/log4js2.svg?branch=1.0.x)](https://travis-ci.org/anigenero/log4js2)
+
 # log4js2
 log4js2 came about because of the lack of logging frameworks that did anything beyond a simple 
 `console.log`. This library is designed to mirror Apache Log4j 2 functionality (to the best 
