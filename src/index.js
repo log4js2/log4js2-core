@@ -26,9 +26,17 @@ import {Logger} from './logger/logger';
 import {LogLevel} from './const/logLevel';
 import {ConsoleAppender} from './appender/consoleAppender';
 
-/** @const */
+/**
+ * The name of the main logger. We use this in case no logger is specified
+ * @const
+ */
 const _MAIN_LOGGER = 'main';
-/** @const */
+
+/**
+ * The default configuration for log4js2. If no configuration is specified, then this
+ * configuration will be injected
+ * @const
+ */
 const _DEFAULT_CONFIG = {
     'allowAppenderInjection' : true,
     'appenders' : [{
@@ -41,7 +49,12 @@ const _DEFAULT_CONFIG = {
     }],
     'layout' : '%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] %logger - %message'
 };
-const APPENDER_METHODS = ['append', 'getName', 'isActive', 'setLogLevel', 'setLayout'];
+
+/**
+ * The methods that an appender must contain
+ * @const
+ */
+const _APPENDER_METHODS = ['append', 'getName', 'isActive', 'setLogLevel', 'setLayout'];
 
 /** @type {Object} */
 let _appenders = {};
@@ -86,11 +99,13 @@ export function configure(config) {
 
         formatter.preCompile(config.layout);
 
-        _loggers.forEach(function (logger) {
-           logger.forEach(function (appender) {
-               appender.setLayout(config.layout);
-           });
-        });
+        for (let key in _loggers) {
+            if (_loggers.hasOwnProperty(key)) {
+                _loggers[key].forEach(function (appender) {
+                    appender.setLayout(config.layout);
+                });
+            }
+        }
 
     }
 
@@ -110,21 +125,11 @@ let _configureAppenders = function (appenders) {
 
     if (appenders instanceof Array) {
 
-        let count = appenders.length;
-        for (let i = 0; i < count; i++) {
-
-            if (typeof appenders[i] === 'function') {
-                addAppender(appenders[i]);
+        appenders.forEach(appender => {
+            if (appender instanceof Function) {
+                addAppender(appender);
             }
-
-            // TODO: fix
-            // else if (typeof appenders[i] === 'string') {
-            //     // do something?
-            // } else if (typeof appenders[i] === 'object') {
-            //
-            // }
-
-        }
+        });
 
     } else {
         console.error('Invalid appender configuration');
@@ -241,7 +246,7 @@ let _validateAppender = function (appender) {
 	let appenderObj = appender();
 
     // ensure that the appender methods are present (and are functions)
-    APPENDER_METHODS.forEach(function (element) {
+    _APPENDER_METHODS.forEach(function (element) {
         if (appenderObj[element] == undefined || !(appenderObj[element] instanceof Function)) {
             throw new Error(`Invalid appender: missing/invalid method: ${element}`);
         }
@@ -255,18 +260,18 @@ let _validateAppender = function (appender) {
  * @private
  * @function
  *
- * @param {Object} loggingEvent
+ * @param {Object} logEvent
  */
-function _append(loggingEvent) {
+function _append(logEvent) {
 
 	// finalize the configuration to make sure no other appender can be injected (if set)
 	_finalized = true;
 
-    (_loggers[loggingEvent.logger] || _loggers[_MAIN_LOGGER]).forEach(function (logger) {
-        // TODO: logger active?
-        // if (logger.isActive(loggingEvent.level)) {
-            logger.append(loggingEvent);
-        // }
+    // cycle through each appender for the logger and append the logging event
+    (_loggers[logEvent.logger] || _loggers[_MAIN_LOGGER]).forEach(function (logger) {
+        if (logger.isActive(logEvent.level)) {
+            logger.append(logEvent);
+        }
     });
 
 }
@@ -333,11 +338,13 @@ export function setLogLevel(logLevel, logger) {
                 _loggers[logger].setLogLevel(logLevel);
             }
         } else {
-            _loggers.forEach(function (logger) {
-                logger.forEach(function (appender) {
-                   appender.setLogLevel(logLevel);
-                });
-            });
+            for (let key in _loggers) {
+                if (_loggers.hasOwnProperty(key)) {
+                    _loggers[key].forEach(function (appender) {
+                        appender.setLogLevel(logLevel);
+                    });
+                }
+            }
         }
 
     }

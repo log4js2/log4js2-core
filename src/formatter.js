@@ -219,7 +219,7 @@ let _formatRelative = function (logEvent) {
  *
  * @return {string}
  */
-let formatSequenceNumber_ = function (logEvent) {
+let _formatSequenceNumber = function (logEvent) {
 	return '' + logEvent.sequence;
 };
 
@@ -235,7 +235,7 @@ let _formatters = {
 	'n' : _formatLineSeparator,
 	'p|level' : _formatLevel,
 	'r|relative' : _formatRelative,
-	'sn|sequenceNumber' : formatSequenceNumber_
+	'sn|sequenceNumber' : _formatSequenceNumber
 };
 
 /**
@@ -342,6 +342,8 @@ let _getFormatterObject = function (formatString) {
 };
 
 /**
+ * Determines what formatter function has been configured
+ *
  * @function
  * @memberOf formatter
  *
@@ -353,10 +355,12 @@ let _getFormatterFunction = function (command) {
 
 	let regex;
 	for (let key in _formatters) {
-		regex = new RegExp('^' + key + '$');
-		if (regex.exec(command)) {
-			return _formatters[key];
-		}
+        if (_formatters.hasOwnProperty(key)) {
+            regex = new RegExp('^(' + key + ')$');
+            if (regex.exec(command)) {
+                return _formatters[key];
+            }
+        }
 	}
 
 	return null;
