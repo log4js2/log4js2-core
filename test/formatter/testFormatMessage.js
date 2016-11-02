@@ -1,26 +1,24 @@
 const formatter = require('../../dist/es6/formatter');
+const assert = require('assert');
 
 describe('message', function () {
 
+    const testMessage = 'This is a test message';
+
+    let testMessageOutput = function (loggerTag) {
+        assert.equal(formatter.format(loggerTag, { message : testMessage }), testMessage);
+    };
+
     it('%m', function () {
-
-        const tag = '%m';
-        formatter.preCompile(tag);
-
+        testMessageOutput('%m');
     });
 
     it('%msg', function () {
-
-        const tag = '%msg';
-        formatter.preCompile(tag);
-
+        testMessageOutput('%msg');
     });
 
     it('%message', function () {
-
-        const tag = '%message';
-        formatter.preCompile(tag);
-
+        testMessageOutput('%message');
     });
 
 });

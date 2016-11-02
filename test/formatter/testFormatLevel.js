@@ -7,33 +7,21 @@ describe('level', function () {
 
     let testLevelOutput = function (levelTag) {
 
-        assert.equal('TRACE', formatter.format(levelTag, { level : LogLevel.TRACE }));
-        assert.equal('DEBUG', formatter.format(levelTag, { level : LogLevel.DEBUG }));
-        assert.equal('INFO', formatter.format(levelTag, { level : LogLevel.INFO }));
-        assert.equal('WARN', formatter.format(levelTag, { level : LogLevel.WARN }));
-        assert.equal('ERROR', formatter.format(levelTag, { level : LogLevel.ERROR }));
-        assert.equal('FATAL', formatter.format(levelTag, { level : LogLevel.FATAL }));
+        assert.equal(formatter.format(levelTag, { level : LogLevel.TRACE }), 'TRACE');
+        assert.equal(formatter.format(levelTag, { level : LogLevel.DEBUG }), 'DEBUG');
+        assert.equal(formatter.format(levelTag, { level : LogLevel.INFO }), 'INFO');
+        assert.equal(formatter.format(levelTag, { level : LogLevel.WARN }), 'WARN');
+        assert.equal(formatter.format(levelTag, { level : LogLevel.ERROR }), 'ERROR');
+        assert.equal(formatter.format(levelTag, { level : LogLevel.FATAL }), 'FATAL');
 
     };
 
     it('%level', function () {
-
-        const levelTag = '%level';
-
-        formatter.preCompile(levelTag);
-        testLevelOutput(levelTag);
-
-
+        testLevelOutput('%level');
     });
 
     it('%p', function () {
-
-        const levelTag = '%p';
-
-        formatter.preCompile(levelTag);
-        testLevelOutput(levelTag);
-
+        testLevelOutput('%p');
     });
-
 
 });

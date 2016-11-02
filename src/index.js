@@ -47,7 +47,7 @@ const _DEFAULT_CONFIG = {
         'appender' : 'console',
         'level' : LogLevel.INFO
     }],
-    'layout' : '%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] %logger - %message'
+    'layout' : '%d [%p] %c - %m'
 };
 
 /**

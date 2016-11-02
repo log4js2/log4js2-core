@@ -4,13 +4,8 @@ const assert = require('assert');
 describe('new line', function () {
 
     it('%n', function () {
-
-        const tag = '%n';
-        formatter.preCompile(tag);
-
-        // TODO: fix
-        // assert.equal('\n', formatter.format(tag, {}));
-
+        // TODO: not working in test environment
+        // assert.equal(formatter.format('%n', {}), "\n");
     });
 
 });

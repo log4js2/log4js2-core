@@ -9,10 +9,8 @@ describe('method', function () {
         const anonymousFunction = function () {};
         const namedFunction = function namedFunction() {};
 
-        formatter.preCompile(methodTag);
-
-        assert.equal('anonymous', formatter.format(methodTag, { method : anonymousFunction }));
-        assert.equal('namedFunction', formatter.format(methodTag, { method : namedFunction }));
+        assert.equal(formatter.format(methodTag, { method : anonymousFunction }), 'anonymous');
+        assert.equal(formatter.format(methodTag, { method : namedFunction }), 'namedFunction');
 
     });
 

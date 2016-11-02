@@ -1,26 +1,24 @@
 const formatter = require('../../dist/es6/formatter');
+const assert = require('assert');
 
 describe('map', function () {
 
+    const testMap = { 'a' : 1, 'foo' : 'bar' };
+
+    let testMapOutput = function (tag) {
+        assert.equal(formatter.format(tag, { properties : testMap }), '{{a,1},{foo,bar}}');
+    };
+
     it('%K', function () {
-
-        const tag = '%K';
-        formatter.preCompile(tag);
-
+        testMapOutput('%K');
     });
 
     it('%map', function () {
-
-        const tag = '%map';
-        formatter.preCompile(tag);
-
+        testMapOutput('%map');
     });
 
     it('%MAP', function () {
-
-        const tag = '%MAP';
-        formatter.preCompile(tag);
-
+        testMapOutput('%MAP');
     });
 
 });

@@ -1,26 +1,34 @@
 const formatter = require('../../dist/es6/formatter');
+const assert = require('assert');
 
 describe('exception', function () {
 
+    let testException;
+    try {
+        throw new Error();
+    } catch (e) {
+        testException = e;
+    }
+
+    let testExceptionOutput = function (tag) {
+
+        let formatted = formatter.format(tag, { error : testException });
+
+        assert.equal(formatted.split('\n').length, 11);
+        assert.equal(formatted.split('\n')[0], 'Error');
+
+    };
+
     it('%ex', function () {
-
-        const tag = '%ex';
-        formatter.preCompile(tag);
-
+        testExceptionOutput('%ex');
     });
 
     it('%exception', function () {
-
-        const tag = '%exception';
-        formatter.preCompile(tag);
-
+        testExceptionOutput('%exception');
     });
 
     it('%throwable', function () {
-
-        const tag = '%throwable';
-        formatter.preCompile(tag);
-
+        testExceptionOutput('%throwable');
     });
 
 });

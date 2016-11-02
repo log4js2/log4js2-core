@@ -4,7 +4,7 @@ const assert = require('assert');
 describe('sequence', function () {
 
     let testSequence = function (tag) {
-        assert.equal('1', formatter.format(tag, { sequence : 1 }));
+        assert.equal(formatter.format(tag, { sequence : 1 }), '1');
     };
 
     it('%sn', function () {
