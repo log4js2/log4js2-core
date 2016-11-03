@@ -1,6 +1,6 @@
 {
   "name": "log4js2",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "build": "gulp build",
     "test": "gulp test"
@@ -16,6 +16,14 @@
   },
   "license": "MIT",
   "main": "dist/log4js2.es5.min.js",
+  "keywords": [
+    "logger",
+    "log4j",
+    "log4j2",
+    "log4js",
+    "log",
+    "console"
+  ],
   "devDependencies": {
     "assert": "^1.4.1",
     "babel-loader": "^6.0.0",
