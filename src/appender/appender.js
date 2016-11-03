@@ -11,6 +11,14 @@ export class LogAppender {
     }
 
     /**
+     * Returns whether or not the appender is active
+     * @returns {boolean}
+     */
+    isActive() {
+        return true;
+    }
+
+    /**
      * Appends the log
      * @param {Object} logEvent
      */

@@ -6,16 +6,30 @@
  */
 
 let i18n = {
-	'dayNames' : [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sunday', 'Monday',
+	'd' : [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sunday', 'Monday',
 		'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ],
-	'monthNames' : [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+	'm' : [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
 		'Oct', 'Nov', 'Dec', 'January', 'February', 'March', 'April', 'May', 'June',
 		'July', 'August', 'September', 'October', 'November', 'December' ]
 };
 
-const TOKEN = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|'[^']*'|'[^']*'/g;
+const TOKEN = /d{1,4}|M{1,4}|yy(?:yy)?|([HhmsAa])\1?|[LloSZ]|'[^']*'|'[^']*'/g;
 const TIMEZONE = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g;
 const TIMEZONE_CLIP = /[^-+\dA-Z]/g;
+
+/**
+ * Predefined DATE formats (specified by logj2)
+ * @private
+ * @type {{DEFAULT: string, ABSOLUTE: string, COMPACT: string, DATE: string, ISO8601: string, ISO8601_BASIC: string}}
+ */
+const _PREDEFINED = {
+    'DEFAULT' : 'yyyy-MM-dd HH:mm:ss,S',
+    'ABSOLUTE' : 'HH:MM:ss,S',
+    'COMPACT' : 'yyyyMMddHHmmssS',
+    'DATE' : 'dd MMM yyyy HH:mm:ss,S',
+    'ISO8601' : 'yyyy-MM-ddTHH:mm:ss,S',
+    'ISO8601_BASIC' : 'yyyyMMddTHHmmss,S'
+};
 
 /**
  * Pads numbers in the date format
@@ -26,76 +40,78 @@ const TIMEZONE_CLIP = /[^-+\dA-Z]/g;
  * @returns {?string}
  */
 function pad(value, length) {
-	value = String(value);
+
+    value = String(value);
 	length = length || 2;
-	while (value.length < length) {
+
+    while (value.length < length) {
 		value = '0' + value;
 	}
+
 	return value;
+
 }
 
-export function dateFormat(date, mask, utc) {
+/**
+ * Formats the date
+ * @param date
+ * @param mask
+ * @returns {string}
+ */
+export function dateFormat(date, mask) {
 
-	// You can't provide utc if you skip other args (use the 'UTC:' mask prefix)
-	if (arguments.length == 1 && Object.prototype.toString.call(date) == '[object String]' && !(/\d/).test(date)) {
-		mask = date;
-		date = undefined;
-	}
+    if (_PREDEFINED[mask]) {
+        mask = _PREDEFINED[mask];
+    } else {
+        mask = String(mask || _PREDEFINED.DEFAULT);
+    }
 
-	// Passing date through Date applies Date.parse, if necessary
-	date = date ? new Date(date) : new Date();
-	if (isNaN(date)) {
-		throw new SyntaxError('invalid date');
-	}
-
-	mask = String(mask || 'yyyy-mm-dd HH:MM:ss,S');
-
-	// Allow setting the utc argument via the mask
-	if (mask.slice(0, 4) == 'UTC:') {
+    // check if the date format is set for UTC
+    let isUTC = (mask.slice(0, 4) == 'UTC:');
+	if (isUTC) {
 		mask = mask.slice(4);
-		utc = true;
 	}
 
-	let _ = utc ? 'getUTC' : 'get';
-	let d = date[_ + 'Date']();
-	let D = date[_ + 'Day']();
-	let m = date[_ + 'Month']();
-	let y = date[_ + 'FullYear']();
-	let H = date[_ + 'Hours']();
-	let M = date[_ + 'Minutes']();
-	let s = date[_ + 'Seconds']();
-	let L = date[_ + 'Milliseconds']();
-	let o = utc ? 0 : date.getTimezoneOffset();
+	let prefix = isUTC ? 'getUTC' : 'get';
+	let day = date[prefix + 'Day']();
+	let month = date[prefix + 'Month']();
+	let fullYear = date[prefix + 'FullYear']();
+	let hours = date[prefix + 'Hours']();
+	let minutes = date[prefix + 'Minutes']();
+	let seconds = date[prefix + 'Seconds']();
+	let milliseconds = date[prefix + 'Milliseconds']();
+	let offset = isUTC ? 0 : date.getTimezoneOffset();
+
 	let flags = {
-		'd' : d,
-		'dd' : pad(d),
-		'ddd' : i18n.dayNames[D],
-		'dddd' : i18n.dayNames[D + 7],
-		'M' : m + 1,
-		'MM' : pad(m + 1),
-		'MMM' : i18n.monthNames[m],
-		'MMMM' : i18n.monthNames[m + 12],
-		'yy' : String(y).slice(2),
-		'yyyy' : y,
-		'h' : H % 12 || 12,
-		'hh' : pad(H % 12 || 12),
-		'H' : H,
-		'HH' : pad(H),
-		'm' : M,
-		'mm' : pad(M),
-		's' : s,
-		'ss' : pad(s),
-		'S' : pad(L, 1),
-		't' : H < 12 ? 'a' : 'p',
-		'tt' : H < 12 ? 'am' : 'pm',
-		'T' : H < 12 ? 'A' : 'P',
-		'TT' : H < 12 ? 'AM' : 'PM',
-		'Z' : utc ? 'UTC' : (String(date).match(TIMEZONE) || [ '' ]).pop().replace(TIMEZONE_CLIP, ''),
-		'o' : (o > 0 ? '-' : '+') + pad(Math.floor(Math.abs(o) / 60) * 100 + Math.abs(o) % 60, 4)
+		'd' : date.getDate(),
+		'dd' : pad(date.getDate()),
+		'ddd' : i18n.d[day],
+		'dddd' : i18n.d[day + 7],
+		'M' : month + 1,
+		'MM' : pad(month + 1),
+		'MMM' : i18n.m[month],
+		'MMMM' : i18n.m[month + 12],
+		'yy' : String(fullYear).slice(2),
+		'yyyy' : fullYear,
+		'h' : hours % 12 || 12,
+		'hh' : pad(hours % 12 || 12),
+		'H' : hours,
+		'HH' : pad(hours),
+		'm' : minutes,
+		'mm' : pad(minutes),
+		's' : seconds,
+		'ss' : pad(seconds),
+		'S' : pad(milliseconds, 1),
+		'a' : hours < 12 ? 'a' : 'p',
+		'aa' : hours < 12 ? 'am' : 'pm',
+		'A' : hours < 12 ? 'A' : 'P',
+		'AA' : hours < 12 ? 'AM' : 'PM',
+		'Z' : isUTC ? 'UTC' : (String(date).match(TIMEZONE) || [ '' ]).pop().replace(TIMEZONE_CLIP, ''),
+		'o' : (offset > 0 ? '-' : '+') + pad(Math.floor(Math.abs(offset) / 60) * 100 + Math.abs(offset) % 60, 4)
 	};
 
 	return mask.replace(TOKEN, function ($0) {
-		return $0 in flags ? flags[$0] : $0.slice(1, $0.length - 1);
+		return $0 in flags ? flags[$0] : $0;
 	});
 
 }

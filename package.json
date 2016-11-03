@@ -1,21 +1,21 @@
 {
   "name": "log4js2",
-  "version": "0.1.2",
+  "version": "1.0.0-beta1",
   "scripts": {
     "build": "gulp build",
     "test": "gulp test"
   },
   "author": {
     "name": "Robin Schultz",
-    "email": "developer@cunae.com",
-    "url": "http://cunae.com/"
+    "email": "robin@anigenero.com",
+    "url": "http://anigenero.com/"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/anigenero/log4js2"
   },
   "license": "MIT",
-  "main": "dist/log4js.min.js",
+  "main": "dist/log4js2.es5.min.js",
   "devDependencies": {
     "assert": "^1.4.1",
     "babel-loader": "^6.0.0",
@@ -29,6 +29,7 @@
     "gulp-eslint": "^3.0.1",
     "gulp-minify": "0.0.14",
     "gulp-mocha": "^3.0.1",
+    "gulp-prettydiff": "^1.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^2.0.0",
     "gulp-webpack": "^1.5.0",

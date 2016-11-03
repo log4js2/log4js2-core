@@ -6,6 +6,7 @@ const rename = require('gulp-rename');
 const uglify = require('gulp-uglify');
 const webpack = require('gulp-webpack');
 const minify = require('gulp-minify');
+const prettyDiff = require('gulp-prettydiff');
 const runSequence = require('run-sequence');
 
 let del = require('del');
@@ -85,12 +86,23 @@ gulp.task('webpack-es6', ['babel-es6'], function () {
 
 });
 
-gulp.task('compress', ['webpack-es5'], function () {
+gulp.task('compress-es6', ['webpack-es6'], function () {
+    return gulp.src('./dist/es6/log4js2.js')
+        .pipe(prettyDiff({
+            lang: "javascript",
+            miniwrap: true,
+            mode: 'minify',
+            objsort: 'none',
+            wrap: 1000
+        }))
+        .pipe(rename('log4js2.es6.min.js'))
+        .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('compress-es5', ['webpack-es5'], function () {
     return gulp.src('./dist/es5/log4js2.js')
         .pipe(uglify({}))
-        .pipe(rename({
-            suffix: '.min'
-        }))
+        .pipe(rename('log4js2.es5.min.js'))
         .pipe(gulp.dest('./dist'));
 });
 
@@ -106,6 +118,10 @@ gulp.task('clean', function() {
 });
 
 gulp.task('build', ['clean'], function(callback) {
-    runSequence(['lint', 'babel-es5', 'webpack-es5', 'babel-es6', 'webpack-es6', 'compress'], callback);
+    runSequence('lint',
+        ['babel-es5', 'webpack-es5', 'compress-es5'],
+        ['babel-es6', 'webpack-es6', 'compress-es6'],
+        'test',
+        callback);
 });
 
