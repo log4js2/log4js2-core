@@ -4,8 +4,7 @@ const assert = require('assert');
 describe('new line', function () {
 
     it('%n', function () {
-        // TODO: not working in test environment
-        // assert.equal(formatter.format('%n', {}), "\n");
+        assert.equal(formatter.format('foo %n bar', {}), "foo \n bar");
     });
 
 });

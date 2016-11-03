@@ -33,18 +33,23 @@ import {ConsoleAppender} from './appender/consoleAppender';
 const _MAIN_LOGGER = 'main';
 
 /**
+ * The default appenders that should be included if no appenders are specified
+ * @const
+ */
+const _DEFAULT_APPENDERS = [{
+    'appender' : ConsoleAppender,
+    'level' : LogLevel.INFO
+}];
+
+/**
  * The default configuration for log4js2. If no configuration is specified, then this
  * configuration will be injected
  * @const
  */
 const _DEFAULT_CONFIG = {
     'allowAppenderInjection' : true,
-    'appenders' : [{
-        'appender' : ConsoleAppender,
-        'level' : LogLevel.INFO
-	}],
+    'appenders' : _DEFAULT_APPENDERS,
     'loggers' : [{
-        'appender' : 'console',
         'level' : LogLevel.INFO
     }],
     'layout' : '%d [%p] %c - %m'
@@ -76,7 +81,7 @@ let _loggers = {};
 export function configure(config) {
 
 	if (_finalized) {
-		console.error('Could not configure. LogUtility already in use');
+		console.error('Could not configure - already in use');
 		return;
 	}
 
@@ -84,6 +89,7 @@ export function configure(config) {
         _configuration = {};
     }
 
+    // set the default layout
     if (!config.layout && !_configuration.layout) {
         _configuration.layout = _DEFAULT_CONFIG.layout;
     } else if (config.layout) {
@@ -94,22 +100,6 @@ export function configure(config) {
 	_configureAppenders(config.appenders);
     // configure the loggers
     _configureLoggers(config.loggers);
-
-    if (config.layout) {
-
-        formatter.preCompile(config.layout);
-
-        for (let key in _loggers) {
-            if (_loggers.hasOwnProperty(key)) {
-                _loggers[key].forEach(function (appender) {
-                    appender.setLayout(config.layout);
-                });
-            }
-        }
-
-    }
-
-    _configuration = config;
 
 }
 
@@ -123,17 +113,15 @@ export function configure(config) {
  */
 let _configureAppenders = function (appenders) {
 
-    if (appenders instanceof Array) {
-
-        appenders.forEach(appender => {
-            if (appender instanceof Function) {
-                addAppender(appender);
-            }
-        });
-
-    } else {
-        console.error('Invalid appender configuration');
+    if (!(appenders instanceof Array)) {
+        appenders = _DEFAULT_APPENDERS;
     }
+
+    appenders.forEach(appender => {
+        if (appender instanceof Function) {
+            addAppender(appender);
+        }
+    });
 
 };
 
@@ -282,7 +270,7 @@ function _append(logEvent) {
  * @function
  * @memberOf log4js
  *
- * @param {function|string} context
+ * @param {function|string=} context
  *
  * @return {Logger}
  */
@@ -307,7 +295,7 @@ export function getLogger(context) {
             }
 
         } else {
-            context = 'anonymous';
+            context = _MAIN_LOGGER;
         }
 
     }

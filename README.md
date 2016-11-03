@@ -36,7 +36,7 @@ var log4js = require('log4js2');
 Or, for HTML implementations, place the log4js distribution in your HTML ```<head>``` tag.
 
 ```html
-<script type="text/javascript" src="log4js2.min.js"></script>
+<script type="text/javascript" src="dist/log4js2.es5.min.js"></script>
 ```
 
 Then, log some stuff!!
@@ -59,7 +59,7 @@ the first log you commit will not allow updates from this function
 
 ```javascript
 log4js.configure({
-    layout : '%d{MM-dd-yyyy HH:mm:ss,S}|%logger:%M:%line|%message',
+    layout : '%d{DEFAULT} [%level] %logger %M:%line - %message',
     appenders : [ 'consoleAppender' ],
     loggers : [ {
         logLevel : log4js.LogLevel.INFO
@@ -112,7 +112,7 @@ debugLog.debug('This message will show');
 
 #### layout
 Type: `String`
-Default: `"%d{HH:mm:ss} [%level] %logger - %message"`
+Default: `"%d [%p] %c - %m"`
 
 Sets the tagging layout for the logs. Refer to 
 [Apache's Log4j2 documentation](https://logging.apache.org/log4j/2.x/manual/layouts.html) for how

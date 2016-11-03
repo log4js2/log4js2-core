@@ -15,7 +15,7 @@
     "url": "https://github.com/anigenero/log4js2"
   },
   "license": "MIT",
-  "main": "dist/log4js.min.js",
+  "main": "dist/log4js2.es5.min.js",
   "devDependencies": {
     "assert": "^1.4.1",
     "babel-loader": "^6.0.0",
