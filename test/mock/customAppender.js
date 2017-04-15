@@ -38,6 +38,10 @@ class CustomAppender extends log4js.LogAppender {
 
     }
 
+    clear() {
+
+    }
+
 }
 
 log4js.addAppender(CustomAppender);

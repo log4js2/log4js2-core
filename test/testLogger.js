@@ -5,21 +5,6 @@ const assert = require('assert');
 
 describe('Logger', function () {
 
-    // create a log stack we can throw logs into
-    let logStack = {
-        info: [],
-        error: []
-    };
-
-    // override console
-    // we will use this to monitor logger output
-    console.info = function (log) {
-        logStack.info.push(log);
-    };
-    console.error = function (log) {
-        logStack.error.push(log);
-    };
-
     beforeEach(function () {
         logStack.info = [];
         logStack.error = [];
@@ -28,7 +13,7 @@ describe('Logger', function () {
     it('default logger', function () {
 
         const logMessage = 'Test log';
-        const logger = log4js.getLogger();
+        let logger = log4js.getLogger();
 
         logger.info(logMessage);
 
@@ -40,7 +25,7 @@ describe('Logger', function () {
     it('levels', function () {
 
         const logMessage = 'Test log';
-        const logger = log4js.getLogger(testLogger1);
+        let logger = log4js.getLogger(testLogger1);
 
         // log at info level
         // nothing should be logged
@@ -60,7 +45,7 @@ describe('Logger', function () {
     it('layouts', function () {
 
         const logMessage = 'Test log';
-        const logger = log4js.getLogger(testLogger2);
+        let logger = log4js.getLogger(testLogger2);
 
         // log at info level
         // nothing should be logged

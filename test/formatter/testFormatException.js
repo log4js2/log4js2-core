@@ -12,9 +12,9 @@ describe('exception', function () {
 
     let testExceptionOutput = function (tag) {
 
-        let formatted = formatter.format(tag, { error : testException });
+        const formatted = formatter.format(tag, { error : testException });
 
-        assert.equal(formatted.split('\n').length, 17);
+        assert.ok(formatted.split('\n').length > 1);
         assert.equal(formatted.split('\n')[0], 'Error');
 
     };
