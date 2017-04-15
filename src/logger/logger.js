@@ -110,16 +110,13 @@ export function Logger(context, appenderObj) {
 			'sequence' : _logSequence++
 		};
 
-		let messageStubs = 0;
+		let regex = /\{\}/g;
 		for (let i = 0; i < args.length; i++) {
 
 			if (i === 0) {
 				loggingEvent.message = args[i];
-				let stubs = (/\{}/g).exec(loggingEvent.message);
-				messageStubs = (stubs instanceof Array) ? stubs.length : 0;
-			} else if (messageStubs > 0) {
-				loggingEvent.message = loggingEvent.message.replace(/\{}/, args[i]);
-				messageStubs--;
+			} else if (regex.exec(loggingEvent.message)) {
+				loggingEvent.message = loggingEvent.message.replace(/\{\}/, args[i]);
 			} else if (args[i] instanceof Error) {
 				loggingEvent.error = args[i];
 			} else {

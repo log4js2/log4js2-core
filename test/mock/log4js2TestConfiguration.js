@@ -6,7 +6,7 @@ global.testLogger2 = 'test2';
 global.testAppenderLogger = 'customAppender';
 
 log4js.configure({
-    appenders: ['console', 'custom'],
+    appenders: ['main', 'console', 'custom'],
     layout: '%c - %m',
     loggers: [{
         logLevel: log4js.LogLevel.INFO
