@@ -111,6 +111,24 @@ let _formatLineNumber = function (logEvent) {
  * @memberOf formatter
  *
  * @param {LOG_EVENT} logEvent
+ *
+ * @return {string}
+ */
+let _formatColumn = function (logEvent) {
+
+    if (!logEvent.column) {
+		_getFileDetails(logEvent);
+	}
+
+	return `${logEvent.column}`;
+
+};
+
+/**
+ * @function
+ * @memberOf formatter
+ *
+ * @param {LOG_EVENT} logEvent
  * @param {Array.<string>} params
  *
  * @return {string}
@@ -230,6 +248,7 @@ let _formatters = {
 	'F|file' : _formatFile,
 	'K|map|MAP' : _formatMapMessage,
 	'L|line' : _formatLineNumber,
+	'column': _formatColumn,
 	'm|msg|message' : _formatLogMessage,
 	'M|method' : _formatMethodName,
 	'n' : _formatLineSeparator,
