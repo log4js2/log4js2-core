@@ -319,7 +319,7 @@ export function getLogger(context) {
  */
 export function setLogLevel(logLevel, logger) {
 
-    if (logLevel instanceof Number) {
+    if (Number.isInteger(logLevel)) {
 
         if (logger) {
             if (_loggers[logger]) {
