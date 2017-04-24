@@ -475,10 +475,10 @@ let _getFileDetails = function (logEvent) {
 		if (typeof define !== 'undefined') {
 			let path = require('path');
 			let appDir = path.dirname(require.main.filename);
-			if (appDir == '.') {
-	      			appDir = '';
-	      		}
-			logEvent.filename = fileParts.join(':').replace(appDir, '').replace(/(\\|\/)/, '');
+			if (!fileParts[0].startsWith(appDir)) {
+				appDir = '';
+			}
+			logEvent.filename = fileParts.join(':').replace(appDir, '').replace(/^(\\|\/)/, '');
 		} else {
 			logEvent.filename = fileParts.join(':');
 		}
