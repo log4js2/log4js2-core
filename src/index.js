@@ -282,15 +282,15 @@ export function getLogger(context) {
 	}
 
     // determine the context
-    if (typeof context != 'string') {
+    if (typeof context !== 'string') {
 
-        if (typeof context == 'function') {
+        if (typeof context === 'function') {
             context = utility.getFunctionName(context);
-        } else if (typeof context == 'object') {
+        } else if (typeof context === 'object') {
 
             context = utility.getFunctionName(context.constructor);
 
-            if (context == 'Object') {
+            if (context === 'Object') {
                 context = 'anonymous';
             }
 

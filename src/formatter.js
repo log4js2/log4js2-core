@@ -248,7 +248,7 @@ let _formatters = {
 	'F|file' : _formatFile,
 	'K|map|MAP' : _formatMapMessage,
 	'L|line' : _formatLineNumber,
-	'column': _formatColumn,
+	'column' : _formatColumn,
 	'm|msg|message' : _formatLogMessage,
 	'M|method' : _formatMethodName,
 	'n' : _formatLineSeparator,
@@ -471,7 +471,7 @@ let _getFileDetails = function (logEvent) {
 
 		logEvent.column = fileParts.pop();
 		logEvent.lineNumber = fileParts.pop();
-		
+
 		if (typeof define !== 'undefined') {
 			let path = require('path');
 			let appDir = path.dirname(require.main.filename);

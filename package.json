@@ -1,6 +1,6 @@
 {
   "name": "log4js2",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "build": "gulp build",
     "test": "gulp test"
