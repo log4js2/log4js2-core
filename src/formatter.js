@@ -111,6 +111,24 @@ let _formatLineNumber = function (logEvent) {
  * @memberOf formatter
  *
  * @param {LOG_EVENT} logEvent
+ *
+ * @return {string}
+ */
+let _formatColumn = function (logEvent) {
+
+    if (!logEvent.column) {
+		_getFileDetails(logEvent);
+	}
+
+	return `${logEvent.column}`;
+
+};
+
+/**
+ * @function
+ * @memberOf formatter
+ *
+ * @param {LOG_EVENT} logEvent
  * @param {Array.<string>} params
  *
  * @return {string}
@@ -230,6 +248,7 @@ let _formatters = {
 	'F|file' : _formatFile,
 	'K|map|MAP' : _formatMapMessage,
 	'L|line' : _formatLineNumber,
+	'column': _formatColumn,
 	'm|msg|message' : _formatLogMessage,
 	'M|method' : _formatMethodName,
 	'n' : _formatLineSeparator,
@@ -452,11 +471,14 @@ let _getFileDetails = function (logEvent) {
 
 		logEvent.column = fileParts.pop();
 		logEvent.lineNumber = fileParts.pop();
-
+		
 		if (typeof define !== 'undefined') {
 			let path = require('path');
 			let appDir = path.dirname(require.main.filename);
-			logEvent.filename = fileParts.join(':').replace(appDir, '').replace(/(\\|\/)/, '');
+			if (!fileParts[0].startsWith(appDir)) {
+				appDir = '';
+			}
+			logEvent.filename = fileParts.join(':').replace(appDir, '').replace(/^(\\|\/)/, '');
 		} else {
 			logEvent.filename = fileParts.join(':');
 		}
@@ -468,7 +490,7 @@ let _getFileDetails = function (logEvent) {
 		logEvent.lineNumber = '?';
 
 	}
-
+	logEvent.file = logEvent.filename;
 };
 
 /**
