@@ -1,5 +1,5 @@
 require('./mock/log4js2TestConfiguration');
-const log4js = require('../dist/es6/log4js2.js');
+const log4js = require('../build/es6/log4js2.js');
 
 const assert = require('assert');
 

@@ -6,7 +6,7 @@
     "Robin Schultz <robin@anigenero.com>"
   ],
   "description": "A fast JavaScript logger with no runtime dependencies that is designed to mirror Apache Log4j 2 functionality",
-  "main": "dist/log4js2.es5.min.js",
+  "main": "build/es5/log4js2.es5.min.js",
   "moduleType": [
     "amd",
     "es6",

@@ -1,5 +1,5 @@
 /**
- * log4js <https://github.com/anigenero/log4js>
+ * log4js2 <https://github.com/anigenero/log4js2>
  *
  * Copyright 2016-present Robin Schultz <http://anigenero.com>
  * Released under the MIT License
@@ -10,15 +10,15 @@ import {LogLevel} from '../const/logLevel';
 
 export class ConsoleAppender extends LogAppender {
 
-    static get name() {
-        return 'console';
-    }
+	static appenderName() {
+		return 'console';
+	}
 
     /**
      * Appends the log event
      * @param logEvent
      */
-    append(logEvent) {
+    public append(logEvent) {
         if (logEvent.level <= this.getLogLevel()) {
             this._appendToConsole(logEvent);
         }
@@ -30,7 +30,7 @@ export class ConsoleAppender extends LogAppender {
 	 *
 	 * @param {LOG_EVENT} logEvent
 	 */
-	_appendToConsole(logEvent) {
+	private _appendToConsole(logEvent) {
 
 		let message = this.format(logEvent);
 

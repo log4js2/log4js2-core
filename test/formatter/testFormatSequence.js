@@ -1,4 +1,4 @@
-const formatter = require('../../dist/es6/formatter');
+const formatter = require('../../build/es6/formatter').Formatter;
 const assert = require('assert');
 
 describe('sequence', function () {

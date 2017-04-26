@@ -1,12 +1,18 @@
-import {format} from '../formatter';
+import {LogLevel} from "../const/logLevel";
+import {Formatter} from "../formatter";
 
-export class LogAppender {
+export abstract class LogAppender {
+
+    private active: boolean;
+
+    private logLevel: LogLevel;
+    private layout: string;
 
     /**
      * Gets the name of the appender (e.g. 'console')
      * @returns {null}
      */
-    static get name() {
+    static appenderName() {
         return null;
     }
 
@@ -15,7 +21,7 @@ export class LogAppender {
      * @returns {boolean}
      */
     isActive() {
-        return true;
+        return this.active == true;
     }
 
     /**
@@ -63,7 +69,7 @@ export class LogAppender {
      * @param {Object} logEvent
      */
     format(logEvent) {
-        return format(this.getLayout(), logEvent);
+        return Formatter.format(this.getLayout(), logEvent);
     }
 
 }

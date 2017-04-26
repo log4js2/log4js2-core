@@ -1,4 +1,4 @@
-const log4js = require('../../dist/es6/log4js2');
+const log4js = require('../../build/es6/log4js2');
 require('./customAppender');
 
 global.testLogger1 = 'test1';

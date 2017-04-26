@@ -1,4 +1,4 @@
-const log4js = require('../../dist/es6/log4js2');
+const log4js = require('../../build/es6/log4js2');
 
 global.logStack = {
     error: [],
@@ -24,22 +24,28 @@ class CustomAppender extends log4js.LogAppender {
 
         let message = this.format(logEvent);
 
-        if (logEvent.level == log4js.LogLevel.ERROR) {
+        console.dir(logEvent);
+
+        if (logEvent.level === log4js.LogLevel.ERROR) {
             logStack.error.push(message);
-        } else if (logEvent.level == log4js.LogLevel.WARN) {
+        } else if (logEvent.level === log4js.LogLevel.WARN) {
             logStack.warn.push(message);
-        } else if (logEvent.level == log4js.LogLevel.INFO) {
+        } else if (logEvent.level === log4js.LogLevel.INFO) {
             logStack.info.push(message);
-        } else if (logEvent.level == log4js.LogLevel.DEBUG) {
+        } else if (logEvent.level === log4js.LogLevel.DEBUG) {
             logStack.debug.push(message);
-        } else if (logEvent.level == log4js.LogLevel.TRACE) {
+        } else if (logEvent.level === log4js.LogLevel.TRACE) {
             logStack.trace.push(message);
         }
 
     }
 
     clear() {
-
+        logStack.error = [];
+        logStack.warn = [];
+        logStack.info = [];
+        logStack.debug = [];
+        logStack.trace = [];
     }
 
 }

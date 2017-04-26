@@ -1,5 +1,5 @@
-const formatter = require('../../dist/es6/formatter');
-const LogLevel = require('../../dist/es6/const/logLevel').LogLevel;
+const formatter = require('../../build/es6/formatter').Formatter;
+const LogLevel = require('../../build/es6/const/logLevel').LogLevel;
 
 const assert = require('assert');
 

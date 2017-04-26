@@ -36,7 +36,7 @@ var log4js = require('log4js2');
 Or, for HTML implementations, place the log4js distribution in your HTML ```<head>``` tag.
 
 ```html
-<script type="text/javascript" src="dist/log4js2.es5.min.js"></script>
+<script type="text/javascript" src="build/es5/log4js2.es5.min.js"></script>
 ```
 
 Then, log some stuff!!
