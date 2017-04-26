@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/anigenero/log4js2.svg?branch=master)](https://travis-ci.org/anigenero/log4js2)
+[![Build Status](https://travis-ci.org/anigenero/log4js2.svg?branch=typescript)](https://travis-ci.org/anigenero/log4js2)
 
 # log4js2
 log4js2 came about because of the lack of logging frameworks that did anything beyond a simple 
