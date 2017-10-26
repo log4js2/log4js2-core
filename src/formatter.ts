@@ -1,13 +1,13 @@
 /**
  * log4js2 <https://github.com/anigenero/log4js2>
  *
- * Copyright 2016-present Robin Schultz <http://anigenero.com>
+ * Copyright 2016-2017 Robin Schultz <http://anigenero.com>
  * Released under the MIT License
  */
 
-import {DateFormatter} from './util/dateFormatter';
+import DateFormatter from './util/dateFormatter';
 import {LogLevel} from './const/logLevel';
-import {LogEvent} from './logevent';
+import LogEvent from './logevent';
 import * as define from 'core-js/library/fn/object/define';
 import {Utility} from "./util/utility";
 

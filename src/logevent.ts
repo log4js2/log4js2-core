@@ -1,5 +1,7 @@
 import {LogLevel} from "./const/logLevel";
-export class LogEvent {
+import Marker from "./marker";
+
+export default class LogEvent {
 
     date: Date;
     error: Error;
@@ -10,6 +12,7 @@ export class LogEvent {
     lineNumber: string;
     column: string;
     logger: string;
+    marker: Marker;
     message: string;
     method: Function;
     properties: Map<string, any>;

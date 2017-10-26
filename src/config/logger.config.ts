@@ -1,10 +1,10 @@
 import {LogLevel} from "../const/logLevel";
-export class LoggerConfiguration {
+import PatternLayout from "./pattern.layout";
 
-    level: LogLevel = LogLevel.ERROR;
+export default interface LoggerConfiguration {
 
-    constructor(level: LogLevel) {
-        this.level = level;
-    }
+    async?: Boolean;
+    level?: LogLevel|number;
+    patternLayout?: PatternLayout|string;
 
 }

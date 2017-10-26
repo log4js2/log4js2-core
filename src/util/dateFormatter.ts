@@ -5,7 +5,7 @@
  * Released under the MIT License
  */
 
-export class DateFormatter {
+export default class DateFormatter {
 
     private static readonly i18n = {
         'd': ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sunday', 'Monday',

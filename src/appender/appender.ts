@@ -1,7 +1,7 @@
 import {LogLevel} from "../const/logLevel";
 import {Formatter} from "../formatter";
 
-export abstract class LogAppender {
+export default abstract class LogAppender {
 
     private active: boolean;
 
@@ -20,7 +20,7 @@ export abstract class LogAppender {
      * Returns whether or not the appender is active
      * @returns {boolean}
      */
-    isActive() {
+    isActive(): boolean {
         return this.active == true;
     }
 

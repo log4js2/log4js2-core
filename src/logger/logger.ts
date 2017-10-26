@@ -1,13 +1,7 @@
-/**
- * log4js2 <https://github.com/anigenero/log4js2>
- *
- * Copyright 2016-present Robin Schultz <http://anigenero.com>
- * Released under the MIT License
- */
-
 import {LogLevel} from '../const/logLevel';
-import {LogAppender} from "../appender/appender";
-import {LogEvent} from "../logevent";
+import LogAppender from "../appender/appender";
+import LogEvent from "../logevent";
+import Marker from "../marker";
 
 /**
  * Holds the definition for the log event object
@@ -18,7 +12,7 @@ import {LogEvent} from "../logevent";
  */
 let LOG_EVENT;
 
-export class Logger {
+export default class Logger {
 
     private readonly _logContext: string;
 
@@ -128,6 +122,8 @@ export class Logger {
                 logEvent.message = logEvent.message.replace(/\{\}/, args[i]);
             } else if (args[i] instanceof Error) {
                 logEvent.error = args[i];
+            } else if (args[i] instanceof Marker) {
+                logEvent.marker = <Marker> args[i];
             } else {
                 logEvent.properties = args[i];
             }
@@ -147,7 +143,9 @@ export class Logger {
      * @returns {boolean}
      */
     private _isStrict() {
-        return (function() { return !this; })();
+        return (function () {
+            return !this;
+        })();
     };
 
 }

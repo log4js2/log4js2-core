@@ -1,12 +1,12 @@
-import {LoggerConfiguration} from "./logger.config";
-import {AppenderConfiguration} from "./appender.config";
+import AppenderConfiguration from "../appender/appender.config";
+import LoggerConfiguration from "./logger.config";
+import PatternLayout from "./pattern.layout";
 
-export class Configuration {
+export default interface Configuration {
 
-    allowAppenderInjection: boolean;
-    appenders: AppenderConfiguration[]|string[];
-    application: Object;
+    allowAppenderInjection?: boolean;
+    appenders: AppenderConfiguration[] | string[];
     loggers: LoggerConfiguration[];
-    layout: string;
+    patternLayout: PatternLayout | string;
 
 }

@@ -1,19 +1,20 @@
 /**
  * log4js2 <https://github.com/anigenero/log4js2>
  *
- * Copyright 2016 Robin Schultz <http://anigenero.com>
+ * Copyright 2016-2017 Robin Schultz <http://anigenero.com>
  * Released under the MIT License
  */
 
 import {Utility} from "./util/utility";
-import {LogAppender} from "./appender/appender";
-import {Logger} from "./logger/logger";
+import LogAppender from "./appender/appender";
+import Logger from "./logger/logger";
 import {LogLevel} from "./const/logLevel";
-import {ConsoleAppender} from "./appender/consoleAppender";
-import {Configuration} from "./config/configuration";
-import {LoggerConfiguration} from "./config/logger.config";
-import {AppenderConfiguration} from "./config/appender.config";
-import {LogEvent} from "./logevent";
+import ConsoleAppender from "./appender/console/console.appender";
+import Configuration from "./config/configuration";
+import LoggerConfiguration from "./config/logger.config";
+import AppenderConfiguration from "./appender/appender.config";
+import LogEvent from "./logevent";
+import * as Marker from "./marker";
 
 /**
  * The name of the main logger. We use this in case no logger is specified
@@ -25,34 +26,27 @@ const _MAIN_LOGGER = 'main';
  * The default appenders that should be included if no appenders are specified
  * @const
  */
-const _DEFAULT_APPENDERS: AppenderConfiguration[] = [
-    new AppenderConfiguration(ConsoleAppender, LogLevel.INFO)
-];
+const _DEFAULT_APPENDERS = ((): AppenderConfiguration[] => {
+    return [{
+        appender: ConsoleAppender,
+        level: LogLevel.ERROR
+    }];
+})();
 
 /**
  * The default configuration for log4js2. If no configuration is specified, then this
  * configuration will be injected
  * @const
  */
-const _DEFAULT_CONFIG = (() => {
-
-    let configuration: Configuration = new Configuration();
-    configuration.allowAppenderInjection = true;
-    configuration.appenders = _DEFAULT_APPENDERS;
-    configuration.loggers = [
-        new LoggerConfiguration(LogLevel.INFO)
-    ];
-    configuration.layout = '%d [%p] %c - %m';
-
-    return configuration;
-
+const _DEFAULT_CONFIG = ((): Configuration => {
+    return {
+        appenders: _DEFAULT_APPENDERS,
+        loggers: [{
+            level: LogLevel.INFO
+        }],
+        patternLayout: '%d [%p] %c - %m'
+    };
 })();
-
-/**
- * The methods that an appender must contain
- * @const
- */
-const _APPENDER_METHODS = ['append', 'getName', 'isActive', 'setLogLevel', 'setLayout'];
 
 /** @type {Object} */
 let _appenders = {};
@@ -71,24 +65,24 @@ let _loggers = {};
  */
 export function configure(config: Configuration) {
 
-	if (_finalized) {
-		console.error('Could not configure - already in use');
-		return;
-	}
+    if (_finalized) {
+        console.error('Could not configure - already in use');
+        return;
+    }
 
-	if (!_configuration) {
+    if (!_configuration) {
         _configuration = {};
     }
 
     // set the default layout
-    if (!config.layout && !_configuration.layout) {
-        _configuration.layout = _DEFAULT_CONFIG.layout;
-    } else if (config.layout) {
-        _configuration.layout = config.layout;
+    if (!config.patternLayout && !_configuration.layout) {
+        _configuration.layout = _DEFAULT_CONFIG.patternLayout;
+    } else if (config.patternLayout) {
+        _configuration.layout = config.patternLayout;
     }
 
-	// configure the appenders
-	_configureAppenders(config.appenders);
+    // configure the appenders
+    _configureAppenders(config.appenders);
     // configure the loggers
     _configureLoggers(config.loggers);
 
@@ -102,21 +96,15 @@ export function configure(config: Configuration) {
  *
  * @param {Array.<LogAppender|function>} appenders
  */
-let _configureAppenders = function (appenders: Function[]|AppenderConfiguration[]|string[]) {
+let _configureAppenders = function (appenders: Function[] | AppenderConfiguration[] | string[]) {
 
     if (!(appenders instanceof Array)) {
         appenders = _DEFAULT_APPENDERS;
     }
 
-    let appender;
     let count = appenders.length;
     for (let i = 0; i < count; i++) {
-
-        appender = appenders[i];
-        if (appender instanceof AppenderConfiguration) {
-            addAppender(appender);
-        }
-
+        addAppender(appenders[i]);
     }
 
 };
@@ -131,9 +119,9 @@ let _configureAppenders = function (appenders: Function[]|AppenderConfiguration[
  */
 let _configureLoggers = function (loggers) {
 
-	if (!(loggers instanceof Array)) {
-		throw new Error('Invalid loggers');
-	}
+    if (!(loggers instanceof Array)) {
+        throw new Error('Invalid loggers');
+    }
 
     loggers.forEach(function (logger) {
 
@@ -144,7 +132,7 @@ let _configureLoggers = function (loggers) {
         logger.tag = logger.tag || _MAIN_LOGGER;
         logger.logLevel = logger.logLevel || LogLevel.ERROR;
 
-        _loggers[logger.tag] = _getAppendersForLogger(logger.logLevel, logger.layout);
+        _loggers[logger.tag] = _getAppendersForLogger(logger);
 
     });
 
@@ -156,12 +144,11 @@ let _configureLoggers = function (loggers) {
  * @private
  * @function
  *
- * @param {number} logLevel
- * @param {string} layout
+ * @param {LoggerConfiguration} logConfig
  *
  * @returns {Array}
  */
-let _getAppendersForLogger = function (logLevel, layout) {
+let _getAppendersForLogger = function (logConfig: LoggerConfiguration) {
 
     let logger;
     let appenderList = [];
@@ -170,14 +157,14 @@ let _getAppendersForLogger = function (logLevel, layout) {
 
         logger = (_appenders[key].prototype instanceof LogAppender) ? new _appenders[key]() : _appenders[key]();
 
-        logger.setLogLevel(logLevel);
-        logger.setLayout(layout);
+        logger.setLogLevel(logConfig.level);
+        logger.setLayout(logConfig.patternLayout);
 
         appenderList.push(logger);
 
     });
 
-	return appenderList;
+    return appenderList;
 
 };
 
@@ -192,10 +179,10 @@ let _getAppendersForLogger = function (logLevel, layout) {
  */
 export function addAppender(appender) {
 
-	if (_finalized && !_configuration.allowAppenderInjection) {
-		console.error('Cannot add appender when configuration finalized');
-		return;
-	}
+    if (_finalized && !_configuration.allowAppenderInjection) {
+        console.error('Cannot add appender when configuration finalized');
+        return;
+    }
 
     _validateAppender(appender);
 
@@ -228,14 +215,14 @@ let _validateAppender = function (appender) {
     if (appender.prototype instanceof LogAppender) {
         return;
     } else if (!(appender instanceof Function)) {
-		throw new Error('Invalid appender: not a function or class LogAppender');
-	}
+        throw new Error('Invalid appender');
+    }
 
-	// instantiate the appender function
-	let appenderObj = appender();
+    // instantiate the appender function
+    let appenderObj = appender();
 
     // ensure that the appender methods are present (and are functions)
-    _APPENDER_METHODS.forEach(function (element) {
+    ['append', 'getName', 'isActive', 'setLogLevel', 'setLayout'].forEach(function (element) {
         if (appenderObj[element] == undefined || !(appenderObj[element] instanceof Function)) {
             throw new Error(`Invalid appender: missing/invalid method: ${element}`);
         }
@@ -253,8 +240,8 @@ let _validateAppender = function (appender) {
  */
 function _append(logEvent) {
 
-	// finalize the configuration to make sure no other appender can be injected (if set)
-	_finalized = true;
+    // finalize the configuration to make sure no other appender can be injected (if set)
+    _finalized = true;
 
     // cycle through each appender for the logger and append the logging event
     (_loggers[logEvent.logger] || _loggers[_MAIN_LOGGER]).forEach(function (logger) {
@@ -276,10 +263,10 @@ function _append(logEvent) {
  */
 export function getLogger(context) {
 
-	// we need to initialize if we haven't
-	if (!_configuration) {
-		configure(_DEFAULT_CONFIG);
-	}
+    // we need to initialize if we haven't
+    if (!_configuration) {
+        configure(_DEFAULT_CONFIG);
+    }
 
     // determine the context
     if (typeof context !== 'string') {
@@ -300,14 +287,14 @@ export function getLogger(context) {
 
     }
 
-	return new Logger(context, <LogAppender> {
+
+    return new Logger(context, <LogAppender> {
         append(event: LogEvent) {
             _append(event);
         }
-	});
+    });
 
 }
-
 
 
 /**
@@ -342,5 +329,6 @@ export function setLogLevel(logLevel, logger) {
 
 addAppender(ConsoleAppender);
 
-export { LogLevel };
-export { LogAppender };
+export {LogLevel};
+export {LogAppender};
+export {Marker};
