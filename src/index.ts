@@ -63,7 +63,7 @@ let _loggers = {};
  * @function
  * @params {Configuration} config
  */
-export function configure(config: Configuration) {
+function configure(config: Configuration) {
 
     if (_finalized) {
         console.error('Could not configure - already in use');
@@ -169,20 +169,13 @@ let _getAppendersForLogger = function (logConfig: LoggerConfiguration) {
 };
 
 /**
- * Adds an appender to the appender queue. If the stack is finalized, and
- * the allowAppenderInjection is set to false, then the event will not be
- * appended
+ * Adds an appender to the appender queue
  *
  * @function
  *
  * @params {LogAppender} appender
  */
-export function addAppender(appender) {
-
-    if (_finalized && !_configuration.allowAppenderInjection) {
-        console.error('Cannot add appender when configuration finalized');
-        return;
-    }
+function addAppender(appender) {
 
     _validateAppender(appender);
 
@@ -261,7 +254,7 @@ function _append(logEvent) {
  *
  * @return {Logger}
  */
-export function getLogger(context) {
+function getLogger(context) {
 
     // we need to initialize if we haven't
     if (!_configuration) {
@@ -305,7 +298,7 @@ export function getLogger(context) {
  * @param {number} logLevel
  * @param {string=} logger
  */
-export function setLogLevel(logLevel, logger) {
+function setLogLevel(logLevel, logger) {
 
     if (Number.isInteger(logLevel)) {
 
@@ -329,6 +322,14 @@ export function setLogLevel(logLevel, logger) {
 
 addAppender(ConsoleAppender);
 
-export {LogLevel};
-export {LogAppender};
-export {Marker};
+const log4js = {
+    addAppender: addAppender,
+    configure: configure,
+    getLogger: getLogger,
+    setLogLevel: setLogLevel,
+    LogLevel: LogLevel,
+    LogAppender: LogAppender,
+    Marker: Marker,
+};
+
+export default log4js;

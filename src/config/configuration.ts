@@ -4,7 +4,6 @@ import PatternLayout from "./pattern.layout";
 
 export default interface Configuration {
 
-    allowAppenderInjection?: boolean;
     appenders: AppenderConfiguration[] | string[];
     loggers: LoggerConfiguration[];
     patternLayout: PatternLayout | string;

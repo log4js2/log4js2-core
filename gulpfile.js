@@ -65,7 +65,7 @@ gulp.task('compress-es6', ['webpack-es6'], function () {
             objsort: 'none',
             wrap: 1000
         }))
-        .pipe(rename('log4js2.es6.min.js'))
+        .pipe(rename('log4js2.min.js'))
         .pipe(gulp.dest('./build'));
 });
 
