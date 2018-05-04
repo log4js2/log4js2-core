@@ -1,7 +1,16 @@
-import {LogLevel} from "../const/logLevel";
-import {Formatter} from "../formatter";
+import {LogLevel} from "../const/log.level";
+import {Formatter} from "../layout/formatter";
+import {LogEvent} from "../log.event";
 
 export default abstract class LogAppender {
+
+    /**
+     * Gets the name of the appender (e.g. 'console')
+     * @returns {null}
+     */
+    public static get appenderName(): string {
+        return null;
+    }
 
     private active: boolean;
 
@@ -9,26 +18,18 @@ export default abstract class LogAppender {
     private layout: string;
 
     /**
-     * Gets the name of the appender (e.g. 'console')
-     * @returns {null}
-     */
-    static appenderName() {
-        return null;
-    }
-
-    /**
      * Returns whether or not the appender is active
      * @returns {boolean}
      */
-    isActive(): boolean {
-        return this.active == true;
+    public isActive(): boolean {
+        return this.active === true;
     }
 
     /**
      * Appends the log
-     * @param {Object} logEvent
+     * @param {LogEvent} logEvent
      */
-    append(logEvent) {
+    public append(logEvent: LogEvent) {
         // stub
     }
 
@@ -36,15 +37,15 @@ export default abstract class LogAppender {
      * Gets the current log level
      * @returns {number}
      */
-    getLogLevel() {
+    public getLogLevel() {
         return this.logLevel;
     }
 
     /**
      * Sets the log level of the appender
-     * @param {number} logLevel
+     * @param {LogLevel} logLevel
      */
-    setLogLevel(logLevel) {
+    public setLogLevel(logLevel: LogLevel) {
         this.logLevel = logLevel;
     }
 
@@ -52,7 +53,7 @@ export default abstract class LogAppender {
      * Sets the layout of the appender
      * @param {string} layout
      */
-    setLayout(layout) {
+    public setLayout(layout: string) {
         this.layout = layout;
     }
 
@@ -60,15 +61,15 @@ export default abstract class LogAppender {
      * Gets the layout associated with the appender
      * @returns {string}
      */
-    getLayout() {
+    public getLayout() {
         return this.layout;
     }
 
     /**
      * Formats the log event using the layout provided
-     * @param {Object} logEvent
+     * @param {LogEvent} logEvent
      */
-    format(logEvent) {
+    public format(logEvent: LogEvent) {
         return Formatter.format(this.getLayout(), logEvent);
     }
 

@@ -1,28 +1,30 @@
 {
-    "compilerOptions": {
-        "alwaysStrict": false,
-        "baseUrl": "src",
-        "declaration": false,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "lib": [
-            "es6",
-            "dom"
-        ],
-        "module": "es6",
-        "moduleResolution": "node",
-        "noImplicitUseStrict": true,
-        "outDir": "./build",
-        "preserveConstEnums": true,
-        "removeComments": true,
-        "target": "es6",
-        "sourceMap": true,
-        "types": [
-            "node",
-            "core-js"
-        ]
-    },
-    "files": [
-        "src/index.ts"
+  "compilerOptions": {
+    "allowJs": true,
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es6",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "alwaysStrict": false,
+    "noImplicitUseStrict": true,
+    "moduleResolution": "node",
+    "strict": false,
+    "lib": [
+      "es5",
+      "es6",
+      "dom"
     ]
+  },
+  "include": [
+    "./global.d.ts",
+    "./src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/**/__tests__/*.ts",
+    "src/__mocks__/*.ts"
+  ]
 }

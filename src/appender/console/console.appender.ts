@@ -1,24 +1,24 @@
-/**
- * log4js2 <https://github.com/anigenero/log4js2>
- *
- * Copyright 2016-present Robin Schultz <http://anigenero.com>
- * Released under the MIT License
- */
-
+import {LogLevel} from '../../const/log.level';
+import {Appender} from "../../decorator/appender";
+import {LogEvent} from "../../log.event";
 import LogAppender from '../appender';
-import {LogLevel} from '../../const/logLevel';
-import {Appender} from "../../appender";
 
-@Appender({
-    name: 'Console'
-})
+@Appender('Console')
 export default class ConsoleAppender extends LogAppender {
 
     /**
-     * Appends the log event
-     * @param logEvent
+     * Gets the name of the appender (e.g. 'console')
+     * @returns {null}
      */
-    public append(logEvent) {
+    public static get appenderName(): string {
+        return 'console';
+    }
+
+    /**
+     * Appends the log event
+     * @param {LogEvent} logEvent
+     */
+    public append(logEvent: LogEvent) {
         if (logEvent.level <= this.getLogLevel()) {
             this._appendToConsole(logEvent);
         }
@@ -28,17 +28,17 @@ export default class ConsoleAppender extends LogAppender {
      * @private
      * @function
      *
-     * @param {LOG_EVENT} logEvent
+     * @param {LogEvent} logEvent
      */
-    private _appendToConsole(logEvent) {
+    private _appendToConsole(logEvent: LogEvent) {
 
-        let message = this.format(logEvent);
+        const message = this.format(logEvent);
 
-        if (logEvent.level == LogLevel.ERROR) {
+        if (logEvent.level === LogLevel.ERROR) {
             console.error(message);
-        } else if (logEvent.level == LogLevel.WARN) {
+        } else if (logEvent.level === LogLevel.WARN) {
             console.warn(message);
-        } else if (logEvent.level == LogLevel.INFO) {
+        } else if (logEvent.level === LogLevel.INFO) {
             console.info(message);
         } else if ([LogLevel.DEBUG, LogLevel.TRACE].indexOf(logEvent.level) > -1) {
             console.log(message);

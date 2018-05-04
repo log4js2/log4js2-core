@@ -1,28 +1,28 @@
 /**
- * log4js2 <https://github.com/anigenero/log4js2>
+ * Gets the function name of the specified function
  *
- * Copyright 2016-present Robin Schultz <http://anigenero.com>
- * Released under the MIT License
+ * @function
+ * @param {Function} func
+ *
+ * @returns {string}
  */
-export class Utility {
+export const getFunctionName = (func: () => any): string => {
 
-    /**
-     * Gets the function name of the specified function
-     *
-     * @function
-     * @param {Function} func
-     *
-     * @returns {string}
-     */
-    static getFunctionName(func: Function): string {
+    // get the name of the function
+    let name = func.toString().substring('function '.length);
+    name = name.substring(0, name.indexOf('('));
 
-        // get the name of the function
-        let name = func.toString().substring('function '.length);
-        name = name.substring(0, name.indexOf('('));
+    // if the string is not empty
+    return (name && name.trim()) ? name : 'anonymous';
 
-        // if the string is not empty
-        return (name && name.trim()) ? name : 'anonymous';
+};
 
-    }
-
-}
+/**
+ * Determines whether or not the value is an array. Return false is null
+ *
+ * @param {any} value
+ * @returns {boolean} true if non-null array, else false
+ */
+export const isArray = <T>(value: T) => {
+    return (typeof value === 'object' && value instanceof Array);
+};

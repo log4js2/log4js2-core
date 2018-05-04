@@ -1,18 +1,5 @@
 export default class Marker {
 
-    private static _markers: { [key: string]: Marker; } = {};
-
-    private _parents: WeakSet<Marker> = null;
-    private _name: string;
-
-    /**
-     * Hide the constructor. We don't want people to arbitrarily make these without access to Marker#getMarker
-     * @param {string} name
-     */
-    private constructor(name: string) {
-        this._name = name;
-    }
-
     /**
      * Gets the marker for the specified name
      * @param {string} name
@@ -26,6 +13,19 @@ export default class Marker {
 
         return Marker._markers[name];
 
+    }
+
+    private static _markers: { [key: string]: Marker; } = {};
+
+    private _parents: Set<Marker> = null;
+    private _name: string;
+
+    /**
+     * Hide the constructor. We don't want people to arbitrarily make these without access to Marker#getMarker
+     * @param {string} name
+     */
+    private constructor(name: string) {
+        this._name = name;
     }
 
     /**
@@ -42,10 +42,12 @@ export default class Marker {
      */
     public getParents(): Marker[] {
 
-        let result = [];
-        for (let marker in this._parents) {
-            result.push(marker);
+        if (this._parents === null) {
+            return [];
         }
+
+        const result: Marker[] = [];
+        this._parents.forEach((marker) => result.push(marker));
 
         return result;
 
@@ -56,7 +58,7 @@ export default class Marker {
      * @returns {boolean}
      */
     public hasParents(): boolean {
-        return this._parents instanceof Array;
+        return this._parents !== null;
     }
 
     /**
@@ -73,7 +75,7 @@ export default class Marker {
      */
     public setParents(...markers: Marker[]) {
 
-        this._parents = new WeakSet();
+        this._parents = new Set<Marker>();
 
         let index = markers.length;
         while (index--) {

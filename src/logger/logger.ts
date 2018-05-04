@@ -1,16 +1,7 @@
-import {LogLevel} from '../const/logLevel';
 import LogAppender from "../appender/appender";
-import LogEvent from "../logevent";
+import {LogLevel} from '../const/log.level';
+import {LogEvent} from "../log.event";
 import Marker from "../marker";
-
-/**
- * Holds the definition for the log event object
- *
- * @typedef {{ date : number, error : Object, filename: string, lineNumber: ?string, column: ?string,
- *      logErrorStack : Object, file : String, level : number, logger : string, message : string,
- *      method : Function, properties : Object=, relative : number, sequence : number }}
- */
-let LOG_EVENT;
 
 export default class Logger {
 
@@ -34,9 +25,9 @@ export default class Logger {
      * @function
      * @memberOf Logger
      */
-    public error() {
+    public error(...args: any[]) {
         this.appender.append(this._constructLogEvent(LogLevel.ERROR, arguments));
-    };
+    }
 
     /**
      * Logs a warning
@@ -44,9 +35,9 @@ export default class Logger {
      * @function
      * @memberOf Logger
      */
-    public warn() {
+    public warn(...args: any[]) {
         this.appender.append(this._constructLogEvent(LogLevel.WARN, arguments));
-    };
+    }
 
     /**
      * Logs an info level event
@@ -54,9 +45,9 @@ export default class Logger {
      * @function
      * @memberOf Logger
      */
-    public info() {
+    public info(...args: any[]) {
         this.appender.append(this._constructLogEvent(LogLevel.INFO, arguments));
-    };
+    }
 
     /**
      * Logs a debug event
@@ -64,9 +55,9 @@ export default class Logger {
      * @function
      * @memberOf Logger
      */
-    public debug() {
+    public debug(...args: any[]) {
         this.appender.append(this._constructLogEvent(LogLevel.DEBUG, arguments));
-    };
+    }
 
     /**
      * Logs a trace event
@@ -74,9 +65,9 @@ export default class Logger {
      * @function
      * @memberOf Logger
      */
-    public trace() {
+    public trace(...args: any[]) {
         this.appender.append(this._constructLogEvent(LogLevel.TRACE, arguments));
-    };
+    }
 
     /**
      * @function
@@ -84,11 +75,11 @@ export default class Logger {
      * @param {number} level
      * @param {Array.<Object>} args
      *
-     * @return {LOG_EVENT}
+     * @return {LogEvent}
      */
-    private _constructLogEvent(level: LogLevel, args): LogEvent {
+    private _constructLogEvent(level: LogLevel, args: IArguments): LogEvent {
 
-        let logTime = new Date();
+        const logTime = new Date();
         let error = null;
 
         // this looks horrible, but this is the only way to catch the stack for IE to later parse the stack
@@ -98,22 +89,22 @@ export default class Logger {
             error = e;
         }
 
-        let logEvent: LogEvent = new LogEvent;
+        const logEvent: LogEvent = {
+            date: logTime,
+            error: null,
+            logErrorStack: error,
+            file: null,
+            level,
+            lineNumber: null,
+            logger: this._logContext,
+            message: '',
+            method: 0, // !this._isStrict() ? args.callee.caller : 0,
+            properties: undefined,
+            relative: logTime.getTime() - this._relative,
+            sequence: this._logSequence++,
+        };
 
-        logEvent.date = logTime;
-        logEvent.error = null;
-        logEvent.logErrorStack = error;
-        logEvent.file = null;
-        logEvent.level = level;
-        logEvent.lineNumber = null;
-        logEvent.logger = this._logContext;
-        logEvent.message = '';
-        logEvent.method = !this._isStrict() ? args.callee.caller : 0;
-        logEvent.properties = undefined;
-        logEvent.relative = logTime.getTime() - this._relative;
-        logEvent.sequence = this._logSequence++;
-
-        let regex = /\{\}/g;
+        const regex = /\{\}/g;
         for (let i = 0; i < args.length; i++) {
 
             if (i === 0) {
@@ -123,7 +114,7 @@ export default class Logger {
             } else if (args[i] instanceof Error) {
                 logEvent.error = args[i];
             } else if (args[i] instanceof Marker) {
-                logEvent.marker = <Marker> args[i];
+                logEvent.marker = args[i] as Marker;
             } else {
                 logEvent.properties = args[i];
             }
@@ -143,9 +134,7 @@ export default class Logger {
      * @returns {boolean}
      */
     private _isStrict() {
-        return (function () {
-            return !this;
-        })();
-    };
+        return (() => !this)();
+    }
 
 }

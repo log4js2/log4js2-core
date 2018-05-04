@@ -1,0 +1,40 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-sonarts"
+  ],
+  "compilerOptions": {
+    "module": "commonjs"
+  },
+  "rules": {
+    "object-literal-sort-keys": false,
+    "interface-over-type-literal": false,
+    "no-namespace": false,
+    "no-console": [
+      "debug",
+      "info",
+      "log",
+      "time",
+      "timeEnd",
+      "trace"
+    ],
+    "no-trailing-whitespace": [
+      true,
+      "ignore-comments",
+      "ignore-jsdoc"
+    ],
+    "max-line-length": [
+      150
+    ],
+    "no-var-requires": false,
+    "quotemark": false,
+    "trailing-comma": false,
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore",
+      "allow-pascal-case"
+    ]
+  }
+}
