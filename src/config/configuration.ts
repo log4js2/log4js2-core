@@ -7,5 +7,6 @@ export default interface IConfiguration {
     appenders?: IAppenderConfiguration[] | string[];
     loggers?: ILoggerConfiguration[];
     patternLayout?: PatternLayout | string;
+    virtualConsole?: boolean;
 
 }

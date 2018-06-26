@@ -8,12 +8,18 @@
  */
 export const getFunctionName = (func: () => any): string => {
 
-    // get the name of the function
-    let name = func.toString().substring('function '.length);
-    name = name.substring(0, name.indexOf('('));
+    if (func.name !== '') {
+        return func.name;
+    } else {
 
-    // if the string is not empty
-    return (name && name.trim()) ? name : 'anonymous';
+        // get the name of the function
+        let name = func.toString().substring('function '.length);
+        name = name.substring(0, name.indexOf('('));
+
+        // if the string is not empty
+        return (name && name.trim()) ? name : 'anonymous';
+
+    }
 
 };
 

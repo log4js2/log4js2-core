@@ -6,6 +6,7 @@ import {LogLevel} from "./const/log.level";
 import {LogEvent} from "./log.event";
 import Logger from "./logger/logger";
 import {getFunctionName, isArray} from "./util/utility";
+import {getVirtualConsole} from "./util/virtual.console";
 
 /**
  * The name of the main logger. We use this in case no logger is specified
@@ -19,7 +20,7 @@ const _MAIN_LOGGER = 'main';
  */
 const _DEFAULT_APPENDERS = ((): IAppenderConfiguration[] => {
     return [{
-        appender: 'console',
+        appender: 'Console',
         level: LogLevel.ERROR
     }];
 })();
@@ -75,6 +76,8 @@ export function configure(config: IConfiguration) {
     _configureAppenders(config.appenders);
     // configure the loggers
     _configureLoggers(config.loggers);
+
+    getVirtualConsole(getLogger());
 
 }
 
@@ -164,15 +167,15 @@ const _getAppendersForLogger = (logConfig: ILoggerConfiguration) => {
  *
  * @params {LogAppender} appender
  */
-export const addAppender = (appender: Newable<LogAppender> | string, name?: string) => {
+export const addAppender = <T extends LogAppender>(appender: Newable<T>, name?: string) => {
 
     _validateAppender(appender);
 
-    const appenderName = name || (appender as any).appenderName || (appender as Newable<LogAppender>).name;
+    const appenderName = name || (appender as any).appenderName || appender;
 
     // only put the appender into the set if it doesn't exist already
     if (!_appenders.has(appenderName)) {
-        _appenders.set(appenderName, (appender as Newable<LogAppender>));
+        _appenders.set(appenderName, appender);
     }
 
 };
@@ -186,18 +189,16 @@ export const addAppender = (appender: Newable<LogAppender> | string, name?: stri
  * @params {APPENDER} appender
  * @throws {Error} if the appender is invalid
  */
-const _validateAppender = (appender: Newable<LogAppender> | string) => {
+const _validateAppender = <T extends LogAppender>(appender: Newable<T>) => {
 
     // if we are running ES6, we can make sure it extends LogAppender
     // otherwise, it must be a function
-    if ((appender as Newable<LogAppender>).prototype === LogAppender) {
+    if (!(appender instanceof LogAppender)) {
         return;
-    } else if (!(appender instanceof Function)) {
-        throw new Error('Invalid appender');
     }
 
     // instantiate the appender function
-    const appenderObj: LogAppender = new appender();
+    const appenderObj: LogAppender = new (appender as any)();
 
     // ensure that the appender methods are present (and are functions)
     ['append', 'isActive', 'setLogLevel', 'setLayout'].forEach((element) => {
@@ -239,9 +240,9 @@ function _append(logEvent: LogEvent) {
  *
  * @return {Logger}
  */
-export function getLogger(context?: Newable<any> | Method<any> | string): Logger {
+export function getLogger<T>(context?: Newable<T> | Method<T> | string): Logger {
 
-    // we need to initialize if we haven't
+    // we need to initialize if we haven't already
     if (!_configuration) {
         configure(_DEFAULT_CONFIG);
     }
@@ -250,7 +251,7 @@ export function getLogger(context?: Newable<any> | Method<any> | string): Logger
     if (typeof context !== 'string') {
 
         if (typeof context === 'function') {
-            context = getFunctionName(context as Method<any>);
+            context = getFunctionName(context as Method<T>);
         } else if (typeof context === 'object') {
 
             context = getFunctionName((context as any).constructor);

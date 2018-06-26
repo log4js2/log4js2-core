@@ -7,8 +7,8 @@ import {addAppender} from "../log4js";
  * @returns {(target: Newable<LogAppender>) => void}
  * @constructor
  */
-export function Appender(name?: string) {
-    return (target: Newable<LogAppender>) => {
+export function Appender<T extends LogAppender>(name?: string): Function {
+    return (target: Newable<T>) => {
         addAppender(target, name);
         return target;
     };

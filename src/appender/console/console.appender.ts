@@ -11,7 +11,7 @@ export default class ConsoleAppender extends LogAppender {
      * @returns {null}
      */
     public static get appenderName(): string {
-        return 'console';
+        return 'Console';
     }
 
     /**
@@ -34,14 +34,32 @@ export default class ConsoleAppender extends LogAppender {
 
         const message = this.format(logEvent);
 
-        if (logEvent.level === LogLevel.ERROR) {
-            console.error(message);
-        } else if (logEvent.level === LogLevel.WARN) {
-            console.warn(message);
-        } else if (logEvent.level === LogLevel.INFO) {
-            console.info(message);
-        } else if ([LogLevel.DEBUG, LogLevel.TRACE].indexOf(logEvent.level) > -1) {
-            console.log(message);
+        switch (logEvent.level) {
+
+            case LogLevel.ERROR: {
+                console.error(message, logEvent.error);
+                break;
+            }
+
+            case LogLevel.WARN: {
+                console.warn(message);
+                break;
+            }
+
+            case LogLevel.INFO: {
+                console.info(message);
+                break;
+            }
+
+            case LogLevel.DEBUG:
+            case LogLevel.TRACE: {
+                console.debug(message);
+                break;
+            }
+
+            default:
+                break;
+
         }
 
     }
