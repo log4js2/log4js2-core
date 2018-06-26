@@ -1,4 +1,4 @@
-import IAppenderConfiguration from "../appender/appender.config";
+import IAppenderConfiguration from "./appender.config";
 import ILoggerConfiguration from "./logger.config";
 import PatternLayout from "./pattern.layout";
 

@@ -1,5 +1,5 @@
 import LogAppender from "./appender/appender";
-import IAppenderConfiguration from "./appender/appender.config";
+import IAppenderConfiguration from "./config/appender.config";
 import IConfiguration from "./config/configuration";
 import ILoggerConfiguration from "./config/logger.config";
 import {LogLevel} from "./const/log.level";
@@ -144,6 +144,8 @@ const _configureLoggers = (loggers: ILoggerConfiguration[]) => {
 const _getAppendersForLogger = (logConfig: ILoggerConfiguration) => {
 
     const appenderList: LogAppender[] = [];
+
+    console.dir(_appenders);
 
     _appenders.forEach((value) => {
 

@@ -4,7 +4,7 @@ import {LogEvent} from "../log.event";
 import {getFunctionName} from "../util/utility";
 import {DateTimeFormat, formatDate} from './date.formatter';
 
-type FormatterObject = { formatter: Method<any>; params: string[]; after: string[] };
+type FormatterObject = { formatter: Method<any>; params: string[]; };
 
 export class Formatter {
 
@@ -48,9 +48,6 @@ export class Formatter {
         'r|relative': Formatter._formatRelative,
         'sn|sequenceNumber': Formatter._formatSequenceNumber
     };
-
-    /** @const */
-    private static readonly _COMMAND_REGEX: RegExp = /%([a-z,A-Z]+)(?=\{|)/;
 
     /** @type {Map} */
     private static _compiledLayouts: Map<string, any[]> = new Map<string, any[]>();
@@ -315,28 +312,8 @@ export class Formatter {
      */
     private static _compileLayout(layout: string) {
 
-        let index = layout.indexOf('%');
-        let currentFormatString = '';
-        const formatArray = [];
-
-        if (index !== 0) {
-            formatArray.push(layout.substring(0, index));
-        }
-
-        do {
-
-            const startIndex = index;
-            const endIndex = index = layout.indexOf('%', index + 1);
-
-            if (endIndex < 0) {
-                currentFormatString = layout.substring(startIndex);
-            } else {
-                currentFormatString = layout.substring(startIndex, endIndex);
-            }
-
-            formatArray.push(Formatter._getFormatterObject(currentFormatString));
-
-        } while (index > -1);
+        const formatArray = layout.match(/(%\w+({\w+}|)|.)/g)
+            .map((value) => Formatter._getFormatterObject(value));
 
         // set the format array to the specified compiled layout
         Formatter._compiledLayouts.set(layout, formatArray);
@@ -355,33 +332,32 @@ export class Formatter {
      */
     private static _getFormatterObject(formatString: string) {
 
-        const result = Formatter._COMMAND_REGEX.exec(formatString);
-        if (result != null && result.length === 2) {
+        const result = /%(\w+)(?:{(\w+)})*/g.exec(formatString);
+
+        if (result == null) {
+            return formatString;
+        } else if (result.length < 3) {
+
+            return {
+                formatter: Formatter._getFormatterFunction(result[1]),
+                params: [] as string[]
+            };
+
+        } else {
 
             const formatter = Formatter._getFormatterFunction(result[1]);
             if (!formatter) {
                 return null;
             }
 
-            const params = Formatter._getLayoutTagParams(formatString);
-
-            let after = '';
-            const endIndex = formatString.lastIndexOf('}');
-            if (endIndex !== -1) {
-                after = formatString.substring(endIndex + 1);
-            } else {
-                after = formatString.substring(result.index + result[1].length + 1);
-            }
+            const params = Formatter._getLayoutTagParams(result[2]);
 
             return {
                 formatter,
-                params,
-                after
+                params
             };
 
         }
-
-        return formatString;
 
     }
 
@@ -423,14 +399,7 @@ export class Formatter {
      * @return {Array.<string>}
      */
     private static _getLayoutTagParams(command: string): string[] {
-
-        const match = command.match(/{([^}]*)(?=})/g);
-        if (match !== null) {
-            match.map((value) => value.substring(1));
-        }
-
-        return [];
-
+        return (command) ? command.split(',') : [];
     }
 
     /**
@@ -458,7 +427,6 @@ export class Formatter {
                     if (response != null) {
                         message += response;
                     }
-                    message += formatter[i].after;
 
                 } else {
                     message += formatter[i];

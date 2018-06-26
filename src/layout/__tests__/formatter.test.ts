@@ -23,7 +23,7 @@ describe('formatter', () => {
             expect(Formatter.format('%d{DEFAULT}', {date})).toEqual('2016-01-31 13:30:15,500');
             expect(Formatter.format('%d{ISO8601}', {date})).toEqual('2016-01-31T13:30:15,500');
             expect(Formatter.format('%d{ISO8601_BASIC}', {date})).toEqual('20160131T133015,500');
-            expect(Formatter.format('%d{ABSOLUTE}', {date})).toEqual('13:01:15,500');
+            expect(Formatter.format('%d{ABSOLUTE}', {date})).toEqual('13:30:15,500');
             expect(Formatter.format('%d{DATE}', {date})).toEqual('31 Jan 2016 13:30:15,500');
             expect(Formatter.format('%d{COMPACT}', {date})).toEqual('20160131133015500');
 
@@ -157,13 +157,13 @@ describe('formatter', () => {
         test('format', () => {
 
             const methodTag = '%method';
-            const anonymousFunction = (): any => null;
+            const arrowFunction = (): any => null;
 
-            function namedFunction() {
-                return;
+            function namedFunction(): any {
+                return null;
             }
 
-            expect(Formatter.format(methodTag, {method: anonymousFunction})).toEqual('anonymous');
+            expect(Formatter.format(methodTag, {method: arrowFunction})).toEqual('arrowFunction');
             expect(Formatter.format(methodTag, {method: namedFunction})).toEqual('namedFunction');
 
         });
