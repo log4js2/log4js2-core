@@ -1,6 +1,6 @@
-import PatternLayout from "./pattern.layout";
-import {LogLevel} from "../const/log.level";
 import LogAppender from "../appender/appender";
+import {LogLevel} from "../const/log.level";
+import PatternLayout from "./pattern.layout";
 
 export default interface IAppenderConfiguration {
 
