@@ -1,0 +1,11 @@
+/coverage
+/src
+
+.travis.yml
+global.d.ts
+gulpfile.ts
+gulpfile.js
+jest.setup.js
+tsconfig.json
+tslint.json
+webpack.config.js

@@ -1,21 +1,27 @@
 {
   "name": "log4js2",
-  "version": "1.0.2",
+  "version": "2.0.0-alpha1",
   "scripts": {
-    "build": "gulp build",
-    "test": "gulp test"
+    "build": "npm run lint && tsc",
+    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "test": "jest"
   },
   "author": {
     "name": "Robin Schultz",
     "email": "robin@anigenero.com",
-    "url": "http://anigenero.com/"
+    "url": "http://anigenero.com"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/anigenero/log4js2"
   },
+  "bugs": {
+    "url": "https://github.com/anigenero/log4js2/issues"
+  },
+  "homepage": "https://github.com/anigenero/log4js2#readme",
   "license": "MIT",
-  "main": "dist/log4js2.es5.min.js",
+  "main": "dist/index.js",
+  "typings": "dist/index",
   "keywords": [
     "logger",
     "log4j",
@@ -25,23 +31,50 @@
     "console"
   ],
   "devDependencies": {
-    "assert": "^1.4.1",
-    "babel-loader": "^6.0.0",
-    "babel-preset-es2015": "^6.6.0",
-    "babel-preset-es2015-loose": "^8.0.0",
-    "babel-runtime": "^5.1.10",
-    "delete": "~0.3.0",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.2",
-    "gulp-eslint": "^3.0.1",
-    "gulp-minify": "0.0.14",
-    "gulp-mocha": "^3.0.1",
-    "gulp-prettydiff": "^1.0.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^2.0.0",
-    "mocha": "^3.2.0",
-    "run-sequence": "^1.2.2",
-    "webpack": "^2.4.1",
-    "webpack-stream": "^3.2.0"
+    "@types/core-js": "^0.9.46",
+    "@types/jest": "^22.2.3",
+    "@types/node": "^7.0.66",
+    "jest": "^22.4.4",
+    "jest-cli": "^22.4.4",
+    "ts-jest": "^22.4.6",
+    "ts-loader": "^4.4.1",
+    "tslint": "^5.10.0",
+    "tslint-loader": "^3.6.0",
+    "tslint-sonarts": "^1.7.0",
+    "typescript": "^2.9.2"
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "/dist/",
+      "/node_modules/"
+    ],
+    "testMatch": [
+      "**/__tests__/*.spec.(t|j)s"
+    ],
+    "transform": {
+      "^.+\\.(t|j)s?": "ts-jest"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!typeorm)"
+    ]
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.12"
   }
 }
