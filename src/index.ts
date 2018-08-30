@@ -1,6 +1,10 @@
+import 'reflect-metadata';
+
 export * from './log4js';
-export * from './marker';
-export * from './const/log.level';
-export * from './appender/log.appender';
-export * from './appender/console.appender';
-export * from './decorator/appender';
+export * from './def';
+
+export { Logger } from './logger/logger';
+export { LogLevel } from './const/log.level';
+export { LogAppender } from './appender/log.appender';
+export { ConsoleAppender } from './appender/console.appender';
+export { Appender } from './decorator/appender';

@@ -1,42 +1,14 @@
-import Logger from "../logger/logger";
+import { Logger } from '..';
 
-let virtualConsole = console;
+let virtualConsole: Console;
 
-export const getVirtualConsole = (logger: Logger) => {
+export const getVirtualConsole = (logger?: Logger) => {
 
     class Log4JConsole implements Console {
 
         public Console: NodeJS.ConsoleConstructor;
 
         public memory: any = {};
-
-        public debug() {
-            logger.debug(arguments);
-        }
-
-        public error() {
-            logger.error(arguments);
-        }
-
-        public exception() {
-            logger.error(arguments);
-        }
-
-        public info() {
-            logger.info(arguments);
-        }
-
-        public log() {
-            logger.info(arguments);
-        }
-
-        public trace() {
-            logger.debug(arguments);
-        }
-
-        public warn() {
-            logger.warn(arguments);
-        }
 
         public assert(condition?: boolean, message?: string, ...data: any[]): void;
         public assert(value: any, message?: string, ...optionalParams: any[]): void;
@@ -120,6 +92,34 @@ export const getVirtualConsole = (logger: Logger) => {
 
         public timelineEnd(label?: string): void {
             virtualConsole.timelineEnd(label);
+        }
+
+        public debug(message?: any, ...optionalParams: any[]): void {
+            logger.debug(message, ...optionalParams);
+        }
+
+        public error(message?: any, ...optionalParams: any[]): void {
+            logger.error(message, ...optionalParams);
+        }
+
+        public exception(message?: string, ...optionalParams: any[]): void {
+            logger.error(message, ...optionalParams);
+        }
+
+        public info(message?: any, ...optionalParams: any[]): void {
+            logger.info(message, ...optionalParams);
+        }
+
+        public log(message?: any, ...optionalParams: any[]): void {
+            logger.debug(message, ...optionalParams);
+        }
+
+        public trace(message?: any, ...optionalParams: any[]): void {
+            logger.trace(message, ...optionalParams);
+        }
+
+        public warn(message?: any, ...optionalParams: any[]): void {
+            logger.warn(message, ...optionalParams);
         }
 
     }

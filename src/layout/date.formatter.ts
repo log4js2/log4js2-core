@@ -1,5 +1,6 @@
 type DateFormatFunction = (date: Date, isUTC?: boolean) => string | number;
 
+// tslint:disable-next-line
 const TIMEZONE: RegExp = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g;
 const TIMEZONE_CLIP: RegExp = /[^-+\dA-Z]/g;
 
@@ -90,7 +91,6 @@ function _createMask(mask: string) {
     // tslint:disable-next-line:no-conditional-assignment
     while (match = maskStr.match(regex)) {
 
-        match = maskStr.match(regex);
         value = match[0];
 
         formatMap.push(_flags[value] || value);

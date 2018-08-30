@@ -1,7 +1,7 @@
-import LogAppender from "../appender/log.appender";
-import {LogLevel} from "../const/log.level";
-import {Appender} from "../decorator/appender";
-import {LogEvent} from "../log.event";
+import { LogAppender } from '..';
+import { LogLevel } from '..';
+import { Appender } from '..';
+import { ILogEvent } from '../log.event';
 
 export const logStack: { [key: string]: string[] } = {
     error: [],
@@ -20,7 +20,7 @@ export class CustomAppender extends LogAppender {
         return CUSTOM_APPENDER_NAME;
     }
 
-    public append(logEvent: LogEvent) {
+    public append(logEvent: ILogEvent) {
         if (logEvent.level <= this.getLogLevel()) {
             this._append(logEvent);
         }
@@ -34,7 +34,7 @@ export class CustomAppender extends LogAppender {
         logStack.trace = [];
     }
 
-    private _append(logEvent: LogEvent) {
+    private _append(logEvent: ILogEvent) {
 
         const message = this.format(logEvent);
 

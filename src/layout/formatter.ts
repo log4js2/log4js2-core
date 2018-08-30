@@ -1,10 +1,14 @@
 import * as define from 'core-js/library/fn/object/define';
-import {LogLevel} from '../const/log.level';
-import {LogEvent} from "../log.event";
-import {getFunctionName} from "../util/utility";
-import {DateTimeFormat, formatDate} from './date.formatter';
+import { LogLevel } from '../const/log.level';
+import { Method } from '../def';
+import { ILogEvent } from '../log.event';
+import { getFunctionName } from '../util/utility';
+import { DateTimeFormat, formatDate } from './date.formatter';
 
-type FormatterObject = { formatter: Method<any>; params: string[]; };
+interface IFormatterObject {
+    formatter: Method<any>;
+    params: string[];
+}
 
 export class Formatter {
 
@@ -25,11 +29,11 @@ export class Formatter {
      * @memberOf formatter
      *
      * @param {string} layout
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      *
      * @return {string}
      */
-    public static format(layout: string, logEvent: LogEvent) {
+    public static format(layout: string, logEvent: ILogEvent) {
         return Formatter._formatLogEvent(Formatter._getCompiledLayout(layout), logEvent);
     }
 
@@ -56,11 +60,11 @@ export class Formatter {
      * @function
      * @memberOf formatter
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      *
      * @return {string}
      */
-    private static _formatLogger(logEvent: LogEvent): string {
+    private static _formatLogger(logEvent: ILogEvent): string {
         return logEvent.logger;
     }
 
@@ -68,12 +72,12 @@ export class Formatter {
      * @function
      * @memberOf formatter
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      * @param {Array.<string>} params
      *
      * @return {string}
      */
-    private static _formatDate(logEvent: LogEvent, params: string[]): string {
+    private static _formatDate(logEvent: ILogEvent, params: string[]): string {
         return formatDate(logEvent.date, (DateTimeFormat as any)[params[0]]);
     }
 
@@ -81,11 +85,11 @@ export class Formatter {
      * @function
      * @memberOf formatter
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      *
      * @return {string}
      */
-    private static _formatException(logEvent: LogEvent): string {
+    private static _formatException(logEvent: ILogEvent): string {
 
         let message = '';
 
@@ -111,9 +115,9 @@ export class Formatter {
      * @function
      * @memberOf formatter
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      */
-    private static _formatFile(logEvent: LogEvent): string {
+    private static _formatFile(logEvent: ILogEvent): string {
 
         if (!logEvent.file) {
             Formatter._getFileDetails(logEvent);
@@ -127,11 +131,11 @@ export class Formatter {
      * @function
      * @memberOf formatter
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      *
      * @return {string}
      */
-    private static _formatLineNumber(logEvent: LogEvent): string {
+    private static _formatLineNumber(logEvent: ILogEvent): string {
 
         if (!logEvent.lineNumber) {
             Formatter._getFileDetails(logEvent);
@@ -145,11 +149,11 @@ export class Formatter {
      * @function
      * @memberOf formatter
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      *
      * @return {string}
      */
-    private static _formatColumn(logEvent: LogEvent): string {
+    private static _formatColumn(logEvent: ILogEvent): string {
 
         if (!logEvent.column) {
             Formatter._getFileDetails(logEvent);
@@ -163,12 +167,12 @@ export class Formatter {
      * @function
      * @memberOf formatter
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      * @param {Array.<string>} params
      *
      * @return {string}
      */
-    private static _formatMapMessage(logEvent: LogEvent, params: string[]): string {
+    private static _formatMapMessage(logEvent: ILogEvent, params: string[]): string {
 
         let message = null;
         if (logEvent.properties) {
@@ -196,11 +200,11 @@ export class Formatter {
      * @function
      * @memberOf formatter
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      *
      * @return {string}
      */
-    private static _formatLogMessage(logEvent: LogEvent): string {
+    private static _formatLogMessage(logEvent: ILogEvent): string {
         return logEvent.message;
     }
 
@@ -208,11 +212,11 @@ export class Formatter {
      * @function
      * @memberOf formatter
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      *
      * @return {string}
      */
-    private static _formatMethodName(logEvent: LogEvent): string {
+    private static _formatMethodName(logEvent: ILogEvent): string {
         return getFunctionName(logEvent.method as Method<any>);
     }
 
@@ -229,11 +233,11 @@ export class Formatter {
      * @function
      * @memberOf formatter
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      *
      * @return {string}
      */
-    private static _formatLevel(logEvent: LogEvent): string {
+    private static _formatLevel(logEvent: ILogEvent): string {
 
         switch (logEvent.level) {
 
@@ -259,11 +263,11 @@ export class Formatter {
      * @function
      * @memberOf formatter
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      *
      * @return {string}
      */
-    private static _formatRelative(logEvent: LogEvent) {
+    private static _formatRelative(logEvent: ILogEvent) {
         return '' + logEvent.relative;
     }
 
@@ -271,11 +275,11 @@ export class Formatter {
      * @function
      * @memberOf formatter
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      *
      * @return {string}
      */
-    private static _formatSequenceNumber(logEvent: LogEvent) {
+    private static _formatSequenceNumber(logEvent: ILogEvent) {
         return '' + logEvent.sequence;
     }
 
@@ -409,11 +413,11 @@ export class Formatter {
      * @function
      *
      * @param {Array.<function|string>} formatter
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      *
      * @return {string}
      */
-    private static _formatLogEvent(formatter: FormatterObject[], logEvent: LogEvent) {
+    private static _formatLogEvent(formatter: IFormatterObject[], logEvent: ILogEvent) {
 
         let response;
         let message = '';
@@ -445,9 +449,9 @@ export class Formatter {
      * @function
      * @memberOf formatter
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      */
-    private static _getFileDetails(logEvent: LogEvent) {
+    private static _getFileDetails(logEvent: ILogEvent) {
 
         if (logEvent.logErrorStack) {
 

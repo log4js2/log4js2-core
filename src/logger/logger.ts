@@ -1,16 +1,16 @@
-import LogAppender from "../appender/log.appender";
-import {LogLevel} from '../const/log.level';
-import {LogEvent} from "../log.event";
-import Marker from "../marker";
+import { LogAppender } from '..';
+import { LogLevel } from '..';
+import { ILogEvent } from '../log.event';
+import Marker from '../marker';
 
-export default class Logger {
+export class Logger {
 
     private readonly _logContext: string;
 
     private _logSequence: number;
     private _relative: number;
 
-    constructor(context: string, private appender: LogAppender) {
+    constructor(context: string, private _appenders: LogAppender[]) {
 
         this._logContext = context;
 
@@ -26,7 +26,8 @@ export default class Logger {
      * @memberOf Logger
      */
     public error(...args: any[]) {
-        this.appender.append(this._constructLogEvent(LogLevel.ERROR, arguments));
+        this._appenders.forEach((appender) =>
+            appender.append(this._constructLogEvent(LogLevel.ERROR, arguments)));
     }
 
     /**
@@ -36,7 +37,8 @@ export default class Logger {
      * @memberOf Logger
      */
     public warn(...args: any[]) {
-        this.appender.append(this._constructLogEvent(LogLevel.WARN, arguments));
+        this._appenders.forEach((appender) =>
+            appender.append(this._constructLogEvent(LogLevel.WARN, arguments)));
     }
 
     /**
@@ -46,7 +48,8 @@ export default class Logger {
      * @memberOf Logger
      */
     public info(...args: any[]) {
-        this.appender.append(this._constructLogEvent(LogLevel.INFO, arguments));
+        this._appenders.forEach((appender) =>
+            appender.append(this._constructLogEvent(LogLevel.INFO, arguments)));
     }
 
     /**
@@ -56,7 +59,8 @@ export default class Logger {
      * @memberOf Logger
      */
     public debug(...args: any[]) {
-        this.appender.append(this._constructLogEvent(LogLevel.DEBUG, arguments));
+        this._appenders.forEach((appender) =>
+            appender.append(this._constructLogEvent(LogLevel.DEBUG, arguments)));
     }
 
     /**
@@ -66,7 +70,8 @@ export default class Logger {
      * @memberOf Logger
      */
     public trace(...args: any[]) {
-        this.appender.append(this._constructLogEvent(LogLevel.TRACE, arguments));
+        this._appenders.forEach((appender) =>
+            appender.append(this._constructLogEvent(LogLevel.TRACE, arguments)));
     }
 
     /**
@@ -75,9 +80,9 @@ export default class Logger {
      * @param {number} level
      * @param {Array.<Object>} args
      *
-     * @return {LogEvent}
+     * @return {ILogEvent}
      */
-    private _constructLogEvent(level: LogLevel, args: IArguments): LogEvent {
+    private _constructLogEvent(level: LogLevel, args: IArguments): ILogEvent {
 
         const logTime = new Date();
         let error = null;
@@ -89,7 +94,7 @@ export default class Logger {
             error = e;
         }
 
-        const logEvent: LogEvent = {
+        const logEvent: ILogEvent = {
             date: logTime,
             error: null,
             logErrorStack: error,
@@ -104,13 +109,13 @@ export default class Logger {
             sequence: this._logSequence++,
         };
 
-        const regex = /{}/g;
+        const regex = /\{\}/g;
         for (let i = 0; i < args.length; i++) {
 
             if (i === 0) {
                 logEvent.message = args[i];
             } else if (regex.exec(logEvent.message)) {
-                logEvent.message = logEvent.message.replace(/{}/, args[i]);
+                logEvent.message = logEvent.message.replace(/\{\}/, args[i]);
             } else if (args[i] instanceof Error) {
                 logEvent.error = args[i];
             } else if (args[i] instanceof Marker) {

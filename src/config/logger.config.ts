@@ -1,11 +1,10 @@
-import {LogLevel} from "../const/log.level";
-import PatternLayout from "./pattern.layout";
+import { LogLevel } from '..';
 
 export default interface ILoggerConfiguration {
 
     tag?: string;
     async?: boolean;
-    level?: LogLevel|number;
-    patternLayout?: PatternLayout|string;
+    level?: LogLevel | number;
+    patternLayout?: string;
 
 }

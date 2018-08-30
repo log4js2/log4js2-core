@@ -1,6 +1,10 @@
-import {CUSTOM_LOGGER} from "../__mocks__/configuration";
-import {logStack} from "../__mocks__/custom.appender";
-import {getLogger} from "../log4js";
+import { CUSTOM_LOGGER } from '../__mocks__/configuration';
+import { logStack } from '../__mocks__/custom.appender';
+import { configure, getLogger } from '../log4js';
+
+configure({
+    patternLayout: '%m'
+});
 
 describe('Logger', () => {
 

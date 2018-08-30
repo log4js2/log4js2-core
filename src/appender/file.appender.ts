@@ -1,6 +1,6 @@
-import {Appender} from "../decorator/appender";
-import {LogEvent} from "../log.event";
-import LogAppender from './log.appender';
+import { Appender } from '..';
+import { ILogEvent } from '../log.event';
+import { LogAppender } from './log.appender';
 
 @Appender('File')
 export default class FileAppender extends LogAppender {
@@ -15,9 +15,9 @@ export default class FileAppender extends LogAppender {
 
     /**
      * Appends the log event
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      */
-    public append(logEvent: LogEvent) {
+    public append(logEvent: ILogEvent) {
         if (logEvent.level <= this.getLogLevel()) {
             this._appendToFile(logEvent);
         }
@@ -27,14 +27,10 @@ export default class FileAppender extends LogAppender {
      * @private
      * @function
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      */
-    private _appendToFile(logEvent: LogEvent) {
-
-        const message = this.format(logEvent);
-
-
-
+    private _appendToFile(logEvent: ILogEvent) {
+        // TODO
     }
 
 }

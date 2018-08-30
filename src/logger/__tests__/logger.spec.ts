@@ -50,7 +50,7 @@ describe('Logger', () => {
         // nothing should be logged
         logger.info(logMessage);
 
-        expect(logStack.info.length).toHaveLength(1);
+        expect(logStack.info).toHaveLength(1);
         expect(logStack.info[0]).toEqual(`${TEST_LOGGER_2} [INFO] ${logMessage}`);
 
     });

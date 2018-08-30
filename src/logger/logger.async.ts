@@ -1,25 +1,25 @@
-import Logger from "./logger";
+import { Logger } from './logger';
 
 export default class AsyncLogger extends Logger {
 
     public async error() {
-        await super.error();
+        super.error();
     }
 
     public async warn() {
-        await super.warn();
+        super.warn();
     }
 
     public async info() {
-        await super.info();
+        super.info();
     }
 
     public async debug() {
-        await super.debug();
+        super.debug();
     }
 
     public async trace() {
-        await super.trace();
+        super.trace();
     }
 
 }

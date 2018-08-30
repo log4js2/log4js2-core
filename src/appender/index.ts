@@ -1,4 +1,5 @@
-import LogAppender from "./log.appender";
+import { Newable } from '../def';
+import { LogAppender } from './log.appender';
 
 const _appenderMethods: Set<FunctionProps<LogAppender>> = new Set<FunctionProps<LogAppender>>();
 _appenderMethods.add('append');
@@ -10,26 +11,6 @@ _appenderMethods.add('format');
 
 /** @type {Object} */
 const _appenders: Map<string, Newable<LogAppender>> = new Map<string, Newable<LogAppender>>();
-
-/**
- * Adds an appender to the appender queue
- *
- * @function
- *
- * @params {LogAppender} appender
- */
-export const addAppender = <T extends LogAppender>(appender: Newable<T>, name?: string) => {
-
-    _validateAppender(appender);
-
-    const appenderName = name || (appender as any).appenderName || appender;
-
-    // only put the appender into the set if it doesn't exist already
-    if (!_appenders.has(appenderName)) {
-        _appenders.set(appenderName, appender);
-    }
-
-};
 
 /**
  * Validates that the appender
@@ -52,11 +33,31 @@ const _validateAppender = <T extends LogAppender>(appender: Newable<T>) => {
     const appenderObj: LogAppender = new (appender as any)();
 
     // ensure that the appender methods are present (and are functions)
-    ['append', 'isActive', 'setLogLevel', 'setLayout'].forEach((element) => {
+    _appenderMethods.forEach((element) => {
         if (!(appenderObj as any)[element] || !((appenderObj as any)[element] instanceof Function)) {
             throw new Error(`Invalid appender: missing/invalid method: ${element}`);
         }
     });
+
+};
+
+/**
+ * Adds an appender to the appender queue
+ *
+ * @function
+ *
+ * @params {LogAppender} appender
+ */
+export const addAppender = <T extends LogAppender>(appender: Newable<T>, name?: string) => {
+
+    _validateAppender(appender);
+
+    const appenderName = name || (appender as any).appenderName || appender;
+
+    // only put the appender into the set if it doesn't exist already
+    if (!_appenders.has(appenderName)) {
+        _appenders.set(appenderName, appender);
+    }
 
 };
 

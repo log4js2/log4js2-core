@@ -1,6 +1,6 @@
-import {LogLevel} from "../const/log.level";
-import {configure} from "../log4js";
-import {CUSTOM_APPENDER_NAME} from "./custom.appender";
+import { LogLevel } from '..';
+import { configure } from '../log4js';
+import { CUSTOM_APPENDER_NAME } from './custom.appender';
 
 export const CUSTOM_LOGGER = 'custom';
 export const TEST_LOGGER_1 = 'test1';

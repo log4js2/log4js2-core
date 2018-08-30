@@ -1,7 +1,8 @@
-import {LogLevel} from "./const/log.level";
-import Marker from "./marker";
+import { LogLevel } from './const/log.level';
+import { Method } from './def';
+import Marker from './marker';
 
-export type LogEvent = {
+export interface ILogEvent {
 
     date?: Date;
     error?: Error;
@@ -20,4 +21,4 @@ export type LogEvent = {
     relative?: number;
     sequence?: number;
 
-};
+}

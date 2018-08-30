@@ -1,8 +1,8 @@
-import {LogLevel} from "../const/log.level";
-import {Formatter} from "../layout/formatter";
-import {LogEvent} from "../log.event";
+import { LogLevel } from '../const/log.level';
+import { Formatter } from '../layout/formatter';
+import { ILogEvent } from '../log.event';
 
-export default abstract class LogAppender {
+export abstract class LogAppender {
 
     /**
      * Gets the name of the appender (e.g. 'console')
@@ -27,9 +27,9 @@ export default abstract class LogAppender {
 
     /**
      * Appends the log
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      */
-    public append(logEvent: LogEvent) {
+    public append(logEvent: ILogEvent) {
         // stub
     }
 
@@ -38,7 +38,7 @@ export default abstract class LogAppender {
      * @returns {number}
      */
     public getLogLevel() {
-        return this.logLevel;
+        return this.logLevel || LogLevel.ERROR;
     }
 
     /**
@@ -67,9 +67,9 @@ export default abstract class LogAppender {
 
     /**
      * Formats the log event using the layout provided
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      */
-    public format(logEvent: LogEvent) {
+    public format(logEvent: ILogEvent) {
         return Formatter.format(this.getLayout(), logEvent);
     }
 

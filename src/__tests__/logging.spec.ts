@@ -1,25 +1,32 @@
-import {getLogger} from "../log4js";
+import { LogLevel } from '../const/log.level';
+import { configure, getLogger } from '../log4js';
+import { getVirtualConsole } from '../util/virtual.console';
 
 describe('Message', () => {
 
+    configure({
+        level: LogLevel.INFO,
+        patternLayout: '%c - %m'
+    });
+
     // create a log stack we can throw logs into
-    const logStack: { [key: string]: string[] } = {
+    const _logStack: { [key: string]: string[] } = {
         info: [],
         error: []
     };
 
     // override console
     // we will use this to monitor logger output
-    console.info = (log: string) => {
-        logStack.info.push(log);
+    getVirtualConsole().info = (log: string) => {
+        _logStack.info.push(log);
     };
-    console.error = (log: string) => {
-        logStack.error.push(log);
+    getVirtualConsole().error = (log: string) => {
+        _logStack.error.push(log);
     };
 
     beforeEach(() => {
-        logStack.info = [];
-        logStack.error = [];
+        _logStack.info = [];
+        _logStack.error = [];
     });
 
     test('single', () => {
@@ -31,8 +38,8 @@ describe('Message', () => {
 
         logger.info(logMessage, param1);
 
-        expect(logStack.info.length).toHaveLength(1);
-        expect(logStack.info[0]).toEqual(`main - ${param1}`);
+        expect(_logStack.info).toHaveLength(1);
+        expect(_logStack.info[0]).toEqual(`main - ${param1}`);
 
     });
 
@@ -47,8 +54,8 @@ describe('Message', () => {
 
         logger.info(logMessage, param1, param2, param3);
 
-        expect(logStack.info.length).toHaveLength(1);
-        expect(logStack.info[0]).toEqual(`main - ${param1} ${param2} ${param3}`);
+        expect(_logStack.info).toHaveLength(1);
+        expect(_logStack.info[0]).toEqual(`main - ${param1} ${param2} ${param3}`);
 
     });
 

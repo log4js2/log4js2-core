@@ -1,5 +1,5 @@
-import LogAppender from "../appender/log.appender";
-import {addAppender} from "../appender";
+import { LogAppender, Newable } from '..';
+import { addAppender } from '../appender';
 
 /**
  *

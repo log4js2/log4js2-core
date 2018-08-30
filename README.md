@@ -26,13 +26,7 @@ npm install log4js2 --save
 Import _log4js_ from the module:
 
 ```javascript
-import log4js from 'log4js2';
-```
-
-Or, for HTML implementations:
-
-```html
-<script type="text/javascript" src="log4js2.min.js"></script>
+import * as log4js from 'log4js2';
 ```
 
 ## Usage
@@ -55,16 +49,31 @@ Default layout will follow the pattern layout of `%d [%p] %c - %m`
 Configure log4js using the configure() method. This must be the first thing you do. Otherwise, 
 the first log you commit will not allow updates from this function
 
-```javascript
-log4js.configure({
+```typescript
+import {configure, LogLevel} from 'log4js2';
+
+configure({
+    
     layout : '%d [%p] %c %M:%line:%column - %m %ex',
     appenders : [{
         appender: 'Console'
     }],
     loggers : [{
-        logLevel : log4js.LogLevel.INFO
+        tag: 'App',
+        logLevel : LogLevel.INFO
     }]
 });
+```
+
+### Virtual Console
+
+ConsoleAppender utilizes a virtual console that "hijacks" `console` and inputs it into the log4js2 stream. Make sure
+`log4js2` is loaded at the top of the page to ensure all logs are caught.
+
+```typescript
+console.log('console log');
+
+// outputs: 08-30-2018 12:38:00 [INFO] main - console log
 ```
 
 ### Configuration Options
@@ -85,18 +94,18 @@ Specifies the loggers for log4js2. The `tag` property specifies what logger the 
 set a logger-specific layout using the `patternLayout` property. 
 
 ```javascript
-log4js.configure({
+configure({
     // ...
     loggers : [ {
-	    logLevel : log4js.LogLevel.INFO
+	    logLevel : LogLevel.INFO
     }, {
 		tag : 'debugLogger',
-		logLevel : log4js.LogLevel.DEBUG
+		logLevel : LogLevel.DEBUG
 	}]
 });
 
-const logger = log4js.getLogger('myLogger');
-const debugLogger = log4js.getLogger('debugLogger');
+const logger = getLogger('myLogger');
+const debugLogger = getLogger('debugLogger');
 
 logger.debug('This message will not show');
 debugLogger.debug('This message will show');
@@ -111,12 +120,12 @@ should only really be used in a development environment - such as *%method* and 
 Refer to the [wiki](https://github.com/anigenero/log4js2/wiki/Pattern-Layouts) for more information.
 
 ```javascript
-log4js.configure({
+configure({
     patternLayout : '%d{MM-dd-yyyy HH:mm:ss} [%p] %c.%M:%line - %message',
     // ...
 });
 
-const logger = log4js.getLogger('myLogger');
+const logger = getLogger('myLogger');
 logger.warn('This is a log {}', 'with parameters');
 ```
 ```text

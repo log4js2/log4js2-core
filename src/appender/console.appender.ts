@@ -1,14 +1,15 @@
-import {LogLevel} from '../const/log.level';
-import {Appender} from "../decorator/appender";
-import {LogEvent} from "../log.event";
-import LogAppender from './log.appender';
+import { LogLevel } from '../const/log.level';
+import { Appender } from '../decorator/appender';
+import { ILogEvent } from '../log.event';
+import { getVirtualConsole } from '../util/virtual.console';
+import { LogAppender } from './log.appender';
 
 @Appender('Console')
-export default class ConsoleAppender extends LogAppender {
+export class ConsoleAppender extends LogAppender {
 
     /**
      * Gets the name of the appender (e.g. 'console')
-     * @returns {null}
+     * @returns {string}
      */
     public static get appenderName(): string {
         return 'Console';
@@ -16,9 +17,9 @@ export default class ConsoleAppender extends LogAppender {
 
     /**
      * Appends the log event
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      */
-    public append(logEvent: LogEvent) {
+    public append(logEvent: ILogEvent) {
         if (logEvent.level <= this.getLogLevel()) {
             this._appendToConsole(logEvent);
         }
@@ -28,32 +29,36 @@ export default class ConsoleAppender extends LogAppender {
      * @private
      * @function
      *
-     * @param {LogEvent} logEvent
+     * @param {ILogEvent} logEvent
      */
-    private _appendToConsole(logEvent: LogEvent) {
+    private _appendToConsole(logEvent: ILogEvent) {
 
         const message = this.format(logEvent);
 
         switch (logEvent.level) {
 
             case LogLevel.ERROR: {
-                console.error(message, logEvent.error);
+                if (logEvent.error) {
+                    getVirtualConsole().error(message, logEvent.error);
+                } else {
+                    getVirtualConsole().error(message);
+                }
                 break;
             }
 
             case LogLevel.WARN: {
-                console.warn(message);
+                getVirtualConsole().warn(message);
                 break;
             }
 
             case LogLevel.INFO: {
-                console.info(message);
+                getVirtualConsole().info(message);
                 break;
             }
 
             case LogLevel.DEBUG:
             case LogLevel.TRACE: {
-                console.debug(message);
+                getVirtualConsole().debug(message);
                 break;
             }
 

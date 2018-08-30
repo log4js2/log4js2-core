@@ -1,12 +1,14 @@
-import IAppenderConfiguration from "./appender.config";
-import ILoggerConfiguration from "./logger.config";
-import PatternLayout from "./pattern.layout";
+import { LogLevel } from '..';
+import { LogAppender } from '..';
+import IAppenderConfiguration from './appender.config';
+import ILoggerConfiguration from './logger.config';
 
 export default interface IConfiguration {
 
-    appenders?: IAppenderConfiguration[] | string[];
+    level?: LogLevel;
+    appenders?: Array<IAppenderConfiguration<LogAppender>> | string[];
     loggers?: ILoggerConfiguration[];
-    patternLayout?: PatternLayout | string;
+    patternLayout?: string;
     virtualConsole?: boolean;
 
 }

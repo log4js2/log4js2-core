@@ -1,11 +1,10 @@
-import LogAppender from "../appender/log.appender";
-import {LogLevel} from "../const/log.level";
-import PatternLayout from "./pattern.layout";
+import { LogAppender, Newable } from '..';
+import { LogLevel } from '..';
 
 export default interface IAppenderConfiguration<T extends LogAppender> {
 
     appender: Newable<T> | string;
     level?: LogLevel | number;
-    patternLayout?: PatternLayout | string;
+    patternLayout?: string;
 
 }
