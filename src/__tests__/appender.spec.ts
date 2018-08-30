@@ -1,8 +1,10 @@
+import { LogLevel } from '..';
 import { CUSTOM_LOGGER } from '../__mocks__/configuration';
 import { logStack } from '../__mocks__/custom.appender';
 import { configure, getLogger } from '../log4js';
 
 configure({
+    level: LogLevel.DEBUG,
     patternLayout: '%m'
 });
 

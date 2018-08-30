@@ -1,13 +1,15 @@
 import { LogLevel } from '..';
 import { configure } from '../log4js';
-import { CUSTOM_APPENDER_NAME } from './custom.appender';
+import { CustomAppender } from './custom.appender';
 
 export const CUSTOM_LOGGER = 'custom';
 export const TEST_LOGGER_1 = 'test1';
 export const TEST_LOGGER_2 = 'test2';
 
 configure({
-    appenders: ['main', 'console', CUSTOM_LOGGER],
+    appenders: [{
+        appender: CustomAppender
+    }],
     patternLayout: '%c - %m',
     loggers: [{
         level: LogLevel.INFO
@@ -19,7 +21,7 @@ configure({
         level: LogLevel.INFO,
         patternLayout: '%c [%p] %m'
     }, {
-        tag: CUSTOM_APPENDER_NAME,
+        tag: CUSTOM_LOGGER,
         level: LogLevel.TRACE
     }]
 });

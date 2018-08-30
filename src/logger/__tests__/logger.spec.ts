@@ -1,6 +1,6 @@
-import {TEST_LOGGER_1, TEST_LOGGER_2} from "../../__mocks__/configuration";
-import {logStack} from "../../__mocks__/custom.appender";
-import {getLogger} from "../../log4js";
+import { TEST_LOGGER_1, TEST_LOGGER_2 } from '../../__mocks__/configuration';
+import { logStack } from '../../__mocks__/custom.appender';
+import { getLogger } from '../../log4js';
 
 describe('Logger', () => {
 
