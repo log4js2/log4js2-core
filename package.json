@@ -59,7 +59,6 @@
     "setupFiles": [
       "<rootDir>/jest.setup.js"
     ],
-    "collectCoverage": true,
     "coveragePathIgnorePatterns": [
       "/dist/",
       "/node_modules/"
