@@ -67,6 +67,7 @@
     "testMatch": [
       "**/__tests__/*.spec.(t|j)s"
     ],
+    "testURL": "http://localhost",
     "transform": {
       "^.+\\.(t|j)s?": "ts-jest"
     },
