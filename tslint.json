@@ -10,14 +10,7 @@
     "ban-types": false,
     "object-literal-sort-keys": false,
     "interface-over-type-literal": false,
-    "no-console": [
-      "debug",
-      "info",
-      "log",
-      "time",
-      "timeEnd",
-      "trace"
-    ],
+    "no-console": false,
     "no-namespace": false,
     "no-trailing-whitespace": [
       true,

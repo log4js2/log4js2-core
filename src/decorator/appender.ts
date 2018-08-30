@@ -1,5 +1,5 @@
-import LogAppender from "../appender/appender";
-import {addAppender} from "../log4js";
+import LogAppender from "../appender/log.appender";
+import {addAppender} from "../appender";
 
 /**
  *

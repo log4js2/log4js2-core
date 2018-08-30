@@ -1,14 +1,15 @@
 {
   "name": "log4js2",
-  "version": "1.0.2",
+  "version": "2.0.0-alpha1",
   "scripts": {
     "build": "webpack --progress --colors --mode production --env.STAGE=prod",
+    "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest --coverage"
   },
   "author": {
     "name": "Robin Schultz",
     "email": "robin@anigenero.com",
-    "url": "http://anigenero.com/"
+    "url": "http://anigenero.com"
   },
   "repository": {
     "type": "git",
@@ -59,13 +60,10 @@
     "collectCoverage": true,
     "coveragePathIgnorePatterns": [
       "/dist/",
-      "/node_modules/",
-      "orm/index.ts",
-      "orm/entity/*",
-      "/gulpfile.ts"
+      "/node_modules/"
     ],
     "testMatch": [
-      "**/__tests__/*.test.(t|j)s"
+      "**/__tests__/*.spec.(t|j)s"
     ],
     "transform": {
       "^.+\\.(t|j)s?": "ts-jest"

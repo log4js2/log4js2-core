@@ -1,7 +1,7 @@
 import {LogLevel} from '../const/log.level';
 import {Appender} from "../decorator/appender";
 import {LogEvent} from "../log.event";
-import LogAppender from './appender';
+import LogAppender from './log.appender';
 
 @Appender('Console')
 export default class ConsoleAppender extends LogAppender {

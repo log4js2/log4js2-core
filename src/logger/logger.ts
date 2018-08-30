@@ -1,4 +1,4 @@
-import LogAppender from "../appender/appender";
+import LogAppender from "../appender/log.appender";
 import {LogLevel} from '../const/log.level';
 import {LogEvent} from "../log.event";
 import Marker from "../marker";
@@ -98,19 +98,19 @@ export default class Logger {
             lineNumber: null,
             logger: this._logContext,
             message: '',
-            method: 0, // !this._isStrict() ? args.callee.caller : 0,
+            method: this._isNotStrict() ? args.callee.caller : 0,
             properties: undefined,
             relative: logTime.getTime() - this._relative,
             sequence: this._logSequence++,
         };
 
-        const regex = /\{\}/g;
+        const regex = /{}/g;
         for (let i = 0; i < args.length; i++) {
 
             if (i === 0) {
                 logEvent.message = args[i];
             } else if (regex.exec(logEvent.message)) {
-                logEvent.message = logEvent.message.replace(/\{\}/, args[i]);
+                logEvent.message = logEvent.message.replace(/{}/, args[i]);
             } else if (args[i] instanceof Error) {
                 logEvent.error = args[i];
             } else if (args[i] instanceof Marker) {
@@ -133,7 +133,7 @@ export default class Logger {
      *
      * @returns {boolean}
      */
-    private _isStrict() {
+    private _isNotStrict() {
         return (() => !this)();
     }
 

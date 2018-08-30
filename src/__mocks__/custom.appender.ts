@@ -1,4 +1,4 @@
-import LogAppender from "../appender/appender";
+import LogAppender from "../appender/log.appender";
 import {LogLevel} from "../const/log.level";
 import {Appender} from "../decorator/appender";
 import {LogEvent} from "../log.event";

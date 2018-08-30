@@ -1,4 +1,5 @@
-import LogAppender from "./appender/appender";
+import {addAppender, getAppender, getAppenders} from "./appender";
+import LogAppender from "./appender/log.appender";
 import IAppenderConfiguration from "./config/appender.config";
 import IConfiguration from "./config/configuration";
 import ILoggerConfiguration from "./config/logger.config";
@@ -38,8 +39,6 @@ const _DEFAULT_CONFIG = ((): IConfiguration => ({
     patternLayout: '%d [%p] %c - %m'
 }))();
 
-/** @type {Object} */
-const _appenders: Map<string, Newable<LogAppender>> = new Map<string, Newable<LogAppender>>();
 /** @type {?IConfiguration} */
 let _configuration: IConfiguration = null;
 /** @type {Object} */
@@ -89,16 +88,31 @@ export function configure(config: IConfiguration) {
  *
  * @param {Array.<LogAppender|function>} appenders
  */
-const _configureAppenders = (appenders: Array<(Newable<typeof LogAppender> | IAppenderConfiguration | string)>) => {
+const _configureAppenders = <T extends LogAppender>(appenders: Array<(Newable<T> | IAppenderConfiguration<T> | string)>) => {
 
     if (!isArray(appenders)) {
         appenders = _DEFAULT_APPENDERS;
     }
 
-    const count = appenders.length;
-    for (let i = 0; i < count; i++) {
-        addAppender((appenders[i] as IAppenderConfiguration).appender || (appenders[i] as any));
-    }
+    appenders.forEach((value) => {
+        if (typeof value === 'string') {
+            if (getAppender(value as string)) {
+
+            }
+        } else if ((value as IAppenderConfiguration<T>).appender) {
+            if (typeof (value as IAppenderConfiguration<T>).appender === 'string') {
+                if (getAppender((value as IAppenderConfiguration<T>).appender as string)) {
+
+                }
+            } else {
+                addAppender((value as IAppenderConfiguration<T>).appender as Newable<T>);
+            }
+        } else if ((value as Newable<T>).prototype.append) {
+            addAppender(value as Newable<T>);
+        } else {
+            // TODO: throw an error
+        }
+    });
 
 };
 
@@ -145,9 +159,7 @@ const _getAppendersForLogger = (logConfig: ILoggerConfiguration) => {
 
     const appenderList: LogAppender[] = [];
 
-    console.dir(_appenders);
-
-    _appenders.forEach((value) => {
+    getAppenders().forEach((value) => {
 
         const logger: LogAppender = new value();
 
@@ -159,55 +171,6 @@ const _getAppendersForLogger = (logConfig: ILoggerConfiguration) => {
     });
 
     return appenderList;
-
-};
-
-/**
- * Adds an appender to the appender queue
- *
- * @function
- *
- * @params {LogAppender} appender
- */
-export const addAppender = <T extends LogAppender>(appender: Newable<T>, name?: string) => {
-
-    _validateAppender(appender);
-
-    const appenderName = name || (appender as any).appenderName || appender;
-
-    // only put the appender into the set if it doesn't exist already
-    if (!_appenders.has(appenderName)) {
-        _appenders.set(appenderName, appender);
-    }
-
-};
-
-/**
- * Validates that the appender
- *
- * @private
- * @function
- *
- * @params {APPENDER} appender
- * @throws {Error} if the appender is invalid
- */
-const _validateAppender = <T extends LogAppender>(appender: Newable<T>) => {
-
-    // if we are running ES6, we can make sure it extends LogAppender
-    // otherwise, it must be a function
-    if (!(appender instanceof LogAppender)) {
-        return;
-    }
-
-    // instantiate the appender function
-    const appenderObj: LogAppender = new (appender as any)();
-
-    // ensure that the appender methods are present (and are functions)
-    ['append', 'isActive', 'setLogLevel', 'setLayout'].forEach((element) => {
-        if (!(appenderObj as any)[element] || !((appenderObj as any)[element] instanceof Function)) {
-            throw new Error(`Invalid appender: missing/invalid method: ${element}`);
-        }
-    });
 
 };
 

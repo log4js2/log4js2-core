@@ -1,6 +1,6 @@
 import {Appender} from "../decorator/appender";
 import {LogEvent} from "../log.event";
-import LogAppender from './appender';
+import LogAppender from './log.appender';
 
 @Appender('File')
 export default class FileAppender extends LogAppender {
