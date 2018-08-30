@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/anigenero/log4js2.svg?branch=master)](https://travis-ci.org/anigenero/log4js2)
+[![codecov](https://codecov.io/gh/anigenero/log4js2/branch/master/graph/badge.svg)](https://codecov.io/gh/anigenero/log4js2)
 
 # log4js2
 log4js2 is a fast and lightweight logging library that enables logging flexibility within JavaScript/TypeScript applications, 
