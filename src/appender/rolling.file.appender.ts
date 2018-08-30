@@ -1,33 +1,27 @@
 import { Appender } from '../decorator/appender';
 import { ILogEvent } from '../log.event';
+import { IFileAppenderConfig } from './file.appender';
 import { LogAppender } from './log.appender';
 
-export interface IFileAppenderConfig {
-    destination: string;
+export interface IRollingFileAppenderConfig extends IFileAppenderConfig {
+    fileNamePattern: string;
+    maxSize: number;
 }
 
 @Appender()
-export class FileAppender extends LogAppender<IFileAppenderConfig> {
+export class RollingFileAppender extends LogAppender<IRollingFileAppenderConfig> {
 
     private static _logFile: NodeJS.WriteStream;
 
-    private readonly _config: IFileAppenderConfig;
+    private readonly _config: IRollingFileAppenderConfig;
 
-    /**
-     * Gets the name of the appender (e.g. 'console')
-     * @returns {null}
-     */
-    public static get appenderName(): string {
-        return 'File';
-    }
-
-    constructor(config?: IFileAppenderConfig) {
+    constructor(config?: IRollingFileAppenderConfig) {
 
         super(config);
 
         if (typeof window !== 'undefined') {
             throw new Error('Cannot use FileAppender in browser mode');
-        } else if (!FileAppender._logFile) {
+        } else if (!RollingFileAppender._logFile) {
 
             this._config = config;
 
@@ -37,7 +31,7 @@ export class FileAppender extends LogAppender<IFileAppenderConfig> {
                 fs.mkdirSync(config.destination);
             }
 
-            FileAppender._logFile = fs.createWriteStream(config.destination, {flags: 'w'});
+            RollingFileAppender._logFile = fs.createWriteStream(config.destination, {flags: 'w'});
 
         }
 
@@ -60,7 +54,7 @@ export class FileAppender extends LogAppender<IFileAppenderConfig> {
      * @param {ILogEvent} logEvent
      */
     private _appendToFile(logEvent: ILogEvent) {
-        FileAppender._logFile.write(this.format(logEvent) + '\n');
+        RollingFileAppender._logFile.write(this.format(logEvent) + '\n');
     }
 
 }

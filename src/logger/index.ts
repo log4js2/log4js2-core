@@ -1,5 +1,5 @@
 import { LogAppender } from '..';
-import { getAppenders } from '../appender';
+import { getAppenderInstances } from '../appender';
 import ILoggerConfiguration from '../config/logger.config';
 import { Logger } from './logger';
 
@@ -34,9 +34,8 @@ export const getLogger = <T>(context: string, config: ILoggerConfiguration): Log
     } else {
 
         const appenders: LogAppender[] = [];
-        getAppenders().forEach((value) => {
+        getAppenderInstances().forEach((appender) => {
 
-            const appender = new (value as any)();
             appender.setLogLevel(config.level);
             appender.setLayout(config.patternLayout);
 

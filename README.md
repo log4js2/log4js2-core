@@ -1,11 +1,11 @@
-[![Build Status](https://travis-ci.org/anigenero/log4js2.svg?branch=master)](https://travis-ci.org/anigenero/log4js2)
-[![codecov](https://codecov.io/gh/anigenero/log4js2/branch/master/graph/badge.svg)](https://codecov.io/gh/anigenero/log4js2)
-
 # log4js2
 log4js2 is a fast and lightweight logging library that enables logging flexibility within JavaScript/TypeScript applications, 
 similar to Apache's [Log4j2 library](https://logging.apache.org/log4j/2.x/). This library is designed to mirror Log4j2 
 functionality to the best ability that a JavaScript framework can. It can also serve as a drop-in replacement for log4js, 
 since the namespace and functions are mostly similar.
+
+[![Build Status](https://travis-ci.org/anigenero/log4js2.svg?branch=master)](https://travis-ci.org/anigenero/log4js2)
+[![codecov](https://codecov.io/gh/anigenero/log4js2/branch/master/graph/badge.svg)](https://codecov.io/gh/anigenero/log4js2)
 
 ## Installing & Building
 
@@ -19,21 +19,13 @@ If you're building from source, simply run
 Or, you can install log4js2 from npm.
 
 ```bash
-npm install log4js2 --save
-```
-
-## Setup
-
-Import _log4js_ from the module:
-
-```javascript
-import * as log4js from 'log4js2';
+> npm install --save log4js2
 ```
 
 ## Usage
 
-Logging works out-of-the-box, with no configuration, however, __note that only error messages will display without 
-specific configuration__
+Logging works out-of-the-box, with no configuration, however, note that only error messages will display without 
+specific configuration
 
 ```javascript
 const logger = log4js.getLogger('myLogger');
@@ -44,6 +36,19 @@ Default layout will follow the pattern layout of `%d [%p] %c - %m`
 ```text
 03-24-2016 12:00:18,670 [ERROR] myLogger - This is a log
 ```
+
+
+## Virtual Console
+
+ConsoleAppender utilizes a virtual console that "hijacks" `console` and inputs it into the log4js2 stream. Make sure
+`log4js2` is loaded at the top of the page to ensure all logs are caught.
+
+```typescript
+console.log('console log');
+
+// outputs: 08-30-2018 12:38:00 [INFO] main - console log
+```
+
 
 ## Configuration
 
@@ -64,17 +69,6 @@ configure({
         logLevel : LogLevel.INFO
     }]
 });
-```
-
-### Virtual Console
-
-ConsoleAppender utilizes a virtual console that "hijacks" `console` and inputs it into the log4js2 stream. Make sure
-`log4js2` is loaded at the top of the page to ensure all logs are caught.
-
-```typescript
-console.log('console log');
-
-// outputs: 08-30-2018 12:38:00 [INFO] main - console log
 ```
 
 ### Configuration Options
@@ -141,10 +135,8 @@ In order to make the **%method** tag word, you must call from named function, li
 function callerFunction() {
     log.info('This is within a name function');
 }
-```
 
-```text
-03-24-2016 16:17:50,360 [INFO] myLogger.callerFunction:3 - This is within a name function
+// outputs [INFO] myLogger.callerFunction:3 - This is within a name function
 ```
 
 Otherwise, non-named functions will simply display an 'anonymous' placeholder:
@@ -181,6 +173,36 @@ class MyAppender extends LogAppender {
     }
     
 }
+```
+
+### Custom Appender Configuration
+In the case that your appender needs special configuration, the `config` element of `IAppenderConfiguration` allows
+for configuration to be passed.
+
+```typescript
+interface IAjaxAppenderConfig {
+    endpoint: string;
+}
+
+class AjaxAppender extends LogAppender {
+    
+    constructor(config?: IAjaxAppenderConfig) {
+        // ...handle config
+    }
+    
+}
+```
+
+When configuring, use the `config` key to pass configuration for that appender.
+```typescript
+configure({
+    appenders: [{
+        appender: MyAppender,
+        config: {
+            endpoint: 'http://example.com/logs'
+        }
+    }]
+})
 ```
 
 ## log4js

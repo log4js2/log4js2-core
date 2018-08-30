@@ -3,13 +3,12 @@ import { addAppender } from '../appender';
 
 /**
  *
- * @param {string} name
  * @returns {(target: Newable<LogAppender>) => void}
  * @constructor
  */
-export function Appender<T extends LogAppender>(name?: string): Function {
+export function Appender<T extends LogAppender>(): Function {
     return (target: Newable<T>) => {
-        addAppender(target, name);
+        addAppender(target);
         return target;
     };
 }

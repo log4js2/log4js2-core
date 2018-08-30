@@ -1,4 +1,4 @@
-import { addAppender, getAppender, getAppenders } from './appender';
+import { getAppender, getAppenderInstances, getAppenderName, registerAppender, setAppenderConfig } from './appender';
 import { ConsoleAppender } from './appender/console.appender';
 import { LogAppender } from './appender/log.appender';
 import IAppenderConfiguration from './config/appender.config';
@@ -54,14 +54,12 @@ const _getAppendersForLogger = (logConfig: ILoggerConfiguration) => {
 
     const appenderList: LogAppender[] = [];
 
-    getAppenders().forEach((value) => {
+    getAppenderInstances().forEach((appender) => {
 
-        const logger: LogAppender = new (value as any)();
+        appender.setLogLevel(logConfig.level);
+        appender.setLayout(logConfig.patternLayout);
 
-        logger.setLogLevel(logConfig.level);
-        logger.setLayout(logConfig.patternLayout);
-
-        appenderList.push(logger);
+        appenderList.push(appender);
 
     });
 
@@ -126,30 +124,37 @@ const _configureLoggers = (config: IConfiguration) => {
  *
  * @param {Array.<LogAppender|function>} appenders
  */
-const _configureAppenders = <T extends LogAppender>(appenders: Array<(Newable<T> | IAppenderConfiguration<T> | string)>) => {
+const _configureAppenders = (appenders: Array<(Newable<LogAppender> | IAppenderConfiguration | string)>) => {
 
     if (!isArray(appenders)) {
         appenders = _DEFAULT_APPENDERS;
     }
 
-    appenders.forEach((value) => {
-        if (typeof value === 'string') {
-            if (getAppender(value)) {
-                // TODO
-            }
-        } else if ((value as IAppenderConfiguration<T>).appender) {
-            if (typeof (value as IAppenderConfiguration<T>).appender === 'string') {
-                if (getAppender((value as IAppenderConfiguration<T>).appender as string)) {
-                    // TODO
-                }
-            } else {
-                addAppender((value as IAppenderConfiguration<T>).appender as Newable<T>);
-            }
-        } else if ((value as Newable<T>).prototype.append) {
-            addAppender(value as Newable<T>);
+    appenders.forEach((appenderConfig) => {
+
+        let appender: Newable<LogAppender>;
+
+        if (typeof appenderConfig === 'string') {
+            appender = getAppender(appenderConfig);
         } else {
-            // TODO: throw an error
+            if ((appenderConfig as IAppenderConfiguration).appender) {
+                if (typeof (appenderConfig as IAppenderConfiguration).appender === 'string') {
+                    appender = getAppender((appenderConfig as IAppenderConfiguration).appender as string);
+                } else {
+                    appender = registerAppender((appenderConfig as IAppenderConfiguration).appender as Newable<LogAppender>);
+                }
+            } else if ((appenderConfig as Newable<LogAppender>).prototype.append) {
+                appender = registerAppender(appenderConfig as Newable<LogAppender>);
+            } else {
+                throw new Error('Invalid appender: \'' + appenderConfig + '\'');
+            }
+
         }
+
+        if ((appenderConfig as IAppenderConfiguration).config) {
+            setAppenderConfig(getAppenderName(appender), (appenderConfig as IAppenderConfiguration).config);
+        }
+
     });
 
 };
@@ -184,7 +189,7 @@ export const getLogger = <T>(context?: Newable<T> | Method<T> | string): Logger 
         configure(_DEFAULT_CONFIG);
     }
 
-    const logContext = determineContext(context);
+    const logContext = _determineContext(context);
     const loggerConfig = _getLoggerConfiguration(logContext) || _getLoggerConfiguration(MAIN_LOGGER);
 
     return getLoggerFromContext(logContext, loggerConfig);
@@ -195,7 +200,7 @@ function _getLoggerConfiguration(context: string): ILoggerConfiguration {
     return _configuration.loggers.filter((value) => value.tag === context)[0];
 }
 
-function determineContext<T>(context?: Newable<T> | Method<T> | string): string {
+function _determineContext<T>(context?: Newable<T> | Method<T> | string): string {
 
     // determine the context
     if (typeof context === 'string') {

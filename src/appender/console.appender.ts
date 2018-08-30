@@ -4,7 +4,7 @@ import { ILogEvent } from '../log.event';
 import { getVirtualConsole } from '../util/virtual.console';
 import { LogAppender } from './log.appender';
 
-@Appender('Console')
+@Appender()
 export class ConsoleAppender extends LogAppender {
 
     /**

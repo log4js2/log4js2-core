@@ -2,7 +2,7 @@ import { LogLevel } from '../const/log.level';
 import { Formatter } from '../layout/formatter';
 import { ILogEvent } from '../log.event';
 
-export abstract class LogAppender {
+export abstract class LogAppender<C extends {} = {}> {
 
     /**
      * Gets the name of the appender (e.g. 'console')
@@ -16,6 +16,10 @@ export abstract class LogAppender {
 
     private logLevel: LogLevel;
     private layout: string;
+
+    constructor(config?: C) {
+        // do nothing
+    }
 
     /**
      * Returns whether or not the appender is active
