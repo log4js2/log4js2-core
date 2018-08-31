@@ -2,6 +2,9 @@
 /src
 /types
 
+index.html
+/docs
+
 .travis.yml
 jest.setup.js
 tsconfig.json

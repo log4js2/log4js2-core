@@ -28,7 +28,10 @@ Logging works out-of-the-box, with no configuration, however, note that only err
 specific configuration
 
 ```javascript
-const logger = log4js.getLogger('myLogger');
+import {getLogger} from 'log4js2';
+
+
+const logger = getLogger('myLogger');
 logger.error('This is a log');
 ```
 Default layout will follow the pattern layout of `%d [%p] %c - %m`
@@ -59,7 +62,6 @@ the first log you commit will not allow updates from this function
 import {configure, LogLevel} from 'log4js2';
 
 configure({
-    
     layout : '%d [%p] %c %M:%line:%column - %m %ex',
     appenders : [{
         appender: 'Console'
@@ -92,10 +94,10 @@ set a logger-specific layout using the `patternLayout` property.
 configure({
     // ...
     loggers : [ {
-	    logLevel : LogLevel.INFO
+        logLevel : LogLevel.INFO
     }, {
-		tag : 'debugLogger',
-		logLevel : LogLevel.DEBUG
+        tag : 'debugLogger',
+        logLevel : LogLevel.DEBUG
 	}]
 });
 
@@ -107,7 +109,7 @@ debugLogger.debug('This message will show');
 ```
 
 #### layout
-Type: `String`
+Type: `string`
 Default: `"%d [%p] %c - %m"`
 
 Sets the pattern layout for the logs. Keep in mind that some of the layout tags are relatively more expensive, and 
@@ -156,12 +158,10 @@ You can output logs to a specific location or methodology using a custom appende
 will handle registering the appender with log4js2.
 
 ```typescript
-@Appender({
-    name: 'CustomAppender'
-})
+@Appender()
 class MyAppender extends LogAppender {
     
-    static get name() {
+    static get appenderName() {
         return 'myappender';
     }
     
@@ -187,7 +187,11 @@ interface IAjaxAppenderConfig {
 class AjaxAppender extends LogAppender {
     
     constructor(config?: IAjaxAppenderConfig) {
+        
+        super(config);
+        
         // ...handle config
+        
     }
     
 }
@@ -214,14 +218,14 @@ Sets the configuration. If no configuration is set before the first log, then th
 configuration will be used. See configuration for options.
 
 #### getLogger(logger)
-__logger?__ `String [optional]`
+__logger?__ `string [optional]`
 
 Gets a logger instance. If the logger is not set, the logger name will be pulled from the
 containing named instance it was created in (anonymous if unnamed).
 
 #### setLogLevel(logLevel, logger)
 
-__logLevel__ `LogLevel|Number`,
-__logger?__ `String`
+__logLevel__ `LogLevel|number`,
+__logger?__ `string`
 
 Sets the log level for a specific logger, or all loggers (if logger is not set).
