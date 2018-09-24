@@ -9,7 +9,7 @@ import { Method, Newable } from './def';
 import { addLogger, getLogger as getLoggerFromContext, MAIN_LOGGER } from './logger';
 import { Logger } from './logger/logger';
 import { getFunctionName, isArray } from './util/utility';
-import { getVirtualConsole } from './util/virtual.console';
+import { getVirtualConsole, useVirtualConsole } from './util/virtual.console';
 
 /**
  * The default appenders that should be included if no appenders are specified
@@ -177,7 +177,11 @@ export function configure(config: IConfiguration) {
     // configure the loggers
     _configureLoggers(config);
 
-    getVirtualConsole(getLoggerFromContext(MAIN_LOGGER, config));
+    if (config.virtualConsole !== false) {
+        getVirtualConsole(getLoggerFromContext(MAIN_LOGGER, config));
+    } else {
+        useVirtualConsole(false);
+    }
 
     _configuration = config;
 

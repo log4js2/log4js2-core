@@ -1,8 +1,17 @@
 import { Logger } from '..';
 
-let virtualConsole: Console;
+let _virtualConsole: Console;
+let _isUseVirtualConsole = true;
+
+export const useVirtualConsole = (state: boolean) => {
+    _isUseVirtualConsole = state;
+};
 
 export const getVirtualConsole = (logger?: Logger) => {
+
+    if (!useVirtualConsole) {
+        return console;
+    }
 
     class Log4JConsole implements Console {
 
@@ -13,41 +22,41 @@ export const getVirtualConsole = (logger?: Logger) => {
         public assert(condition?: boolean, message?: string, ...data: any[]): void;
         public assert(value: any, message?: string, ...optionalParams: any[]): void;
         public assert(condition?: boolean | any, message?: string, ...data: any[]): void {
-            virtualConsole.assert(...arguments);
+            _virtualConsole.assert(...arguments);
         }
 
         public clear(): void {
-            virtualConsole.clear();
+            _virtualConsole.clear();
         }
 
         public count(label?: string): void {
-            virtualConsole.count(label);
+            _virtualConsole.count(label);
         }
 
         public dir(value?: any, ...optionalParams: any[]): void;
         public dir(obj: any, options?: NodeJS.InspectOptions): void;
         public dir(value?: any, ...optionalParams: Array<any | NodeJS.InspectOptions>): void {
-            virtualConsole.dir(...arguments);
+            _virtualConsole.dir(...arguments);
         }
 
         public dirxml(value: any): void {
-            virtualConsole.dirxml(value);
+            _virtualConsole.dirxml(value);
         }
 
         public group(groupTitle?: string, ...optionalParams: any[]): void {
-            virtualConsole.group(groupTitle, ...optionalParams);
+            _virtualConsole.group(groupTitle, ...optionalParams);
         }
 
         public groupCollapsed(groupTitle?: string, ...optionalParams: any[]): void {
-            virtualConsole.groupCollapsed(groupTitle, ...optionalParams);
+            _virtualConsole.groupCollapsed(groupTitle, ...optionalParams);
         }
 
         public groupEnd(): void {
-            virtualConsole.groupEnd();
+            _virtualConsole.groupEnd();
         }
 
         public markTimeline(label?: string): void {
-            virtualConsole.markTimeline(label);
+            _virtualConsole.markTimeline(label);
         }
 
         public msIsIndependentlyComposed(element: Element): boolean {
@@ -55,43 +64,43 @@ export const getVirtualConsole = (logger?: Logger) => {
         }
 
         public profile(reportName?: string): void {
-            virtualConsole.profile(reportName);
+            _virtualConsole.profile(reportName);
         }
 
         public profileEnd(): void {
-            virtualConsole.profileEnd();
+            _virtualConsole.profileEnd();
         }
 
         public select(element: Element): void {
-            virtualConsole.select(element);
+            _virtualConsole.select(element);
         }
 
         public table(...tabularData: any[]): void {
-            virtualConsole.table(...tabularData);
+            _virtualConsole.table(...tabularData);
         }
 
         public time(label?: string): void;
         public time(label: string): void;
         public time(label?: string): void {
-            virtualConsole.time(label);
+            _virtualConsole.time(label);
         }
 
         public timeEnd(label?: string): void;
         public timeEnd(label: string): void;
         public timeEnd(label?: string): void {
-            virtualConsole.timeEnd(label);
+            _virtualConsole.timeEnd(label);
         }
 
         public timeStamp(label?: string): void {
-            virtualConsole.timeStamp(label);
+            _virtualConsole.timeStamp(label);
         }
 
         public timeline(label?: string): void {
-            virtualConsole.timeline(label);
+            _virtualConsole.timeline(label);
         }
 
         public timelineEnd(label?: string): void {
-            virtualConsole.timelineEnd(label);
+            _virtualConsole.timelineEnd(label);
         }
 
         public debug(message?: any, ...optionalParams: any[]): void {
@@ -124,11 +133,11 @@ export const getVirtualConsole = (logger?: Logger) => {
 
     }
 
-    if (!virtualConsole) {
-        virtualConsole = console;
+    if (!_virtualConsole) {
+        _virtualConsole = console;
         console = new Log4JConsole();
     }
 
-    return virtualConsole;
+    return _virtualConsole;
 
 };
