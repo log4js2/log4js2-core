@@ -71,10 +71,6 @@ export const getVirtualConsole = (logger?: Logger) => {
             _virtualConsole.profileEnd();
         }
 
-        public select(element: Element): void {
-            _virtualConsole.select(element);
-        }
-
         public table(...tabularData: any[]): void {
             _virtualConsole.table(...tabularData);
         }
@@ -129,6 +125,14 @@ export const getVirtualConsole = (logger?: Logger) => {
 
         public warn(message?: any, ...optionalParams: any[]): void {
             logger.warn(message, ...optionalParams);
+        }
+
+        public countReset(label?: string): void {
+            _virtualConsole.countReset(label);
+        }
+
+        public timeLog(label: string, ...data: any[]): void {
+            _virtualConsole.timeLog(label, ...data);
         }
 
     }

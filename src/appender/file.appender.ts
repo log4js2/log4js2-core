@@ -1,5 +1,6 @@
 import { Appender } from '../decorator/appender';
 import { ILogEvent } from '../log.event';
+import { FileHandler } from './handler/file.handler';
 import { LogAppender } from './log.appender';
 
 export interface IFileAppenderConfig {
@@ -9,9 +10,7 @@ export interface IFileAppenderConfig {
 @Appender()
 export class FileAppender extends LogAppender<IFileAppenderConfig> {
 
-    private static _logFile: NodeJS.WriteStream;
-
-    private readonly _config: IFileAppenderConfig;
+    private readonly _handler: FileHandler;
 
     /**
      * Gets the name of the appender (e.g. 'console')
@@ -21,24 +20,14 @@ export class FileAppender extends LogAppender<IFileAppenderConfig> {
         return 'File';
     }
 
-    constructor(config?: IFileAppenderConfig) {
+    constructor(private readonly _config: IFileAppenderConfig) {
 
-        super(config);
+        super(_config);
 
-        if (typeof window !== 'undefined') {
+        if (typeof process === 'undefined') {
             throw new Error('Cannot use FileAppender in browser mode');
-        } else if (!FileAppender._logFile) {
-
-            this._config = config;
-
-            const FS = 'fs';
-            const fs = require(`${FS}`);
-            if (!fs.exists(config.destination)) {
-                fs.mkdirSync(config.destination);
-            }
-
-            FileAppender._logFile = fs.createWriteStream(config.destination, {flags: 'w'});
-
+        } else {
+            this._handler = new FileHandler(_config);
         }
 
     }
@@ -49,18 +38,8 @@ export class FileAppender extends LogAppender<IFileAppenderConfig> {
      */
     public append(logEvent: ILogEvent) {
         if (logEvent.level <= this.getLogLevel()) {
-            this._appendToFile(logEvent);
+            process.nextTick(() => this._handler.append(this.format(logEvent)));
         }
-    }
-
-    /**
-     * @private
-     * @function
-     *
-     * @param {ILogEvent} logEvent
-     */
-    private _appendToFile(logEvent: ILogEvent) {
-        FileAppender._logFile.write(this.format(logEvent) + '\n');
     }
 
 }

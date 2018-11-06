@@ -20,6 +20,8 @@ describe('formatter', () => {
             expect(Formatter.format('%d', {date})).toEqual('2016-01-31 13:30:15,500');
             expect(Formatter.format('%date', {date})).toEqual('2016-01-31 13:30:15,500');
 
+            expect(Formatter.format('%date{yyyy-MM-dd}', {date})).toEqual('2016-01-31');
+
             expect(Formatter.format('%d{DEFAULT}', {date})).toEqual('2016-01-31 13:30:15,500');
             expect(Formatter.format('%d{ISO8601}', {date})).toEqual('2016-01-31T13:30:15,500');
             expect(Formatter.format('%d{ISO8601_BASIC}', {date})).toEqual('20160131T133015,500');

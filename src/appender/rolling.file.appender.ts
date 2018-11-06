@@ -1,37 +1,41 @@
 import { Appender } from '../decorator/appender';
 import { ILogEvent } from '../log.event';
-import { IFileAppenderConfig } from './file.appender';
+import { RollingFileHandler } from './handler/rolling.file.handler';
 import { LogAppender } from './log.appender';
 
-export interface IRollingFileAppenderConfig extends IFileAppenderConfig {
-    fileNamePattern: string;
+export interface IRollingFileAppenderConfig {
+
+    fileName: string;
+    filePattern: string;
+    maxBackup: number;
     maxSize: number;
+
 }
 
 @Appender()
 export class RollingFileAppender extends LogAppender<IRollingFileAppenderConfig> {
 
-    private static _logFile: NodeJS.WriteStream;
+    private _handler: RollingFileHandler;
 
-    private readonly _config: IRollingFileAppenderConfig;
+    constructor(private readonly _config: IRollingFileAppenderConfig = {
+        fileName: './logs/app.log',
+        filePattern: './logs/app.%d{yyyy-MM-ddTHH:mm}.log',
+        maxBackup: 5,
+        maxSize: 10
+    }) {
 
-    constructor(config?: IRollingFileAppenderConfig) {
+        super(_config);
 
-        super(config);
+        if (typeof process === 'undefined') {
+            throw new Error('Cannot use RollingFileAppender in browser mode');
+        } else {
 
-        if (typeof window !== 'undefined') {
-            throw new Error('Cannot use FileAppender in browser mode');
-        } else if (!RollingFileAppender._logFile) {
+            this._config = {
+                ..._config,
+                maxSize: _config.maxSize * 1024 * 1024
+            };
 
-            this._config = config;
-
-            const FS = 'fs';
-            const fs = require(`${FS}`);
-            if (!fs.exists(config.destination)) {
-                fs.mkdirSync(config.destination);
-            }
-
-            RollingFileAppender._logFile = fs.createWriteStream(config.destination, {flags: 'w'});
+            this._handler = new RollingFileHandler(this._config);
 
         }
 
@@ -43,18 +47,8 @@ export class RollingFileAppender extends LogAppender<IRollingFileAppenderConfig>
      */
     public append(logEvent: ILogEvent) {
         if (logEvent.level <= this.getLogLevel()) {
-            this._appendToFile(logEvent);
+            process.nextTick(() => this._handler.append(this.format(logEvent)));
         }
-    }
-
-    /**
-     * @private
-     * @function
-     *
-     * @param {ILogEvent} logEvent
-     */
-    private _appendToFile(logEvent: ILogEvent) {
-        RollingFileAppender._logFile.write(this.format(logEvent) + '\n');
     }
 
 }

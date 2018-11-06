@@ -84,12 +84,9 @@ export const getAppender = (name: string): Newable<LogAppender> => _appenders.ge
 export const getAppenderInstances = (): LogAppender[] => {
 
     const result: LogAppender[] = [];
-    _registeredAppenders.forEach((value, key) => {
-
-        const config = _appenderConfigs.get(key);
-        result.push(new (value as any)(config));
-
-    });
+    _registeredAppenders.forEach((value, key) =>
+        result.push(new (value as any)(_appenderConfigs.get(key)))
+    );
 
     return result;
 

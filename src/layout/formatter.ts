@@ -78,7 +78,7 @@ export class Formatter {
      * @return {string}
      */
     private static _formatDate(logEvent: ILogEvent, params: string[]): string {
-        return formatDate(logEvent.date, (DateTimeFormat as any)[params[0]]);
+        return formatDate(logEvent.date, (DateTimeFormat as any)[params[0]] || params[0]);
     }
 
     /**
@@ -316,7 +316,7 @@ export class Formatter {
      */
     private static _compileLayout(layout: string) {
 
-        const formatArray = layout.match(/(%\w+({\w+}|)|.)/g)
+        const formatArray = layout.match(/(%\w+({[\w-]+}|)|.)/g)
             .map((value) => Formatter._getFormatterObject(value));
 
         // set the format array to the specified compiled layout
@@ -336,7 +336,7 @@ export class Formatter {
      */
     private static _getFormatterObject(formatString: string) {
 
-        const result = /%(\w+)(?:{(\w+)})*/g.exec(formatString);
+        const result = /%(\w+)(?:{([\w-]+)})*/g.exec(formatString);
 
         if (result == null) {
             return formatString;

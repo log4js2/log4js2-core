@@ -23,20 +23,6 @@ Or, you can install log4js2 from npm.
 > npm install --save log4js2
 ```
 
-## Virtual Console
-
-This library utilizes a virtual console to intercept `console` logs from other libraries/scripts. This is intended to
-allow usage of this library without having to replace all console.log commands within your code. Make sure `log4js2` is 
-loaded at the top of the page to ensure that all logs are caught.
-
-```typescript
-import * from 'log4js2';
-
-console.log('console log');
-
-// outputs: 08-30-2018 12:38:00 [INFO] main - console log
-```
-
 ## Getting Started
 
 Logging works out-of-the-box, with no configuration. However, note that only error messages will display without 
@@ -70,6 +56,30 @@ configure({
         tag: 'App',
         logLevel : LogLevel.INFO
     }]
+});
+```
+
+## Virtual Console
+
+This library utilizes a virtual console to intercept `console` logs from other libraries/scripts. This is intended to
+allow usage of this library without having to replace all console.log commands within your code - or to intercept logs
+from third-party libraries to input into your own logs bucket. Make sure `log4js2` is loaded at the top of the page to 
+ensure that all logs are caught.
+
+```typescript
+import * from 'log4js2';
+
+console.log('console log');
+
+// outputs: 08-30-2018 12:38:00 [INFO] main - console log
+```
+
+To disable this feature, set the `virtualConsole` property to false when configuring log4js2.
+
+```typescript
+configure({
+    // ...
+    virtualConsole: false
 });
 ```
 

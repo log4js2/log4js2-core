@@ -28,6 +28,10 @@ describe('date format', () => {
 
     });
 
+    test('custom', () => {
+        expect(formatDate(testDate, 'yyyy-MM-dd')).toEqual('2018-01-29');
+    });
+
     test('date formats', () => {
 
         expect(formatDate(testDate, 'd')).toEqual('29');
