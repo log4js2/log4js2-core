@@ -28,7 +28,7 @@ permalink: /
 <h1>Configuration</h1>
 
 <p>
-    Configure log4js using the configure() method. <strong><em>This must be the first thing you do</em></strong>.
+    Configure log4js using the <code>configure()</code> method. <strong><em>This must be the first thing you do</em></strong>.
     Otherwise, the first log you commit will not allow updates from this function.
 </p>
 
@@ -44,6 +44,8 @@ configure({
     }]
 });
 {% endhighlight %}
+
+{% include sections/pattern-layout.html %}
 
 {% include sections/appenders.html %}
 
