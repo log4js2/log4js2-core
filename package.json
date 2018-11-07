@@ -6,7 +6,8 @@
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "jekyll": "jekyll serve --destination ./docs/",
     "test": "jest",
-    "posttest": "codecov -f coverage/*.json"
+    "posttest": "codecov -f coverage/*.json",
+    "postinstall": "echo 'Starting in v2.0, the log4js2 package will be changed to @log4js2/core'"
   },
   "author": {
     "name": "Robin Schultz",

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=" media="screen" type="text/css">
+    <link rel="stylesheet" href="/assets/css/print.css" media="print" type="text/css">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>log4js2 | The fast, flexible logger for JavaScript</title>
+<meta name="generator" content="Jekyll v3.7.4" />
+<meta property="og:title" content="log4js2" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The fast, flexible logger for JavaScript" />
+<meta property="og:description" content="The fast, flexible logger for JavaScript" />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
+<meta property="og:site_name" content="log4js2" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/","headline":"log4js2","name":"log4js2","description":"The fast, flexible logger for JavaScript","@type":"WebSite","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+<body>
+
+<header>
+    <div class="inner">
+        <a href="http://localhost:4000/">
+            <h1>log4js2</h1>
+        </a>
+        <h2>The fast, flexible logger for JavaScript</h2>
+        
+        <a href="https://github.com/anigenero/log4js2" class="button"><small>View project on</small> GitHub</a>
+        
+        
+    </div>
+</header>
+
+
+<div id="content-wrapper">
+    <div class="inner clearfix">
+
+        <section id="main-content">
+            <p>
+    log4js2 is a fast and lightweight logging library that enables logging flexibility within JavaScript applications,
+    similar to Apache's Log4j2 library. It can also serve as a drop-in replacement for log4js, since the namespace and
+    functions are mostly similar.
+</p>
+
+<div>
+    <a href="https://travis-ci.org/anigenero/log4js2">
+        <img src="https://travis-ci.org/anigenero/log4js2.svg?branch=master"/>
+    </a>
+    <a href="https://codecov.io/gh/anigenero/log4js2">
+        <img src="https://codecov.io/gh/anigenero/log4js2/branch/master/graph/badge.svg"/>
+    </a>
+</div>
+
+<h1>Installation & Building</h1>
+
+<pre>
+<code>&gt; npm i -S @log4js2/core</code>
+</pre>
+
+<h1>Configuration</h1>
+
+<p>
+    Configure log4js using the configure() method. <strong><em>This must be the first thing you do</em></strong>.
+    Otherwise, the first log you commit will not allow updates from this function.
+</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="k">import</span> <span class="p">{</span><span class="nx">configure</span><span class="p">,</span> <span class="nx">LogLevel</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'log4js2'</span><span class="p">;</span>
+
+<span class="nx">configure</span><span class="p">({</span>
+    <span class="na">layout</span> <span class="p">:</span> <span class="s1">'%d [%p] %c %M:%line:%column - %m %ex'</span><span class="p">,</span>
+    <span class="na">appenders</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'Console'</span><span class="p">],</span>
+    <span class="na">loggers</span> <span class="p">:</span> <span class="p">[{</span>
+        <span class="na">tag</span><span class="p">:</span> <span class="s1">'App'</span><span class="p">,</span>
+        <span class="na">logLevel</span> <span class="p">:</span> <span class="nx">LogLevel</span><span class="p">.</span><span class="nx">INFO</span>
+    <span class="p">}]</span>
+<span class="p">});</span></code></pre></figure>
+
+<h1>Appenders</h1>
+
+<h2>Console</h2>
+
+<p>
+    Default appender that outputs logs to the system out
+</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="nx">configure</span><span class="p">({</span>
+    <span class="na">layout</span> <span class="p">:</span> <span class="s1">'%d [%p] %c %M:%line:%column - %m %ex'</span><span class="p">,</span>
+    <span class="na">appenders</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="na">appender</span><span class="p">:</span> <span class="s1">'Console'</span>
+    <span class="p">}]</span>
+<span class="p">});</span></code></pre></figure>
+
+<h2>File</h2>
+
+<p>
+    A simple file appender that outputs logs to a single file.
+</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="nx">configure</span><span class="p">({</span>
+    <span class="na">layout</span> <span class="p">:</span> <span class="s1">'%d [%p] %c %M:%line:%column - %m %ex'</span><span class="p">,</span>
+    <span class="na">appenders</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="na">appender</span><span class="p">:</span> <span class="s1">'File'</span><span class="p">,</span>
+        <span class="na">config</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">fileName</span><span class="p">:</span> <span class="s1">'./logs/app.log'</span>
+        <span class="p">}</span>
+    <span class="p">}]</span>
+<span class="p">});</span></code></pre></figure>
+
+<h2>Rolling File</h2>
+
+<p>
+    The rolling file appender allows for logs to be appended to a log file, to be split and backed up once the file
+    reaches a certain size.
+</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="nx">configure</span><span class="p">({</span>
+    <span class="na">layout</span> <span class="p">:</span> <span class="s1">'%d [%p] %c %M:%line:%column - %m %ex'</span><span class="p">,</span>
+    <span class="na">appenders</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="na">appender</span><span class="p">:</span> <span class="s1">'RollingFile'</span><span class="p">,</span>
+        <span class="na">config</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">fileName</span><span class="p">:</span> <span class="s1">'./logs/rollingfile.log'</span><span class="p">,</span>
+            <span class="na">filePattern</span><span class="p">:</span> <span class="s1">'./logs/rollingfile.%i.log'</span><span class="p">,</span>
+            <span class="na">maxBackup</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="na">maxSize</span><span class="p">:</span> <span class="mi">10</span>
+        <span class="p">}</span>
+    <span class="p">}]</span>
+<span class="p">});</span></code></pre></figure>
+
+<h2>Custom</h2>
+
+<p>
+    You can create custom log appenders for specific use cases.
+</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="p">@</span><span class="nd">Appender</span><span class="p">(</span><span class="s1">'MyAppender'</span><span class="p">)</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">MyAppender</span> <span class="kd">extends</span> <span class="nx">LogAppender</span><span class="o">&lt;</span><span class="nx">MyAppenderConfiguration</span><span class="o">&gt;</span> <span class="p">{</span>
+
+    <span class="kr">public</span> <span class="kr">static</span> <span class="kd">get</span> <span class="nx">appenderName</span><span class="p">():</span> <span class="nx">string</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">'MyAppender'</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kr">public</span> <span class="nx">append</span><span class="p">(</span><span class="na">logEvent</span><span class="p">:</span> <span class="nx">ILogEvent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">logEvent</span><span class="p">.</span><span class="nx">level</span> <span class="o">&lt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getLogLevel</span><span class="p">())</span> <span class="p">{</span>
+
+            <span class="kd">const</span> <span class="nx">message</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">format</span><span class="p">(</span><span class="nx">logEvent</span><span class="p">);</span>
+
+            <span class="c1">// handle message</span>
+
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="p">}</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="k">import</span> <span class="p">{</span> <span class="nx">MyAppender</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'./myappender.ts'</span><span class="p">;</span>
+
+<span class="nx">configure</span><span class="p">({</span>
+    <span class="c1">// ...</span>
+    <span class="na">appenders</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="na">appender</span><span class="p">:</span> <span class="nx">MyAppender</span><span class="p">,</span> <span class="c1">// can also refer by name ('MyAppender')</span>
+        <span class="na">config</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1">// ...</span>
+        <span class="p">}</span>
+    <span class="p">}]</span>
+<span class="p">});</span></code></pre></figure>
+
+<h1>Virtual Console</h1>
+<p>
+    This library utilizes a virtual console to intercept console logs from other libraries/scripts. This is intended
+    to allow usage of this library without having to replace all console.log commands within your code - or to intercept
+    logs from third-party libraries to input into your own logs bucket. Make sure log4js2 is loaded at the top of the
+    page to ensure that all logs are caught.
+</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="k">import</span> <span class="o">*</span> <span class="k">from</span> <span class="s1">'log4js2'</span><span class="p">;</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'console log'</span><span class="p">);</span>
+
+<span class="c1">// outputs: 08-30-2018 12:38:00 [INFO] main - console log</span></code></pre></figure>
+
+<p>
+    To disable this feature, set the <strong>virtualConsole</strong> property to false when configuring log4js2.
+</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="nx">configure</span><span class="p">({</span>
+    <span class="c1">// ...</span>
+    <span class="na">virtualConsole</span><span class="p">:</span> <span class="kc">false</span>
+<span class="p">});</span></code></pre></figure>
+
+        </section>
+
+        <aside id="sidebar">
+
+    
+
+    
+        <p class="repo-owner">
+            <a href="https://github.com/anigenero/log4js2">log4js2</a>
+            is maintained by
+            <a href="https://github.com/anigenero/">Robin Schultz</a>.
+        </p>
+    
+
+    <p>
+        This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.
+    </p>
+
+</aside>
+
+    </div>
+</div>
+
+
+</body>
+</html>

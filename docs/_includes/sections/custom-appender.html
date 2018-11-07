@@ -1,0 +1,42 @@
+<h2>Custom</h2>
+
+<p>
+    You can create custom log appenders for specific use cases.
+</p>
+
+{% highlight typescript %}
+
+@Appender('MyAppender')
+export class MyAppender extends LogAppender<MyAppenderConfiguration> {
+
+    public static get appenderName(): string {
+        return 'MyAppender';
+    }
+
+    public append(logEvent: ILogEvent) {
+        if (logEvent.level <= this.getLogLevel()) {
+
+            const message = this.format(logEvent);
+
+            // handle message
+
+        }
+    }
+
+}
+
+{% endhighlight %}
+
+{% highlight typescript %}
+import { MyAppender } from './myappender.ts';
+
+configure({
+    // ...
+    appenders: [{
+        appender: MyAppender, // can also refer by name ('MyAppender')
+        config: {
+            // ...
+        }
+    }]
+});
+{% endhighlight %}

@@ -1,0 +1,58 @@
+<h1>Appenders</h1>
+
+<h2>Console</h2>
+
+<p>
+    Default appender that outputs logs to the system out
+</p>
+
+{% highlight typescript %}
+configure({
+    layout : '%d [%p] %c %M:%line:%column - %m %ex',
+    appenders: [{
+        appender: 'Console'
+    }]
+});
+{% endhighlight %}
+
+<h2>File</h2>
+
+<p>
+    A simple file appender that outputs logs to a single file.
+</p>
+
+{% highlight typescript %}
+configure({
+    layout : '%d [%p] %c %M:%line:%column - %m %ex',
+    appenders: [{
+        appender: 'File',
+        config: {
+            fileName: './logs/app.log'
+        }
+    }]
+});
+{% endhighlight %}
+
+<h2>Rolling File</h2>
+
+<p>
+    The rolling file appender allows for logs to be appended to a log file, to be split and backed up once the file
+    reaches a certain size.
+</p>
+
+{% highlight typescript %}
+configure({
+    layout : '%d [%p] %c %M:%line:%column - %m %ex',
+    appenders: [{
+        appender: 'RollingFile',
+        config: {
+            fileName: './logs/rollingfile.log',
+            filePattern: './logs/rollingfile.%i.log',
+            maxBackup: 10,
+            maxSize: 10
+        }
+    }]
+});
+{% endhighlight %}
+
+{% include sections/custom-appender.html %}

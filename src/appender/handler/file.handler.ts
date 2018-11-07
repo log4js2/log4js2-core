@@ -1,5 +1,4 @@
 import { throttle } from 'lodash';
-import { Formatter } from '../../layout/formatter';
 import { IFileAppenderConfig } from '../file.appender';
 import { FileWriter } from './file.writer';
 
@@ -14,13 +13,13 @@ export class FileHandler extends FileWriter {
 
         super();
 
-        const directory = FileWriter.path.dirname(this._config.destination);
+        const directory = FileWriter.path.dirname(this._config.fileName);
 
         if (!FileWriter.fs.existsSync(directory)) {
             FileWriter.createDirectories(directory);
         }
 
-        this._logFile = this._createStream(_config.destination);
+        this._logFile = this._createStream(_config.fileName);
 
         this._throttledFunction = throttle(() => {
             if (!this._inProcess) {
@@ -56,7 +55,5 @@ export class FileHandler extends FileWriter {
         }
 
     }
-
-
 
 }

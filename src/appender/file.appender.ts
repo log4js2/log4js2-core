@@ -4,7 +4,7 @@ import { FileHandler } from './handler/file.handler';
 import { LogAppender } from './log.appender';
 
 export interface IFileAppenderConfig {
-    destination: string;
+    fileName: string;
 }
 
 @Appender()

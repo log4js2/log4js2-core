@@ -1,0 +1,26 @@
+<h1>Virtual Console</h1>
+<p>
+    This library utilizes a virtual console to intercept console logs from other libraries/scripts. This is intended
+    to allow usage of this library without having to replace all console.log commands within your code - or to intercept
+    logs from third-party libraries to input into your own logs bucket. Make sure log4js2 is loaded at the top of the
+    page to ensure that all logs are caught.
+</p>
+
+{% highlight typescript %}
+import * from 'log4js2';
+
+console.log('console log');
+
+// outputs: 08-30-2018 12:38:00 [INFO] main - console log
+{% endhighlight %}
+
+<p>
+    To disable this feature, set the <strong>virtualConsole</strong> property to false when configuring log4js2.
+</p>
+
+{% highlight typescript %}
+configure({
+    // ...
+    virtualConsole: false
+});
+{% endhighlight %}

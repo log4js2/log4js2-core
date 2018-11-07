@@ -1,0 +1,50 @@
+---
+layout: default
+overview: true
+permalink: /
+---
+
+<p>
+    log4js2 is a fast and lightweight logging library that enables logging flexibility within JavaScript applications,
+    similar to Apache's Log4j2 library. It can also serve as a drop-in replacement for log4js, since the namespace and
+    functions are mostly similar.
+</p>
+
+<div>
+    <a href="https://travis-ci.org/anigenero/log4js2">
+        <img src="https://travis-ci.org/anigenero/log4js2.svg?branch=master"/>
+    </a>
+    <a href="https://codecov.io/gh/anigenero/log4js2">
+        <img src="https://codecov.io/gh/anigenero/log4js2/branch/master/graph/badge.svg"/>
+    </a>
+</div>
+
+<h1>Installation & Building</h1>
+
+<pre>
+<code>&gt; npm i -S @log4js2/core</code>
+</pre>
+
+<h1>Configuration</h1>
+
+<p>
+    Configure log4js using the configure() method. <strong><em>This must be the first thing you do</em></strong>.
+    Otherwise, the first log you commit will not allow updates from this function.
+</p>
+
+{% highlight typescript %}
+import {configure, LogLevel} from 'log4js2';
+
+configure({
+    layout : '%d [%p] %c %M:%line:%column - %m %ex',
+    appenders : ['Console'],
+    loggers : [{
+        tag: 'App',
+        logLevel : LogLevel.INFO
+    }]
+});
+{% endhighlight %}
+
+{% include sections/appenders.html %}
+
+{% include sections/virtual-console.html %}
