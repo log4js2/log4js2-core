@@ -180,7 +180,7 @@ export function configure(config: IConfiguration) {
     _configureLoggers(config);
 
     if (config.virtualConsole !== false) {
-        getVirtualConsole(getLoggerFromContext(MAIN_LOGGER, config));
+        getVirtualConsole(getLoggerFromContext(MAIN_LOGGER, _getLoggerConfiguration(MAIN_LOGGER)));
     } else {
         useVirtualConsole(false);
     }
