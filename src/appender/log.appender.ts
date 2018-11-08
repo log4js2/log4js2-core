@@ -4,14 +4,6 @@ import { ILogEvent } from '../log.event';
 
 export abstract class LogAppender<C extends {}> {
 
-    /**
-     * Gets the name of the appender (e.g. 'console')
-     * @returns {null}
-     */
-    public static get appenderName(): string {
-        return null;
-    }
-
     private active: boolean;
 
     private logLevel: LogLevel;

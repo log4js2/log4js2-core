@@ -4,6 +4,7 @@ import { Appender } from '..';
 import { ILogEvent } from '../log.event';
 
 export const logStack: { [key: string]: string[] } = {
+    fatal: [],
     error: [],
     warn: [],
     info: [],
@@ -27,6 +28,7 @@ export class CustomAppender extends LogAppender<{}> {
     }
 
     public clear() {
+        logStack.fatal = [];
         logStack.error = [];
         logStack.warn = [];
         logStack.info = [];
@@ -38,7 +40,9 @@ export class CustomAppender extends LogAppender<{}> {
 
         const message = this.format(logEvent);
 
-        if (logEvent.level === LogLevel.ERROR) {
+        if (logEvent.level === LogLevel.FATAL) {
+            logStack.fatal.push(message);
+        } else if (logEvent.level === LogLevel.ERROR) {
             logStack.error.push(message);
         } else if (logEvent.level === LogLevel.WARN) {
             logStack.warn.push(message);

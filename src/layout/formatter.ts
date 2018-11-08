@@ -2,6 +2,7 @@ import * as define from 'core-js/library/fn/object/define';
 import { LogLevel } from '../const/log.level';
 import { Method } from '../def';
 import { ILogEvent } from '../log.event';
+import { Marker } from '../marker';
 import { getFunctionName } from '../util/utility';
 import { DateTimeFormat, formatDate } from './date.formatter';
 
@@ -11,18 +12,6 @@ interface IFormatterObject {
 }
 
 export class Formatter {
-
-    /**
-     * @function
-     * @memberOf formatter
-     *
-     * @param {string} layout
-     *
-     * @return {string}
-     */
-    public static preCompile(layout: string) {
-        Formatter._getCompiledLayout(layout);
-    }
 
     /**
      * @function
@@ -47,6 +36,8 @@ export class Formatter {
         'column': Formatter._formatColumn,
         'm|msg|message': Formatter._formatLogMessage,
         'M|method': Formatter._formatMethodName,
+        'marker': Formatter._formatMarker,
+        'markerSimpleName': Formatter._formatMarkerSimple,
         'n': Formatter._formatLineSeparator,
         'p|level': Formatter._formatLevel,
         'r|relative': Formatter._formatRelative,
@@ -206,6 +197,40 @@ export class Formatter {
      */
     private static _formatLogMessage(logEvent: ILogEvent): string {
         return logEvent.message;
+    }
+
+    private static _formatMarkerFromEvent(marker: Marker): string {
+
+        if (marker.hasParents()) {
+            const formatted = marker.getParents().map((parent: Marker) => Formatter._formatMarkerFromEvent(parent));
+            return `${marker.name}[ ${formatted} ]`;
+        } else {
+            return `${marker.name}`;
+        }
+
+    }
+
+    /**
+     *
+     * @private
+     *
+     * @param {ILogEvent} logEvent
+     * @return {string}
+     */
+    private static _formatMarker(logEvent: ILogEvent): string {
+        return (logEvent.marker) ? Formatter._formatMarkerFromEvent(logEvent.marker) : '';
+    }
+
+    /**
+     * Formats just the marker name (no parents)
+     *
+     * @private
+     *
+     * @param {ILogEvent} logEvent
+     * @return {string}
+     */
+    private static _formatMarkerSimple(logEvent: ILogEvent): string {
+        return (logEvent.marker) ? logEvent.marker.name : '';
     }
 
     /**

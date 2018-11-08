@@ -9,11 +9,13 @@ export const useVirtualConsole = (state: boolean) => {
 
 export const getVirtualConsole = (logger?: Logger) => {
 
-    if (!useVirtualConsole) {
+    if (!_isUseVirtualConsole) {
         return console;
     }
 
     class Log4JConsole implements Console {
+
+        public readonly isVirtual = true;
 
         public Console: NodeJS.ConsoleConstructor;
 
@@ -56,7 +58,9 @@ export const getVirtualConsole = (logger?: Logger) => {
         }
 
         public markTimeline(label?: string): void {
-            _virtualConsole.markTimeline(label);
+            if (typeof _virtualConsole.markTimeline === 'function') {
+                _virtualConsole.markTimeline(label);
+            }
         }
 
         public msIsIndependentlyComposed(element: Element): boolean {
@@ -64,11 +68,15 @@ export const getVirtualConsole = (logger?: Logger) => {
         }
 
         public profile(reportName?: string): void {
-            _virtualConsole.profile(reportName);
+            if (typeof _virtualConsole.profile === 'function') {
+                _virtualConsole.profile(reportName);
+            }
         }
 
         public profileEnd(): void {
-            _virtualConsole.profileEnd();
+            if (typeof _virtualConsole.profileEnd === 'function') {
+                _virtualConsole.profileEnd();
+            }
         }
 
         public table(...tabularData: any[]): void {
@@ -84,19 +92,27 @@ export const getVirtualConsole = (logger?: Logger) => {
         public timeEnd(label?: string): void;
         public timeEnd(label: string): void;
         public timeEnd(label?: string): void {
-            _virtualConsole.timeEnd(label);
+            if (typeof _virtualConsole.timeEnd === 'function') {
+                _virtualConsole.timeEnd(label);
+            }
         }
 
         public timeStamp(label?: string): void {
-            _virtualConsole.timeStamp(label);
+            if (typeof _virtualConsole.timeStamp === 'function') {
+                _virtualConsole.timeStamp(label);
+            }
         }
 
         public timeline(label?: string): void {
-            _virtualConsole.timeline(label);
+            if (typeof _virtualConsole.timeline === 'function') {
+                _virtualConsole.timeline(label);
+            }
         }
 
         public timelineEnd(label?: string): void {
-            _virtualConsole.timelineEnd(label);
+            if (typeof _virtualConsole.timelineEnd === 'function') {
+                _virtualConsole.timelineEnd(label);
+            }
         }
 
         public debug(message?: any, ...optionalParams: any[]): void {

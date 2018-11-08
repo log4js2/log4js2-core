@@ -1,4 +1,4 @@
-export default class Marker {
+export class Marker {
 
     /**
      * Gets the marker for the specified name
@@ -17,7 +17,7 @@ export default class Marker {
 
     private static _markers: { [key: string]: Marker; } = {};
 
-    private _parents: Set<Marker> = null;
+    private _parents: Set<Marker> = new Set<Marker>();
     private _name: string;
 
     /**
@@ -42,10 +42,6 @@ export default class Marker {
      */
     public getParents(): Marker[] {
 
-        if (this._parents === null) {
-            return [];
-        }
-
         const result: Marker[] = [];
         this._parents.forEach((marker) => result.push(marker));
 
@@ -58,29 +54,30 @@ export default class Marker {
      * @returns {boolean}
      */
     public hasParents(): boolean {
-        return this._parents !== null;
+        return this._parents.size > 0;
     }
 
     /**
      * Removes the specified marker as a parent
      * @param {Marker} marker
      */
-    public remove(marker: Marker) {
+    public remove(marker: Marker): this {
         this._parents.delete(marker);
+        return this;
     }
 
     /**
      * Sets the parent markers by replacing the current set
      * @param {Marker} markers
      */
-    public setParents(...markers: Marker[]) {
-
-        this._parents = new Set<Marker>();
+    public setParents(...markers: Marker[]): this {
 
         let index = markers.length;
         while (index--) {
             this._parents.add(markers[index]);
         }
+
+        return this;
 
     }
 
