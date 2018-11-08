@@ -1,6 +1,6 @@
 import { LogLevel } from './const/log.level';
 import { Method } from './def';
-import Marker from './marker';
+import { Marker } from './marker';
 
 export interface ILogEvent {
 
