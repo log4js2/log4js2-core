@@ -36,17 +36,22 @@ permalink: /
 import {configure, LogLevel} from 'log4js2';
 
 configure({
-    layout : '%d [%p] %c %M:%line:%column - %m %ex',
-    appenders : ['Console'],
-    loggers : [{
+    level: LogLevel.INFO
+    layout: '%d [%p] %c %M:%line:%column - %m %ex',
+    appenders: ['Console'],
+    loggers: [{
         tag: 'App',
         logLevel : LogLevel.INFO
     }]
 });
 {% endhighlight %}
 
+{% include sections/virtual-console.html %}
+
+{% include sections/usage.html %}
+
+{% include sections/levels.html %}
+
 {% include sections/pattern-layout.html %}
 
 {% include sections/appenders.html %}
-
-{% include sections/virtual-console.html %}

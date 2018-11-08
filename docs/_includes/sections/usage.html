@@ -1,0 +1,44 @@
+<h1>Usage</h1>
+
+<h2>Simple Logging</h2>
+
+{% highlight typescript %}
+
+const logger = getLogger('app');
+
+logger.info('something happened!');
+
+{% endhighlight %}
+
+<h2>Variables</h2>
+
+<p>
+    Variables can be inputted into your log statement by using curly braces <code>{}</code>, and will be replaced with
+    the supplied arguments at the corresponding index. So, the first curly brace will take the first argument after the
+    message string, the second curly brace the second argument, etc.
+</p>
+{% highlight typescript %}
+logger.info('The user email is: {}', email);
+{% endhighlight %}
+
+<h2>Errors</h2>
+
+<p>
+    If specified in the pattern layout, by adding an error to your list of arguments, the stacktrace will be outputted
+    to the logs. <em>Your error must be the last argument, and not consumed by a <code>{}</code>, otherwise it will not
+    display</em>
+</p>
+
+{% highlight typescript %}
+try {
+    // execute something
+} catch (e) {
+
+    // stacktrace displays
+    logger.error('There was an error: {}', e.message, e);
+
+    // stacktrace does not display
+    logger.error('There was an error: {}', e);
+
+}
+{% endhighlight %}

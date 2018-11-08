@@ -14,9 +14,20 @@ export class Logger {
 
         this._logContext = context;
 
-        this._logSequence = 1;
+        this._logSequence = 0;
         this._relative = (new Date()).getTime();
 
+    }
+
+    /**
+     * Logs an error event
+     *
+     * @function
+     * @memberOf Logger
+     */
+    public fatal(...args: any[]) {
+        this._appenders.forEach((appender) =>
+            appender.append(this._constructLogEvent(LogLevel.FATAL, arguments)));
     }
 
     /**

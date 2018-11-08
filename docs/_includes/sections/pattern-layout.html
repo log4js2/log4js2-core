@@ -1,75 +1,230 @@
 <h1>Pattern Layout</h1>
 
+<h2>Specifying a Layout</h2>
+
 <p>
-    log4js2 borrows tags from the Log4j2 library
+    Like log levels, you can specify multiple pattern layouts, in order of precedence, at the logger, appender, and
+    global levels. Pattern layouts are specified using <em>tags</em>, which describe a particular log event attribute
+    (see below).
 </p>
+
+{% highlight typescript %}
+configure({
+    patternLayout: '%d [%p] %c - %m', // default
+    appenders: [{
+        appender: 'Console',
+        patternLayout: '%d{ISO8601} [%p] - %m %exception' // appender
+    }],
+    loggers: [{
+        tag: 'App',
+        patternLayout: '%c.%method (%line:%column) %m %ex' // logger
+    }]
+});
+{% endhighlight %}
+
+<p>
+    If a tag takes parameters, those are specified within the proceeding curly brackets <code>{}</code>.
+    <strong>Do not</strong> add a space between the tag and the parameter(s) container - so <code>%d {DEFAULT}</code>
+    is invalid, whereas <code>%d{DEFAULT}</code> is correct.
+</p>
+
+<h2>Tags</h2>
 
 <h3>Logger</h3>
 
-<code>%c</code>
-<code>%logger</code>
+<p>
+    <code>%c</code>
+    <code>%logger</code>
+</p>
+
+<p>
+    Outputs the name of the logger that pushed the message. If no logger is specified, the <em>main</em> logger is used.
+    This tag takes no parameters.
+</p>
 
 <h3>Date</h3>
 
-<code>%d{DEFAULT}</code>
-<code>%d{ABSOLUTE}</code>
-<code>%d{COMPACT}</code>
-<code>%d{DATE}</code>
-<code>%d{ISO8601}</code>
-<code>%d{ISO8601_BASIC}</code>
+<p>
+    <code>%d</code>
+    <code>%date</code>
+</p>
+
+<p>
+    Outputs the current date the log was issued at. You can specify the date format using one of the named date formats
+    (below), or by supplying your own date format string. Using <code>%d</code> or <code>%date</code> without a format
+    will behave like <code>%d{DEFAULT}</code>
+</p>
+
+<table>
+    <thead>
+    <tr>
+        <td><strong>Name</strong></td>
+        <td><strong>Format</strong></td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="text-align: left;">DEFAULT</td>
+        <td style="text-align: left;">yyyy-MM-dd HH:mm:ss,S</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">ABSOLUTE</td>
+        <td style="text-align: left;">HH:mm:ss,S</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">COMPACT</td>
+        <td style="text-align: left;">yyyyMMddHHmmssS</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">DATE</td>
+        <td style="text-align: left;">dd MMM yyyy HH:mm:ss,S</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">ISO8601</td>
+        <td style="text-align: left;">yyyy-MM-ddTHH:mm:ss,S</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">ISO8601_BASIC</td>
+        <td style="text-align: left;">yyyyMMddTHHmmss,S</td>
+    </tr>
+    </tbody>
+</table>
 
 <h3>Exception</h3>
 
-<code>%ex</code>
-<code>%exception</code>
-<code>%throwable</code>
+<p>
+    <code>%ex</code>
+    <code>%exception</code>
+    <code>%throwable</code>
+</p>
+
+<p>
+    Outputs the stack trace for a thrown error (if present). If no error is present, this tag will not render.
+    {% highlight typescript %} logger.error('an error occurred!', err); {% endhighlight %}
+</p>
 
 <h3>File</h3>
 
-<code>%F</code>
-<code>%file</code>
+<p>
+    <code>%F</code>
+    <code>%file</code>
+</p>
+
+<p>
+    Outputs the file name and location that emitted the log.
+</p>
 
 <h3>Map</h3>
 
-<code>%K</code>
-<code>%map</code>
-<code>%MAP</code>
+<p>
+    <code>%K</code>
+    <code>%map</code>
+    <code>%MAP</code>
+</p>
+
+<p>
+    Outputs a map to a readable format. The value must be of type <code>object</code> with key-value pairs, or type
+    <code>Map</code>. There can also be no corresponding curly brace <code>{}</code> in the log message, otherwise the
+    value will not output.
+</p>
+{% highlight typescript %}
+logger.info('Output: ', { a: 1, foo: 'bar' });
+
+{% raw %}// [INFO] main - {{a,1},{foo,bar}}{% endraw %}
+{% endhighlight %}
 
 <h3>Line</h3>
 
-<code>%L</code>
-<code>%line</code>
+<p>
+    <code>%L</code>
+    <code>%line</code>
+</p>
+
+<p>
+    Outputs the line number the log was emitted from.
+</p>
 
 <h3>Column</h3>
 
-<code>%column</code>
+<p>
+    <code>%column</code>
+</p>
+
+<p>
+    Outputs the column number the log was emitted from.
+</p>
 
 <h3>Log Message</h3>
 
-<code>%m</code>
-<code>%msg</code>
-<code>%message</code>
+<p>
+    <code>%m</code>
+    <code>%msg</code>
+    <code>%message</code>
+</p>
+
+<p>
+    The log message, with all curly brace <code>{}</code> arguments substituted. Your pattern layout
+    <strong>must</strong> have this tag in order to display the log message, which is not emitted regardless of layout.
+</p>
 
 <h3>Method</h3>
 
-<code>%M</code>
-<code>%method</code>
+<p>
+    <code>%M</code>
+    <code>%method</code>
+</p>
+
+<p>
+    The method (function) that called the logger. If the function is named, the name of the method will be shown,
+    otherwise <em>anonymous</em> will be outputted. <em>This tag is expensive in its execution, so it's a good idea
+    not to use it in a production environment. Also, this tag is unreliable when using
+    <code>'use strict'</code></em>.
+</p>
 
 <h3>Line Separator</h3>
 
-<code>%n</code>
+<p>
+    <code>%n</code>
+</p>
+
+<p>
+    Outputs a simple line separator <code>\n</code> within the logs. All logs already terminate with a new line
+    separator, so this is only useful if you want to split your log over multiple lines.
+</p>
 
 <h3>Log Level</h3>
 
-<code>%p</code>
-<code>%level</code>
+<p>
+    <code>%p</code>
+    <code>%level</code>
+</p>
+
+<p>
+    The log level for the given log event. The level can be <code>FATAL</code>, <code>ERROR</code>, <code>WARN</code>,
+    <code>INFO</code>, <code>DEBUG</code>, or <code>TRACE</code>.
+</p>
 
 <h3>Relative</h3>
 
-<code>%r</code>
-<code>%relative</code>
+<p>
+    <code>%r</code>
+    <code>%relative</code>
+</p>
+
+<p>
+    The relative time of a given log to the creation of its logger, in milliseconds. So, for example, if
+    the logger was created at <code>5:35:10 PM</code>, and the log was generated at <code>5:36:00 PM</code>, the
+    outputted relative value would be <code>50000</code>.
+</p>
 
 <h3>Sequence</h3>
 
-<code>%sn</code>
-<code>%sequenceNumber</code>
+<p>
+    <code>%sn</code>
+    <code>%sequenceNumber</code>
+</p>
+
+<p>
+    The sequence number of the log for the given logger. This number starts at 1 and increments for every subsequent
+    log entry.
+</p>

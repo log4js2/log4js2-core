@@ -37,6 +37,7 @@ export class ConsoleAppender extends LogAppender {
 
         switch (logEvent.level) {
 
+            case LogLevel.FATAL:
             case LogLevel.ERROR: {
                 if (logEvent.error) {
                     getVirtualConsole().error(message, logEvent.error);

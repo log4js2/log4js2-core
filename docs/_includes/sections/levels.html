@@ -1,0 +1,32 @@
+<h1>Levels</h1>
+
+<p>
+    The log4js2 <code>LogLevel</code> enum specifies the log levels (in decreasing severity) <code>FATAL</code>,
+    <code>ERROR</code>, <code>WARN</code>, <code>INFO</code>, <code>DEBUG</code>, and <code>TRACE</code> - with an
+    inclusion of <code>ALL</code> and <code>NONE</code> for configuration purposes.
+</p>
+
+<h2>Specifying Levels</h2>
+
+<p>
+    You can specify multiple log levels, in order of precedence, at the logger, appender, and global levels. This allows
+    logs to be, for example, suppressed in a browser console while being passed to another appender to be pushed to an
+    HTTP endpoint. By using <code>ALL</code>, you can allow any and all level logs to be outputted, and by using
+    <code>NONE</code>, restrict any output.
+</p>
+
+{% highlight typescript %}
+
+configure({
+    level: LogLevel.WARN, // default
+    appenders: [{
+        appender: 'RollingFile',
+        level: LogLevel.INFO // appender
+    }],
+    loggers: [{
+        tag: 'DAO',
+        level: LogLevel.ALL // logger
+    }]
+});
+
+{% endhighlight %}

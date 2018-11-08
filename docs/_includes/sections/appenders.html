@@ -3,22 +3,24 @@
 <h2>Console</h2>
 
 <p>
-    Default appender that outputs logs to the system out
+    This is the default appender that outputs logs to the system out. If no appender is specified in the configuration,
+    the console appender will be used.
 </p>
 
 {% highlight typescript %}
+// you can use just the appender name
+// if you don't want to specify any configuration
 configure({
-    layout : '%d [%p] %c %M:%line:%column - %m %ex',
-    appenders: [{
-        appender: 'Console'
-    }]
+    appenders: ['Console']
 });
 {% endhighlight %}
 
 <h2>File</h2>
 
 <p>
-    A simple file appender that outputs logs to a single file.
+    This is a simple file appender that outputs logs to a single file. There is no consideration for file size, so it is
+    wise to only utilize this appender when the process execution terminates after a set time period (e.g. not a http
+    server).
 </p>
 
 {% highlight typescript %}
@@ -37,7 +39,13 @@ configure({
 
 <p>
     The rolling file appender allows for logs to be appended to a log file, to be split and backed up once the file
-    reaches a certain size.
+    reaches a certain size. The <code>filePattern</code> attribute can contain either <code>%d</code> tag for the log
+    file creation date, or a <code>%i</code> tag to specify the increment.
+</p>
+
+<p>
+    You can control the size (in megabytes) by setting the <code>maxSize</code> attribute, or of the max number of log
+    file backups to retain by setting <code>maxBackup</code>.
 </p>
 
 {% highlight typescript %}
@@ -47,7 +55,7 @@ configure({
         appender: 'RollingFile',
         config: {
             fileName: './logs/rollingfile.log',
-            filePattern: './logs/rollingfile.%i.log',
+            filePattern: './logs/rollingfile.%d{DEFAULT}.log',
             maxBackup: 10,
             maxSize: 10
         }
