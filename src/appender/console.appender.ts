@@ -5,7 +5,7 @@ import { getVirtualConsole } from '../util/virtual.console';
 import { LogAppender } from './log.appender';
 
 @Appender()
-export class ConsoleAppender extends LogAppender {
+export class ConsoleAppender extends LogAppender<{}> {
 
     /**
      * Gets the name of the appender (e.g. 'console')

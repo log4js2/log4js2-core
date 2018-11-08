@@ -33,7 +33,7 @@ export const getLogger = <T>(context: string, config: ILoggerConfiguration): Log
         return _loggers.get(context);
     } else {
 
-        const appenders: LogAppender[] = [];
+        const appenders: Array<LogAppender<any>> = [];
         getAppenderInstances().forEach((appender) => {
 
             appender.setLogLevel(config.level);

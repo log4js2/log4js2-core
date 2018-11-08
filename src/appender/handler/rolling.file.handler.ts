@@ -88,11 +88,7 @@ export class RollingFileHandler extends FileWriter {
     }
 
     private _getMaxIndex(): number {
-
-        const {filePattern} = this._config;
-
         return 0;
-
     }
 
 }

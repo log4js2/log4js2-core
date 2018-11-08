@@ -21,6 +21,7 @@ type IsNever<T extends string> = Not<HaveIntersection<IsNeverWorker<T>, 'false'>
 type IsFunction<T> = IsNever<keyof T>;
 
 type NonFunctionProps<T> = {
+    // @ts-ignore
     [K in keyof T]: {
         'false': K,
         'true': never
@@ -28,6 +29,7 @@ type NonFunctionProps<T> = {
 }[keyof T];
 
 type FunctionProps<T> = {
+    // @ts-ignore
     [K in keyof T]: {
         'false': never,
         'true': K

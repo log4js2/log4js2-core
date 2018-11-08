@@ -6,7 +6,7 @@ import ILoggerConfiguration from './logger.config';
 export default interface IConfiguration {
 
     level?: LogLevel;
-    appenders?: Array<IAppenderConfiguration<LogAppender>> | string[];
+    appenders?: Array<IAppenderConfiguration<LogAppender<any>>> | string[];
     loggers?: ILoggerConfiguration[];
     patternLayout?: string;
     virtualConsole?: boolean;

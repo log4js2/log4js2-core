@@ -1,7 +1,7 @@
 import { Newable } from '../def';
 import { LogAppender } from './log.appender';
 
-const _appenderMethods: Set<FunctionProps<LogAppender>> = new Set<FunctionProps<LogAppender>>();
+const _appenderMethods: Set<FunctionProps<LogAppender<any>>> = new Set<FunctionProps<LogAppender<any>>>();
 _appenderMethods.add('append');
 _appenderMethods.add('isActive');
 _appenderMethods.add('setLogLevel');
@@ -9,8 +9,8 @@ _appenderMethods.add('setLayout');
 _appenderMethods.add('getLayout');
 _appenderMethods.add('format');
 
-const _appenders: Map<string, Newable<LogAppender>> = new Map<string, Newable<LogAppender>>();
-const _registeredAppenders: Map<string, Newable<LogAppender>> = new Map<string, Newable<LogAppender>>();
+const _appenders: Map<string, Newable<LogAppender<any>>> = new Map<string, Newable<LogAppender<any>>>();
+const _registeredAppenders: Map<string, Newable<LogAppender<any>>> = new Map<string, Newable<LogAppender<any>>>();
 const _appenderConfigs: Map<string, any> = new Map<string, any>();
 
 /**
@@ -22,7 +22,7 @@ const _appenderConfigs: Map<string, any> = new Map<string, any>();
  * @params {APPENDER} appender
  * @throws {Error} if the appender is invalid
  */
-const _validateAppender = <T extends LogAppender>(appender: Newable<T>) => {
+const _validateAppender = <C, T extends LogAppender<C>>(appender: Newable<T>) => {
 
     // if we are running ES6, we can make sure it extends LogAppender
     // otherwise, it must be a function
@@ -31,7 +31,7 @@ const _validateAppender = <T extends LogAppender>(appender: Newable<T>) => {
     }
 
     // instantiate the appender function
-    const appenderObj: LogAppender = new (appender as any)(_appenderConfigs.get((appender as any).appenderName || appender.name));
+    const appenderObj: LogAppender<C> = new (appender as any)(_appenderConfigs.get((appender as any).appenderName || appender.name));
 
     // ensure that the appender methods are present (and are functions)
     _appenderMethods.forEach((element) => {
@@ -42,7 +42,7 @@ const _validateAppender = <T extends LogAppender>(appender: Newable<T>) => {
 
 };
 
-export const getAppenderName = (appender: Newable<LogAppender>) => (appender as any).appenderName || appender.name;
+export const getAppenderName = (appender: Newable<LogAppender<any>>) => (appender as any).appenderName || appender.name;
 
 /**
  * Adds an appender to the appender queue
@@ -51,7 +51,7 @@ export const getAppenderName = (appender: Newable<LogAppender>) => (appender as 
  *
  * @params {LogAppender} appender
  */
-export const addAppender = <T extends LogAppender>(appender: Newable<T>): Newable<T> => {
+export const addAppender = <C, T extends LogAppender<C>>(appender: Newable<T>): Newable<T> => {
 
     _validateAppender(appender);
 
@@ -66,7 +66,7 @@ export const addAppender = <T extends LogAppender>(appender: Newable<T>): Newabl
 
 };
 
-export const registerAppender = <T extends LogAppender>(appender: Newable<T>): Newable<T> => {
+export const registerAppender = <C, T extends LogAppender<C>>(appender: Newable<T>): Newable<T> => {
 
     const name = getAppenderName(appender);
     if (_appenders.has(name)) {
@@ -79,11 +79,11 @@ export const registerAppender = <T extends LogAppender>(appender: Newable<T>): N
 
 };
 
-export const getAppender = (name: string): Newable<LogAppender> => _appenders.get(name);
+export const getAppender = (name: string): Newable<LogAppender<any>> => _appenders.get(name);
 
-export const getAppenderInstances = (): LogAppender[] => {
+export const getAppenderInstances = (): Array<LogAppender<any>> => {
 
-    const result: LogAppender[] = [];
+    const result: Array<LogAppender<any>> = [];
     _registeredAppenders.forEach((value, key) =>
         result.push(new (value as any)(_appenderConfigs.get(key)))
     );

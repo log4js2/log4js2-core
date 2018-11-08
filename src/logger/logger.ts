@@ -10,7 +10,7 @@ export class Logger {
     private _logSequence: number;
     private _relative: number;
 
-    constructor(context: string, private _appenders: LogAppender[]) {
+    constructor(context: string, private _appenders: Array<LogAppender<any>>) {
 
         this._logContext = context;
 

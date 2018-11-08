@@ -2,7 +2,7 @@ import { LogLevel } from '../const/log.level';
 import { Formatter } from '../layout/formatter';
 import { ILogEvent } from '../log.event';
 
-export abstract class LogAppender<C extends {} = {}> {
+export abstract class LogAppender<C extends {}> {
 
     /**
      * Gets the name of the appender (e.g. 'console')

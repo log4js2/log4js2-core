@@ -15,7 +15,7 @@ import { getVirtualConsole, useVirtualConsole } from './util/virtual.console';
  * The default appenders that should be included if no appenders are specified
  * @const
  */
-const _DEFAULT_APPENDERS = (<T extends LogAppender>(): Array<IAppenderConfiguration<T>> => {
+const _DEFAULT_APPENDERS = (<T extends LogAppender<any>>(): Array<IAppenderConfiguration<T>> => {
     return [{
         appender: ConsoleAppender,
         level: LogLevel.ERROR
@@ -52,7 +52,7 @@ let _configuration: IConfiguration = null;
  */
 const _getAppendersForLogger = (logConfig: ILoggerConfiguration) => {
 
-    const appenderList: LogAppender[] = [];
+    const appenderList: Array<LogAppender<any>> = [];
 
     getAppenderInstances().forEach((appender) => {
 
@@ -124,7 +124,7 @@ const _configureLoggers = (config: IConfiguration) => {
  *
  * @param {Array.<LogAppender|function>} appenders
  */
-const _configureAppenders = (appenders: Array<(Newable<LogAppender> | IAppenderConfiguration | string)>) => {
+const _configureAppenders = (appenders: Array<(Newable<LogAppender<any>> | IAppenderConfiguration | string)>) => {
 
     if (!isArray(appenders)) {
         appenders = _DEFAULT_APPENDERS;
@@ -132,7 +132,7 @@ const _configureAppenders = (appenders: Array<(Newable<LogAppender> | IAppenderC
 
     appenders.forEach((appenderConfig) => {
 
-        let appender: Newable<LogAppender>;
+        let appender: Newable<LogAppender<any>>;
 
         if (typeof appenderConfig === 'string') {
             appender = getAppender(appenderConfig);
@@ -141,10 +141,10 @@ const _configureAppenders = (appenders: Array<(Newable<LogAppender> | IAppenderC
                 if (typeof (appenderConfig as IAppenderConfiguration).appender === 'string') {
                     appender = getAppender((appenderConfig as IAppenderConfiguration).appender as string);
                 } else {
-                    appender = registerAppender((appenderConfig as IAppenderConfiguration).appender as Newable<LogAppender>);
+                    appender = registerAppender((appenderConfig as IAppenderConfiguration).appender as Newable<LogAppender<any>>);
                 }
-            } else if ((appenderConfig as Newable<LogAppender>).prototype.append) {
-                appender = registerAppender(appenderConfig as Newable<LogAppender>);
+            } else if ((appenderConfig as Newable<LogAppender<any>>).prototype.append) {
+                appender = registerAppender(appenderConfig as Newable<LogAppender<any>>);
             } else {
                 throw new Error('Invalid appender: \'' + appenderConfig + '\'');
             }
