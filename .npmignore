@@ -10,3 +10,9 @@ jest.setup.js
 tsconfig.json
 tslint.json
 webpack.config.js
+
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+
+Gemfile
+Gemfile.lock

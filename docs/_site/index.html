@@ -114,9 +114,17 @@
 
 <h2>Simple Logging</h2>
 
+<p>
+    To log, use <code>getLogger</code> to get a logger, and then use (in increasing granularity) <code>fatal</code>,
+    <code>error</code>, <code>warn</code>, <code>info</code>, <code>debug</code>, or <code>trace</code> to output logs.
+    Because of how <code>console</code> is structured in JavaScript, <code>debug</code> and <code>trace</code> will log
+    at the same level, as well as <code>error</code> and <code>fatal</code>.
+</p>
+
 <figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="kd">const</span> <span class="nx">logger</span> <span class="o">=</span> <span class="nx">getLogger</span><span class="p">(</span><span class="s1">'app'</span><span class="p">);</span>
 
-<span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">'something happened!'</span><span class="p">);</span></code></pre></figure>
+<span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">'something happened!'</span><span class="p">);</span>
+<span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">'something bad happened!'</span><span class="p">);</span></code></pre></figure>
 
 <h2>Variables</h2>
 
@@ -146,6 +154,19 @@
     <span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">'There was an error: {}'</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
 
 <span class="p">}</span></code></pre></figure>
+
+<h2>Markers</h2>
+
+<p>
+    Makers are useful to either "mark" a log event for specific filtering, or add useful information to your logs.
+    <em>It is a good idea <strong>not</strong> to generate markers dynamically, but declare them beforehand as
+    constants.</em>
+</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="kd">const</span> <span class="nx">sqlMarker</span> <span class="o">=</span> <span class="nx">Marker</span><span class="p">.</span><span class="nx">getMarker</span><span class="p">(</span><span class="s1">'sql'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">updateMarker</span> <span class="o">=</span> <span class="nx">Marker</span><span class="p">.</span><span class="nx">getMarker</span><span class="p">(</span><span class="s1">'update'</span><span class="p">).</span><span class="nx">addParents</span><span class="p">(</span><span class="nx">sqlMarker</span><span class="p">);</span>
+
+<span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">updateMarker</span><span class="p">,</span> <span class="s1">'Updating the database'</span><span class="p">);</span></code></pre></figure>
 
 <h1>Levels</h1>
 
@@ -341,6 +362,18 @@
     <strong>must</strong> have this tag in order to display the log message, which is not emitted regardless of layout.
 </p>
 
+<h3>Marker</h3>
+
+<p>
+    <code>%marker</code>
+    <code>%markerSimpleName</code>
+</p>
+
+<p>
+    Outputs the marker for the log event, or nothing if absent. The <code>%marker</code> tag will output the marker
+    <strong>and</strong> its parents, while <code>%markerSimpleName</code> will output only the marker name.
+</p>
+
 <h3>Method</h3>
 
 <p>
@@ -499,6 +532,51 @@
         <span class="p">}</span>
     <span class="p">}]</span>
 <span class="p">});</span></code></pre></figure>
+
+<h1>Filters</h1>
+
+<p>
+    Filters allow you to add fine-grain control to appenders by filtering what logs can reach them. You can set the
+    <code>onMatch</code> and <code>onMismatch</code> behaviors using <code>ALLOW</code>, <code>DENY</code>,
+    <code>NEUTRAL</code>.
+</p>
+
+<h2>Marker</h2>
+
+<p>
+    The marker filter allows you to control which logs are appended by the marker attached to the log. The <code>marker</code>
+    attribute corresponds to the marker name, or a marker's parent name.
+</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="nx">configure</span><span class="p">({</span>
+    <span class="na">appenders</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="na">appender</span><span class="p">:</span> <span class="nx">RollingFile</span><span class="p">,</span>
+        <span class="na">filters</span><span class="p">:</span> <span class="p">[{</span>
+            <span class="na">filter</span><span class="p">:</span> <span class="nx">MarkerFilter</span><span class="p">,</span>
+            <span class="na">marker</span><span class="p">:</span> <span class="s1">'MyMarker'</span><span class="p">,</span>
+            <span class="na">onMatch</span><span class="p">:</span> <span class="nx">LogFilterAction</span><span class="p">.</span><span class="nx">ALLOW</span><span class="p">,</span>
+            <span class="na">onMismatch</span><span class="p">:</span> <span class="nx">LogFilterAction</span><span class="p">.</span><span class="nx">DENY</span>
+        <span class="p">}]</span>
+    <span class="p">}]</span>
+<span class="p">});</span></code></pre></figure>
+
+<h2>Custom</h2>
+
+<p>
+    You can create custom filters to handle specific use cases.
+</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="p">@</span><span class="nd">Filter</span><span class="p">(</span><span class="s1">'MyFilter'</span><span class="p">)</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">MyFilter</span> <span class="kd">extends</span> <span class="nx">LogFilter</span><span class="o">&lt;</span><span class="nx">MyFilterConfiguration</span><span class="o">&gt;</span> <span class="p">{</span>
+
+    <span class="kr">public</span> <span class="nx">isMatch</span><span class="p">(</span><span class="nx">logEvent</span><span class="p">?:</span> <span class="nx">ILogEvent</span><span class="p">):</span> <span class="kr">boolean</span> <span class="p">{</span>
+
+        <span class="c1">// check if match</span>
+        <span class="c1">// use this.configuration to grab the current configuration</span>
+
+    <span class="p">}</span>
+
+<span class="p">}</span></code></pre></figure>
 
         </section>
 

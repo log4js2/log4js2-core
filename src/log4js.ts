@@ -151,8 +151,10 @@ const _configureAppenders = (appenders: Array<(Newable<LogAppender<any>> | IAppe
 
         }
 
+        const appenderName = (appenderConfig as IAppenderConfiguration).name || getAppenderName(appender);
+
         if ((appenderConfig as IAppenderConfiguration).config) {
-            setAppenderConfig(getAppenderName(appender), (appenderConfig as IAppenderConfiguration).config);
+            setAppenderConfig(appenderName, (appenderConfig as IAppenderConfiguration).config);
         }
 
     });

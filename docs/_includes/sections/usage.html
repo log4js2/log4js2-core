@@ -2,11 +2,19 @@
 
 <h2>Simple Logging</h2>
 
+<p>
+    To log, use <code>getLogger</code> to get a logger, and then use (in increasing granularity) <code>fatal</code>,
+    <code>error</code>, <code>warn</code>, <code>info</code>, <code>debug</code>, or <code>trace</code> to output logs.
+    Because of how <code>console</code> is structured in JavaScript, <code>debug</code> and <code>trace</code> will log
+    at the same level, as well as <code>error</code> and <code>fatal</code>.
+</p>
+
 {% highlight typescript %}
 
 const logger = getLogger('app');
 
 logger.info('something happened!');
+logger.error('something bad happened!');
 
 {% endhighlight %}
 
@@ -41,4 +49,19 @@ try {
     logger.error('There was an error: {}', e);
 
 }
+{% endhighlight %}
+
+<h2>Markers</h2>
+
+<p>
+    Makers are useful to either "mark" a log event for specific filtering, or add useful information to your logs.
+    <em>It is a good idea <strong>not</strong> to generate markers dynamically, but declare them beforehand as
+    constants.</em>
+</p>
+
+{% highlight typescript %}
+const sqlMarker = Marker.getMarker('sql');
+const updateMarker = Marker.getMarker('update').addParents(sqlMarker);
+
+logger.info(updateMarker, 'Updating the database');
 {% endhighlight %}

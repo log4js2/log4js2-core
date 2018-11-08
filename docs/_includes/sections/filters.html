@@ -1,0 +1,48 @@
+<h1>Filters</h1>
+
+<p>
+    Filters allow you to add fine-grain control to appenders by filtering what logs can reach them. You can set the
+    <code>onMatch</code> and <code>onMismatch</code> behaviors using <code>ALLOW</code>, <code>DENY</code>,
+    <code>NEUTRAL</code>.
+</p>
+
+<h2>Marker</h2>
+
+<p>
+    The marker filter allows you to control which logs are appended by the marker attached to the log. The <code>marker</code>
+    attribute corresponds to the marker name, or a marker's parent name.
+</p>
+
+{% highlight typescript %}
+configure({
+    appenders: [{
+        appender: RollingFile,
+        filters: [{
+            filter: MarkerFilter,
+            marker: 'MyMarker',
+            onMatch: LogFilterAction.ALLOW,
+            onMismatch: LogFilterAction.DENY
+        }]
+    }]
+});
+{% endhighlight %}
+
+<h2>Custom</h2>
+
+<p>
+    You can create custom filters to handle specific use cases.
+</p>
+
+{% highlight typescript %}
+@Filter('MyFilter')
+export class MyFilter extends LogFilter<MyFilterConfiguration> {
+
+    public isMatch(logEvent?: ILogEvent): boolean {
+
+        // check if match
+        // use this.configuration to grab the current configuration
+
+    }
+
+}
+{% endhighlight %}

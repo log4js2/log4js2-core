@@ -167,6 +167,18 @@ logger.info('Output: ', { a: 1, foo: 'bar' });
     <strong>must</strong> have this tag in order to display the log message, which is not emitted regardless of layout.
 </p>
 
+<h3>Marker</h3>
+
+<p>
+    <code>%marker</code>
+    <code>%markerSimpleName</code>
+</p>
+
+<p>
+    Outputs the marker for the log event, or nothing if absent. The <code>%marker</code> tag will output the marker
+    <strong>and</strong> its parents, while <code>%markerSimpleName</code> will output only the marker name.
+</p>
+
 <h3>Method</h3>
 
 <p>

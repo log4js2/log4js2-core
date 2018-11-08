@@ -2,9 +2,9 @@ import { LogLevel } from '..';
 
 export default interface ILoggerConfiguration {
 
-    tag?: string;
-    async?: boolean;
+    appenders?: string[];
     level?: LogLevel | number;
     patternLayout?: string;
+    tag?: string;
 
 }
