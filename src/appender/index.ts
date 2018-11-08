@@ -49,13 +49,14 @@ export const getAppenderName = (appender: Newable<LogAppender<any>>) => (appende
  *
  * @function
  *
- * @params {LogAppender} appender
+ * @param {LogAppender} appender
+ * @param {string} name
  */
-export const addAppender = <C, T extends LogAppender<C>>(appender: Newable<T>): Newable<T> => {
+export const addAppender = <C, T extends LogAppender<C>>(appender: Newable<T>, name?: string): Newable<T> => {
 
     _validateAppender(appender);
 
-    const appenderName = getAppenderName(appender);
+    const appenderName = name || getAppenderName(appender);
 
     // only put the appender into the set if it doesn't exist already
     if (!_appenders.has(appenderName)) {

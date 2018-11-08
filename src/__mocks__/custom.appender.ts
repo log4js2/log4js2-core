@@ -14,7 +14,7 @@ export const logStack: { [key: string]: string[] } = {
 export const CUSTOM_APPENDER_NAME = 'custom';
 
 @Appender(CUSTOM_APPENDER_NAME)
-export class CustomAppender extends LogAppender {
+export class CustomAppender extends LogAppender<{}> {
 
     public static get appenderName(): string {
         return CUSTOM_APPENDER_NAME;
