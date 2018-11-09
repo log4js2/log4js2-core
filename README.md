@@ -5,6 +5,7 @@ since the namespace and functions are mostly similar.
 
 [![Build Status](https://travis-ci.org/anigenero/log4js2.svg?branch=master)](https://travis-ci.org/anigenero/log4js2)
 [![codecov](https://codecov.io/gh/anigenero/log4js2/branch/master/graph/badge.svg)](https://codecov.io/gh/anigenero/log4js2)
+[![dependencies](https://david-dm.org/anigenero/log4js2.svg)](https://david-dm.org/anigenero/log4js2.svg)
 
 - [Read the Docs](https://anigenero.github.io/log4js2/)
 
