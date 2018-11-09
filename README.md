@@ -30,7 +30,7 @@ Logging works out-of-the-box, with no configuration. However, note that only err
 specific configuration.
 
 ```javascript
-import {getLogger} from 'log4js2';
+import {getLogger} from '@log4js2/core';
 
 const logger = getLogger('myLogger');
 
@@ -46,7 +46,7 @@ Configure log4js using the `configure()` method. _This must be the first thing y
 the first log you commit will not allow updates from this function
 
 ```typescript
-import {configure, LogLevel} from 'log4js2';
+import {configure, LogLevel} from '@log4js2/core';
 
 configure({
     layout : '%d [%p] %c %M:%line:%column - %m %ex',
@@ -66,7 +66,7 @@ from third-party libraries to input into your own logs bucket. Make sure `log4js
 ensure that all logs are caught.
 
 ```typescript
-import * from 'log4js2';
+import * from '@log4js2/core';
 
 console.log('console log');
 
