@@ -1,5 +1,5 @@
-import { LogAppender } from '..';
 import { LogLevel } from '..';
+import { AppenderWrapper } from '../appender/appender.wrapper';
 import { ILogEvent } from '../log.event';
 import { Marker } from '../marker';
 
@@ -12,7 +12,7 @@ export class Logger {
     private _logSequence: number;
     private _relative: number;
 
-    constructor(context: string, private _appenders: Array<LogAppender<any>>) {
+    constructor(context: string, private _appenders: AppenderWrapper[]) {
 
         this._logContext = context;
 

@@ -1,4 +1,4 @@
-import { configure } from '../../log4js';
+import { configure } from '../../';
 import { getVirtualConsole } from '../virtual.console';
 
 describe('Virtual Console', () => {

@@ -12,7 +12,7 @@ export interface IRollingFileAppenderConfig {
 
 }
 
-@Appender()
+@Appender('RollingFile')
 export class RollingFileAppender extends LogAppender<IRollingFileAppenderConfig> {
 
     private _handler: RollingFileHandler;

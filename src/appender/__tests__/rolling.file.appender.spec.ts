@@ -4,12 +4,13 @@ import { IRollingFileAppenderConfig } from '../rolling.file.appender';
 
 describe('RollingFileAppender', () => {
 
-    beforeAll(() => {
+    test('test rolling file', async () => {
 
         configure({
             level: LogLevel.DEBUG,
             patternLayout: '[%p] %c - %m',
-            appenders: [{
+            appenders: ['Console', {
+                name: 'RollingFile',
                 appender: RollingFileAppender,
                 config: {
                     maxSize: .1,
@@ -17,12 +18,12 @@ describe('RollingFileAppender', () => {
                     filePattern: './logs/rollingfile.%i.log'
                 } as IRollingFileAppenderConfig
             }],
+            loggers: [{
+                tag: 'main',
+                appenders: ['RollingFile']
+            }],
             virtualConsole: false
         });
-
-    });
-
-    test('test rolling file', async () => {
 
         jest.setTimeout(60000);
 

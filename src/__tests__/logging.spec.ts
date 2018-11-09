@@ -1,5 +1,5 @@
 import { LogLevel } from '../const/log.level';
-import { configure, getLogger } from '../log4js';
+import { configure, getLogger } from '../';
 import { getVirtualConsole } from '../util/virtual.console';
 
 describe('Message', () => {

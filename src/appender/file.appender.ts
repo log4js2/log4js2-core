@@ -7,18 +7,10 @@ export interface IFileAppenderConfig {
     fileName: string;
 }
 
-@Appender()
+@Appender('File')
 export class FileAppender extends LogAppender<IFileAppenderConfig> {
 
     private readonly _handler: FileHandler;
-
-    /**
-     * Gets the name of the appender (e.g. 'console')
-     * @returns {null}
-     */
-    public static get appenderName(): string {
-        return 'File';
-    }
 
     constructor(private readonly _config: IFileAppenderConfig) {
 

@@ -17,10 +17,6 @@ export const CUSTOM_APPENDER_NAME = 'custom';
 @Appender(CUSTOM_APPENDER_NAME)
 export class CustomAppender extends LogAppender<{}> {
 
-    public static get appenderName(): string {
-        return CUSTOM_APPENDER_NAME;
-    }
-
     public append(logEvent: ILogEvent) {
         if (logEvent.level <= this.getLogLevel()) {
             this._append(logEvent);

@@ -1,4 +1,5 @@
-import { getAppender, getAppenderInstances, getAppenderName, registerAppender, setAppenderConfig } from './appender';
+import { getAppender, getAppenderName, getLoggerAppenderInstances, registerAppender, setLoggerAppenderConfig } from './appender';
+import { AppenderWrapper } from './appender/appender.wrapper';
 import { ConsoleAppender } from './appender/console.appender';
 import { LogAppender } from './appender/log.appender';
 import IAppenderConfiguration from './config/appender.config';
@@ -49,14 +50,14 @@ let _configuration: IConfiguration = null;
  */
 const _getAppendersForLogger = (logConfig: ILoggerConfiguration) => {
 
-    const appenderList: Array<LogAppender<any>> = [];
+    const appenderList: AppenderWrapper[] = [];
 
-    getAppenderInstances().forEach((appender) => {
+    getLoggerAppenderInstances(logConfig.appenders).forEach((appenderWrapper) => {
 
-        appender.setLogLevel(logConfig.level);
-        appender.setLayout(logConfig.patternLayout);
+        appenderWrapper.appender.setLogLevel(logConfig.level);
+        appenderWrapper.appender.setLayout(logConfig.patternLayout);
 
-        appenderList.push(appender);
+        appenderList.push(appenderWrapper);
 
     });
 
@@ -161,12 +162,9 @@ const _configureAppenders = (config: IConfiguration): IConfiguration => {
 
                 appenderConfig = {
                     ...(value as IAppenderConfiguration),
+                    name: (value as IAppenderConfiguration).name || getAppenderName(appender),
                     appender
                 };
-
-                if (appenderConfig.config) {
-                    setAppenderConfig(appenderConfig.name, appenderConfig.config);
-                }
 
             } else if ((value as Newable<LogAppender<any>>).prototype.append) {
 
@@ -179,6 +177,8 @@ const _configureAppenders = (config: IConfiguration): IConfiguration => {
             } else {
                 throw new Error('Invalid appender: \'' + value + '\'');
             }
+
+            setLoggerAppenderConfig(appenderConfig.name, appenderConfig);
 
             return appenderConfig;
 

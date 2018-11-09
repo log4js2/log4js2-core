@@ -49,9 +49,7 @@ import {configure, LogLevel} from 'log4js2';
 
 configure({
     layout : '%d [%p] %c %M:%line:%column - %m %ex',
-    appenders : [{
-        appender: 'Console'
-    }],
+    appenders : ['Console'],
     loggers : [{
         tag: 'App',
         logLevel : LogLevel.INFO

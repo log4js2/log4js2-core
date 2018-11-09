@@ -1,6 +1,32 @@
 <h1>Appenders</h1>
 
-<h2>Console</h2>
+<h2>Configuring</h2>
+
+<p>
+    By specifying appenders by name, you can control which loggers log to which appender. This is useful when you want
+    to isolate logs to a specific output file, or prevent certain logs from displaying in the console.
+</p>
+
+{% highlight typescript %}
+configure({
+    appenders: ['Console', {
+        appender: 'File',
+        fileName: 'app.log'
+    }, {
+        name: 'SQLAppender',
+        appender: 'File',
+        fileName: 'sql.log'
+    }],
+    loggers: [{
+        tag: 'sql',
+        appenders: ['SQLAppender'] // will ONLY log to appender named 'SQLAppender'
+    }]
+});
+{% endhighlight %}
+
+<h2>Available Appenders</h2>
+
+<h3>Console</h3>
 
 <p>
     This is the default appender that outputs logs to the system out. If no appender is specified in the configuration,
@@ -15,7 +41,7 @@ configure({
 });
 {% endhighlight %}
 
-<h2>File</h2>
+<h3>File</h3>
 
 <p>
     This is a simple file appender that outputs logs to a single file. There is no consideration for file size, so it is
@@ -35,7 +61,7 @@ configure({
 });
 {% endhighlight %}
 
-<h2>Rolling File</h2>
+<h3>Rolling File</h3>
 
 <p>
     The rolling file appender allows for logs to be appended to a log file, to be split and backed up once the file

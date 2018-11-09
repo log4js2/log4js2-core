@@ -1,5 +1,8 @@
+import IAppenderConfiguration from '../config/appender.config';
 import { Newable } from '../def';
+import { AppenderWrapper } from './appender.wrapper';
 import { LogAppender } from './log.appender';
+import { getFunctionName } from '../util/utility';
 
 const _appenderMethods: Set<FunctionProps<LogAppender<any>>> = new Set<FunctionProps<LogAppender<any>>>();
 _appenderMethods.add('append');
@@ -10,8 +13,7 @@ _appenderMethods.add('getLayout');
 _appenderMethods.add('format');
 
 const _appenders: Map<string, Newable<LogAppender<any>>> = new Map<string, Newable<LogAppender<any>>>();
-const _registeredAppenders: Map<string, Newable<LogAppender<any>>> = new Map<string, Newable<LogAppender<any>>>();
-const _appenderConfigs: Map<string, any> = new Map<string, any>();
+const _registeredLoggerAppenders: Map<string, IAppenderConfiguration> = new Map<string, IAppenderConfiguration>();
 
 /**
  * Validates that the appender
@@ -31,7 +33,7 @@ const _validateAppender = <C, T extends LogAppender<C>>(appender: Newable<T>) =>
     }
 
     // instantiate the appender function
-    const appenderObj: LogAppender<C> = new (appender as any)(_appenderConfigs.get((appender as any).appenderName || appender.name));
+    const appenderObj: LogAppender<C> = new (appender as any)();
 
     // ensure that the appender methods are present (and are functions)
     _appenderMethods.forEach((element) => {
@@ -42,7 +44,7 @@ const _validateAppender = <C, T extends LogAppender<C>>(appender: Newable<T>) =>
 
 };
 
-export const getAppenderName = (appender: Newable<LogAppender<any>>) => (appender as any).appenderName || appender.name;
+export const getAppenderName = (appender: Newable<LogAppender<any>>) => appender.name || getFunctionName(appender as any);
 
 /**
  * Adds an appender to the appender queue
@@ -67,6 +69,11 @@ export const addAppender = <C, T extends LogAppender<C>>(appender: Newable<T>, n
 
 };
 
+/**
+ * Registers an appender
+ *
+ * @param {Newable} appender
+ */
 export const registerAppender = <C, T extends LogAppender<C>>(appender: Newable<T>): Newable<T> => {
 
     const name = getAppenderName(appender);
@@ -74,25 +81,58 @@ export const registerAppender = <C, T extends LogAppender<C>>(appender: Newable<
         addAppender(appender);
     }
 
-    _registeredAppenders.set(name, appender);
+    _appenders.set(name, appender);
 
     return appender;
 
 };
 
+/**
+ * Gets the appender with the specified name
+ *
+ * @param name
+ */
 export const getAppender = (name: string): Newable<LogAppender<any>> => _appenders.get(name);
 
-export const getAppenderInstances = (): Array<LogAppender<any>> => {
+/**
+ * Gets the appender instances. If the appenders parameter is set, then it will only fetch those within the array, otherwise return all
+ *
+ * @param {string[]} appenders
+ */
+export const getLoggerAppenderInstances = (appenders?: string[]): AppenderWrapper[] => {
 
-    const result: Array<LogAppender<any>> = [];
-    _registeredAppenders.forEach((value, key) =>
-        result.push(new (value as any)(_appenderConfigs.get(key)))
-    );
+    if (appenders && appenders.length > 0) {
 
-    return result;
+        return appenders.map((value) => {
+
+            if (_registeredLoggerAppenders.has(value)) {
+                const appenderConfig = _registeredLoggerAppenders.get(value);
+                return new AppenderWrapper(appenderConfig.appender as Newable<LogAppender<any>>, appenderConfig.config);
+            }
+
+            throw new Error(`Invalid appender reference '${value}'`);
+
+        });
+
+    } else {
+
+        const result: AppenderWrapper[] = [];
+        _registeredLoggerAppenders.forEach((appenderConfig) =>
+            result.push(new AppenderWrapper(appenderConfig.appender as Newable<LogAppender<any>>, appenderConfig.config))
+        );
+
+        return result;
+
+    }
 
 };
 
-export const setAppenderConfig = <C extends {}>(appender: string, config: C) => {
-    _appenderConfigs.set(appender, config);
+/**
+ * Sets the appender configuration for a specified appender name
+ *
+ * @param {string} appenderName
+ * @param {IAppenderConfiguration} config
+ */
+export const setLoggerAppenderConfig = (appenderName: string, config: IAppenderConfiguration) => {
+    _registeredLoggerAppenders.set(appenderName, config);
 };

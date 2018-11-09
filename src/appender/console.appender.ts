@@ -4,16 +4,8 @@ import { ILogEvent } from '../log.event';
 import { getVirtualConsole } from '../util/virtual.console';
 import { LogAppender } from './log.appender';
 
-@Appender()
+@Appender('Console')
 export class ConsoleAppender extends LogAppender<{}> {
-
-    /**
-     * Gets the name of the appender (e.g. 'console')
-     * @returns {string}
-     */
-    public static get appenderName(): string {
-        return 'Console';
-    }
 
     /**
      * Appends the log event
