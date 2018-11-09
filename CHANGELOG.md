@@ -3,7 +3,7 @@
 log4js2 follows a semantic versioning. If there seems to be a missing note on some change, or you have a question on 
 migrating from an older version, feel free to ask us and the community.
 
-## 2.0.0
+## 2.0.0-beta1
 
 __BREAKING CHANGES__
 
