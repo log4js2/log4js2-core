@@ -20,7 +20,7 @@ If you're building from source, simply run
 Or, you can install log4js2 from npm.
 
 ```bash
-> npm install --save log4js2
+> npm install --save @log4js2/core
 ```
 
 ## Getting Started
