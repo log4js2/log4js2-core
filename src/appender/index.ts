@@ -32,12 +32,9 @@ const _validateAppender = <C, T extends LogAppender<C>>(appender: Newable<T>) =>
         return;
     }
 
-    // instantiate the appender function
-    const appenderObj: LogAppender<C> = new (appender as any)();
-
     // ensure that the appender methods are present (and are functions)
     _appenderMethods.forEach((element) => {
-        if (!(appenderObj as any)[element] || !((appenderObj as any)[element] instanceof Function)) {
+        if (!appender.prototype[element] || !(appender.prototype[element] instanceof Function)) {
             throw new Error(`Invalid appender: missing/invalid method: ${element}`);
         }
     });

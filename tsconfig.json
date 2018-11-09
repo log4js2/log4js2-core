@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowJs": false,
     "outDir": "./dist/",
-    "sourceMap": true,
+    "sourceMap": false,
     "noImplicitAny": true,
     "declaration": true,
     "module": "commonjs",

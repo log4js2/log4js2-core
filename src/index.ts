@@ -7,8 +7,6 @@ export { Logger } from './logger/logger';
 export { LogLevel } from './const/log.level';
 export { LogAppender } from './appender/log.appender';
 export { ConsoleAppender } from './appender/console.appender';
-export { IFileAppenderConfig, FileAppender } from './appender/file.appender';
-export { IRollingFileAppenderConfig, RollingFileAppender } from './appender/rolling.file.appender';
 
 export { ILogEvent } from './log.event';
 export { Marker } from './marker';
