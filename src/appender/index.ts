@@ -1,8 +1,8 @@
 import IAppenderConfiguration from '../config/appender.config';
 import { Newable } from '../def';
+import { getFunctionName } from '../util/utility';
 import { AppenderWrapper } from './appender.wrapper';
 import { LogAppender } from './log.appender';
-import { getFunctionName } from '../util/utility';
 
 const _appenderMethods: Set<FunctionProps<LogAppender<any>>> = new Set<FunctionProps<LogAppender<any>>>();
 _appenderMethods.add('append');

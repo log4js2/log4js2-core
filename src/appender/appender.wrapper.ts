@@ -1,10 +1,10 @@
 import IAppenderConfiguration from '../config/appender.config';
+import { Newable } from '../def';
 import { getFilter } from '../filter';
 import { ILogFilterConfiguration, LogFilter } from '../filter/log.filter';
 import { LogFilterAction } from '../filter/log.filter.action';
 import { ILogEvent } from '../log.event';
 import { LogAppender } from './log.appender';
-import { Newable } from '../def';
 
 interface IFilterRegister<T extends ILogFilterConfiguration> {
     filter: LogFilter<T>;
