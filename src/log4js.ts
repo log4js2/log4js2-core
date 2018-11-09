@@ -2,7 +2,7 @@ import { getAppender, getAppenderInstances, getAppenderName, registerAppender, s
 import { ConsoleAppender } from './appender/console.appender';
 import { LogAppender } from './appender/log.appender';
 import IAppenderConfiguration from './config/appender.config';
-import IConfiguration from './config/configuration';
+import IConfiguration, { AppenderConfigurationItem } from './config/configuration';
 import ILoggerConfiguration from './config/logger.config';
 import { LogLevel } from './const/log.level';
 import { Method, Newable } from './def';
@@ -15,11 +15,8 @@ import { getVirtualConsole, useVirtualConsole } from './util/virtual.console';
  * The default appenders that should be included if no appenders are specified
  * @const
  */
-const _DEFAULT_APPENDERS = (<T extends LogAppender<any>>(): Array<IAppenderConfiguration<T>> => {
-    return [{
-        appender: ConsoleAppender,
-        level: LogLevel.ERROR
-    }];
+const _DEFAULT_APPENDERS = (<T extends LogAppender<any>>(): AppenderConfigurationItem[] => {
+    return [ConsoleAppender];
 })();
 
 const _DEFAULT_PATTERN_LAYOUT = '%d [%p] %c - %m';
@@ -75,11 +72,14 @@ const _getAppendersForLogger = (logConfig: ILoggerConfiguration) => {
  *
  * @param {IConfiguration} config
  */
-const _configureLoggers = (config: IConfiguration) => {
+const _configureLoggers = (config: IConfiguration): IConfiguration => {
+
+    let {loggers} = config;
 
     let hasMain = false;
-    if (isArray(config.loggers)) {
-        config.loggers.forEach((logger) => {
+
+    if (isArray(loggers)) {
+        loggers.forEach((logger) => {
 
             logger.tag = logger.tag || MAIN_LOGGER;
 
@@ -96,7 +96,7 @@ const _configureLoggers = (config: IConfiguration) => {
 
         });
     } else {
-        config.loggers = [];
+        loggers = [];
     }
 
     if (!hasMain) {
@@ -107,12 +107,17 @@ const _configureLoggers = (config: IConfiguration) => {
             patternLayout: config.patternLayout || _DEFAULT_PATTERN_LAYOUT,
         };
 
-        config.loggers.push(mainLoggerConfig);
+        loggers.push(mainLoggerConfig);
 
         addLogger(MAIN_LOGGER, new Logger(MAIN_LOGGER,
             _getAppendersForLogger(mainLoggerConfig)));
 
     }
+
+    return {
+        ...config,
+        loggers
+    };
 
 };
 
@@ -122,42 +127,67 @@ const _configureLoggers = (config: IConfiguration) => {
  * @private
  * @function
  *
- * @param {Array.<LogAppender|function>} appenders
+ * @param {IConfiguration} config
  */
-const _configureAppenders = (appenders: Array<(Newable<LogAppender<any>> | IAppenderConfiguration | string)>) => {
+const _configureAppenders = (config: IConfiguration): IConfiguration => {
+
+    let {appenders} = config;
 
     if (!isArray(appenders)) {
         appenders = _DEFAULT_APPENDERS;
     }
 
-    appenders.forEach((appenderConfig) => {
+    const result = (appenders as AppenderConfigurationItem[])
+        .map((value) => {
 
-        let appender: Newable<LogAppender<any>>;
+            let appender: Newable<LogAppender<any>>;
+            let appenderConfig: IAppenderConfiguration;
 
-        if (typeof appenderConfig === 'string') {
-            appender = getAppender(appenderConfig);
-        } else {
-            if ((appenderConfig as IAppenderConfiguration).appender) {
-                if (typeof (appenderConfig as IAppenderConfiguration).appender === 'string') {
-                    appender = getAppender((appenderConfig as IAppenderConfiguration).appender as string);
+            if (typeof value === 'string') {
+
+                appender = getAppender(value);
+                appenderConfig = {
+                    name: getAppenderName(appender),
+                    appender
+                };
+
+            } else if ((value as IAppenderConfiguration).appender) {
+
+                if (typeof (value as IAppenderConfiguration).appender === 'string') {
+                    appender = getAppender((value as IAppenderConfiguration).appender as string);
                 } else {
-                    appender = registerAppender((appenderConfig as IAppenderConfiguration).appender as Newable<LogAppender<any>>);
+                    appender = registerAppender((value as IAppenderConfiguration).appender as Newable<LogAppender<any>>);
                 }
-            } else if ((appenderConfig as Newable<LogAppender<any>>).prototype.append) {
-                appender = registerAppender(appenderConfig as Newable<LogAppender<any>>);
+
+                appenderConfig = {
+                    ...(value as IAppenderConfiguration),
+                    appender
+                };
+
+                if (appenderConfig.config) {
+                    setAppenderConfig(appenderConfig.name, appenderConfig.config);
+                }
+
+            } else if ((value as Newable<LogAppender<any>>).prototype.append) {
+
+                appender = registerAppender(value as Newable<LogAppender<any>>);
+                appenderConfig = {
+                    name: getAppenderName(appender),
+                    appender
+                };
+
             } else {
-                throw new Error('Invalid appender: \'' + appenderConfig + '\'');
+                throw new Error('Invalid appender: \'' + value + '\'');
             }
 
-        }
+            return appenderConfig;
 
-        const appenderName = (appenderConfig as IAppenderConfiguration).name || getAppenderName(appender);
+        });
 
-        if ((appenderConfig as IAppenderConfiguration).config) {
-            setAppenderConfig(appenderName, (appenderConfig as IAppenderConfiguration).config);
-        }
-
-    });
+    return {
+        ...config,
+        appenders: result
+    };
 
 };
 
@@ -175,17 +205,17 @@ export function configure(config: IConfiguration) {
     }
 
     // configure the appenders
-    _configureAppenders(config.appenders);
+    config = _configureAppenders(config);
     // configure the loggers
-    _configureLoggers(config);
+    config = _configureLoggers(config);
+
+    _configuration = config;
 
     if (config.virtualConsole !== false) {
         getVirtualConsole(getLoggerFromContext(MAIN_LOGGER, _getLoggerConfiguration(MAIN_LOGGER)));
     } else {
         useVirtualConsole(false);
     }
-
-    _configuration = config;
 
 }
 

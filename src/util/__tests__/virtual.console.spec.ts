@@ -11,8 +11,6 @@ describe('Virtual Console', () => {
 
         const virtualConsole = getVirtualConsole();
 
-        console.dir(virtualConsole);
-
         expect(virtualConsole).toBeDefined();
         expect((console as any).isVirtual).toBe(true);
 

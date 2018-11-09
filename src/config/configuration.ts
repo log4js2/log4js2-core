@@ -1,12 +1,14 @@
-import { LogLevel } from '..';
+import { LogLevel, Newable } from '..';
 import { LogAppender } from '..';
 import IAppenderConfiguration from './appender.config';
 import ILoggerConfiguration from './logger.config';
 
+export type AppenderConfigurationItem = Newable<LogAppender<any>> | IAppenderConfiguration | string;
+
 export default interface IConfiguration {
 
     level?: LogLevel;
-    appenders?: Array<IAppenderConfiguration<LogAppender<any>>> | string[];
+    appenders?: AppenderConfigurationItem[] | string[];
     loggers?: ILoggerConfiguration[];
     patternLayout?: string;
     virtualConsole?: boolean;

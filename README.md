@@ -85,3 +85,7 @@ configure({
 
 ## Contributors
 Library built and maintained by [Robin Schultz](http://anigenero.com)
+
+If you would like to contribute (aka buy me a beer), you can send funds via PayPal at the link below.
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SLT7SZ2XFNEUQ)
