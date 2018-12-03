@@ -24,7 +24,7 @@ export const getVirtualConsole = (logger?: Logger) => {
         public assert(condition?: boolean, message?: string, ...data: any[]): void;
         public assert(value: any, message?: string, ...optionalParams: any[]): void;
         public assert(condition?: boolean | any, message?: string, ...data: any[]): void {
-            _virtualConsole.assert(...arguments);
+            _virtualConsole.assert.call(arguments);
         }
 
         public clear(): void {
@@ -38,7 +38,7 @@ export const getVirtualConsole = (logger?: Logger) => {
         public dir(value?: any, ...optionalParams: any[]): void;
         public dir(obj: any, options?: NodeJS.InspectOptions): void;
         public dir(value?: any, ...optionalParams: Array<any | NodeJS.InspectOptions>): void {
-            _virtualConsole.dir(...arguments);
+            _virtualConsole.dir.call(arguments);
         }
 
         public dirxml(value: any): void {

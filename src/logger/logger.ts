@@ -29,8 +29,9 @@ export class Logger {
      */
     public fatal(...args: any[]): void;
     public fatal(marker: Marker, ...args: NotMarker[]): void {
+        const passed = arguments;
         this._appenders.forEach((appender) =>
-            appender.append(this._constructLogEvent(LogLevel.FATAL, arguments)));
+            appender.append(this._constructLogEvent(LogLevel.FATAL, passed)));
     }
 
     /**
@@ -41,8 +42,9 @@ export class Logger {
      */
     public error(...args: any[]): void;
     public error(marker: Marker, ...args: NotMarker[]): void {
+        const passed = arguments;
         this._appenders.forEach((appender) =>
-            appender.append(this._constructLogEvent(LogLevel.ERROR, arguments)));
+            appender.append(this._constructLogEvent(LogLevel.ERROR, passed)));
     }
 
     /**
@@ -53,8 +55,9 @@ export class Logger {
      */
     public warn(...args: any[]): void;
     public warn(marker: Marker, ...args: NotMarker[]): void {
+        const passed = arguments;
         this._appenders.forEach((appender) =>
-            appender.append(this._constructLogEvent(LogLevel.WARN, arguments)));
+            appender.append(this._constructLogEvent(LogLevel.WARN, passed)));
     }
 
     /**
@@ -65,8 +68,9 @@ export class Logger {
      */
     public info(...args: any[]): void;
     public info(marker: Marker, ...args: NotMarker[]): void {
+        const passed = arguments;
         this._appenders.forEach((appender) =>
-            appender.append(this._constructLogEvent(LogLevel.INFO, arguments)));
+            appender.append(this._constructLogEvent(LogLevel.INFO, passed)));
     }
 
     /**
@@ -77,8 +81,9 @@ export class Logger {
      */
     public debug(...args: any[]): void;
     public debug(marker: Marker, ...args: NotMarker[]): void {
+        const passed = arguments;
         this._appenders.forEach((appender) =>
-            appender.append(this._constructLogEvent(LogLevel.DEBUG, arguments)));
+            appender.append(this._constructLogEvent(LogLevel.DEBUG, passed)));
     }
 
     /**
@@ -89,8 +94,9 @@ export class Logger {
      */
     public trace(...args: any[]): void;
     public trace(marker: Marker, ...args: NotMarker[]): void {
+        const passed = arguments;
         this._appenders.forEach((appender) =>
-            appender.append(this._constructLogEvent(LogLevel.TRACE, arguments)));
+            appender.append(this._constructLogEvent(LogLevel.TRACE, passed)));
     }
 
     /**
