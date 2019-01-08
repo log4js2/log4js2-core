@@ -1,6 +1,6 @@
 {
   "name": "@log4js2/core",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "scripts": {
     "build": "tsc",
     "lint": "tslint -p tsconfig.json -c tslint.json",

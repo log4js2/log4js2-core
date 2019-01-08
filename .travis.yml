@@ -8,6 +8,7 @@ script:
   - 'npm test'
   - 'npm run build'
 deploy:
+  skip_cleanup: true
   on:
     tags: true
   provider: npm
