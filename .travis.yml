@@ -3,6 +3,10 @@ node_js:
   - '10'
 before_install:
   - export TZ=America/New_York
+jobs:
+  include:
+    - stage: build
+      script: 'npm run build'
 deploy:
   on:
     tags: true
