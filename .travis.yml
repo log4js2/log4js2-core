@@ -4,6 +4,7 @@ node_js:
 before_install:
   - export TZ=America/New_York
 script:
+  - 'npm run lint'
   - 'npm test'
   - 'npm run build'
 deploy:

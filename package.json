@@ -1,8 +1,8 @@
 {
   "name": "@log4js2/core",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "scripts": {
-    "build": "npm run lint && tsc",
+    "build": "tsc",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "jekyll": "jekyll serve --destination ./docs/",
     "test": "jest",
