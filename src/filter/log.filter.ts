@@ -1,14 +1,6 @@
 import { ILogEvent } from '../log.event';
-import { LogFilterAction } from './log.filter.action';
 
-export interface ILogFilterConfiguration {
-
-    onMatch: LogFilterAction;
-    onMismatch: LogFilterAction;
-
-}
-
-export abstract class LogFilter<C extends ILogFilterConfiguration> {
+export abstract class LogFilter<C> {
 
     constructor(protected readonly configuration: C) { }
 

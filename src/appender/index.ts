@@ -104,7 +104,7 @@ export const getLoggerAppenderInstances = (appenders?: string[]): AppenderWrappe
 
             if (_registeredLoggerAppenders.has(value)) {
                 const appenderConfig = _registeredLoggerAppenders.get(value);
-                return new AppenderWrapper(appenderConfig.appender as Newable<LogAppender<any>>, appenderConfig.config);
+                return new AppenderWrapper(appenderConfig.appender as Newable<LogAppender<any>>, appenderConfig);
             }
 
             throw new Error(`Invalid appender reference '${value}'`);
@@ -115,7 +115,7 @@ export const getLoggerAppenderInstances = (appenders?: string[]): AppenderWrappe
 
         const result: AppenderWrapper[] = [];
         _registeredLoggerAppenders.forEach((appenderConfig) =>
-            result.push(new AppenderWrapper(appenderConfig.appender as Newable<LogAppender<any>>, appenderConfig.config))
+            result.push(new AppenderWrapper(appenderConfig.appender as Newable<LogAppender<any>>, appenderConfig))
         );
 
         return result;

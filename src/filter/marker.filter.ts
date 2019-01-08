@@ -1,9 +1,9 @@
 import { Filter } from '../decorator/filter';
 import { ILogEvent } from '../log.event';
 import { Marker } from '../marker';
-import { ILogFilterConfiguration, LogFilter } from './log.filter';
+import { LogFilter } from './log.filter';
 
-export interface IMarkerFilterConfiguration extends ILogFilterConfiguration {
+export interface IMarkerFilterConfiguration {
     marker: string;
 }
 

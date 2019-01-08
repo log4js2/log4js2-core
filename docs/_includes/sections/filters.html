@@ -18,10 +18,12 @@ configure({
     appenders: [{
         appender: RollingFile,
         filters: [{
-            filter: MarkerFilter,
+            filter: 'Marker',
             marker: 'MyMarker',
-            onMatch: LogFilterAction.ALLOW,
-            onMismatch: LogFilterAction.DENY
+            config: {
+                onMatch: LogFilterAction.ALLOW,
+                onMismatch: LogFilterAction.DENY
+            }
         }]
     }]
 });

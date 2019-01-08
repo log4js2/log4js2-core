@@ -15,5 +15,5 @@ export { Appender } from './decorator/appender';
 export { Filter } from './decorator/filter';
 
 export { LogFilterAction } from './filter/log.filter.action';
-export { ILogFilterConfiguration, LogFilter } from './filter/log.filter';
+export { LogFilter } from './filter/log.filter';
 export { IMarkerFilterConfiguration, MarkerFilter } from './filter/marker.filter';

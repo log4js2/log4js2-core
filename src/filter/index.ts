@@ -1,4 +1,4 @@
-import { ILogFilterConfiguration, LogFilter } from '..';
+import { LogFilter } from '..';
 import { Newable } from '../def';
 
 const _filterMethods: Set<FunctionProps<LogFilter<any>>> = new Set<FunctionProps<LogFilter<any>>>();
@@ -15,7 +15,7 @@ const _filters: Map<string, Newable<LogFilter<any>>> = new Map<string, Newable<L
  * @params {APPENDER} appender
  * @throws {Error} if the appender is invalid
  */
-const _validateFilter = <C extends ILogFilterConfiguration, T extends LogFilter<C>>(filter: Newable<T>) => {
+const _validateFilter = <C, T extends LogFilter<C>>(filter: Newable<T>) => {
 
     // if we are running ES6, we can make sure it extends LogAppender
     // otherwise, it must be a function
@@ -35,7 +35,7 @@ const _validateFilter = <C extends ILogFilterConfiguration, T extends LogFilter<
 
 };
 
-export const addFilter = <C extends ILogFilterConfiguration, T extends LogFilter<C>>(filter: Newable<T>, name: string): Newable<T> => {
+export const addFilter = <C, T extends LogFilter<C>>(filter: Newable<T>, name: string): Newable<T> => {
 
     _validateFilter(filter);
 

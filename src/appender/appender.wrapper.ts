@@ -1,14 +1,16 @@
 import IAppenderConfiguration from '../config/appender.config';
 import { Newable } from '../def';
 import { getFilter } from '../filter';
-import { ILogFilterConfiguration, LogFilter } from '../filter/log.filter';
+import { LogFilter } from '../filter/log.filter';
 import { LogFilterAction } from '../filter/log.filter.action';
 import { ILogEvent } from '../log.event';
 import { LogAppender } from './log.appender';
 
-interface IFilterRegister<T extends ILogFilterConfiguration> {
+interface IFilterRegister<T> {
     filter: LogFilter<T>;
     config: T;
+    onMatch: LogFilterAction;
+    onMismatch: LogFilterAction;
 }
 
 export class AppenderWrapper {
@@ -26,7 +28,9 @@ export class AppenderWrapper {
 
             this._filters = _config.filters.map((filter) => ({
                 filter: new (getFilter(filter.filter as string) as any)(filter.config),
-                config: filter.config
+                config: filter.config,
+                onMatch: filter.onMatch,
+                onMismatch: filter.onMismatch
             }));
 
         } else {
@@ -40,13 +44,13 @@ export class AppenderWrapper {
     }
 
     public append(event: ILogEvent) {
-        this._appender.append(event);
+        if (this.isMatch(event)) {
+            this._appender.append(event);
+        }
     }
 
     public isMatch(event: ILogEvent): boolean {
-
         return this._isPassThrough || this._isMatch(event);
-
     }
 
     private _isMatch(event: ILogEvent): boolean {
@@ -57,15 +61,15 @@ export class AppenderWrapper {
 
             item = this._filters[i];
             if (!item.filter.isMatch(event)) {
-                if (item.config.onMismatch === LogFilterAction.DENY) {
+                if (item.onMismatch === LogFilterAction.DENY) {
                     return false;
-                } else if (item.config.onMismatch === LogFilterAction.ALLOW) {
+                } else if (item.onMismatch === LogFilterAction.ALLOW) {
                     return true;
                 }
             } else {
-                if (item.config.onMatch === LogFilterAction.DENY) {
+                if (item.onMatch === LogFilterAction.DENY) {
                     return false;
-                } else if (item.config.onMatch === LogFilterAction.ALLOW) {
+                } else if (item.onMatch === LogFilterAction.ALLOW) {
                     return true;
                 }
             }
