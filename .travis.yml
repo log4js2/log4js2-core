@@ -1,5 +1,12 @@
 language: node_js
 node_js:
-  - "10"
+  - '10'
 before_install:
   - export TZ=America/New_York
+deploy:
+  on:
+    tags: true
+  provider: npm
+  email: developer@cunae.com
+  api_key:
+    secure: at2FGfKOmOZ+NcQ/F27tQ/CzfWO6UZeNCW823J6Lm+iCNf4dYgXsSE0oa3nEepTfZFR8I9tmRZLT1T/HFL6qNmZaEiF/I7SFrGat7f9siZMXW475V+kme9ESz5/zuJ7P8rDEXGz0l1CQswzjj4dKIC2kmWazd/eLBCYGp/oHGTKIhZTeAl9qvChueZqXy/ZUx3hfXGHnQjsU4nqI3bpRz67557isfRbFTEJlbCy9jeAMhFuEprKrKjvfx4XOvqrPBsepRqUJtIHK/b2Qz+sNS0cZMaVaundmxpziqW7Z1h6Bpw7qfnGYZ0dHIVf/lhOESbPOacej+dQfA7Mc2LlD8BsFtzvJjITaGNKN5Jg6fX+ZCpZOAgVA8adYDB6nK5S6ZXiRDYPxhMNxplPNbVXQdDdNv5cOlSBoZJ94BQuiEwHcCuHyX98Ven5MrBtyqQuH2yf86D3rzcI6Qy/q8v+agRr10odbu8QKIbLi2Rc0cf+EQQ58bG2nVnCAm2TqkWLAY04VGtMS7NNZn+XAPiEU7H23rmrYuX0LsntEQTQEDq7yRGHlA3I50JOdrqhp+DBZH5yx0WWs/QCMsNqlVw/SAMvAHxTk5SoB7O0XqL8CSw5sizfmNMzulxwM35B57k4jt2q3L2zLXkkH2aviO2mYTb4vQlEUFJdVmmioiF4QDEs=
