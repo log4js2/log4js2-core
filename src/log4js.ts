@@ -32,7 +32,7 @@ const _DEFAULT_CONFIG = ((): IConfiguration => ({
     loggers: [{
         level: LogLevel.ERROR
     }],
-    patternLayout: '%d [%p] %c - %m'
+    layout: '%d [%p] %c - %m'
 }))();
 
 /** @type {?IConfiguration} */
@@ -55,7 +55,7 @@ const _getAppendersForLogger = (logConfig: ILoggerConfiguration) => {
     getLoggerAppenderInstances(logConfig.appenders).forEach((appenderWrapper) => {
 
         appenderWrapper.appender.setLogLevel(logConfig.level);
-        appenderWrapper.appender.setLayout(logConfig.patternLayout);
+        appenderWrapper.appender.setLayout(logConfig.layout);
 
         appenderList.push(appenderWrapper);
 
@@ -86,11 +86,11 @@ const _configureLoggers = (config: IConfiguration): IConfiguration => {
 
             hasMain = hasMain || logger.tag === MAIN_LOGGER;
 
-            if (!logger.patternLayout || typeof logger.patternLayout !== 'string') {
-                logger.patternLayout = config.patternLayout;
+            if (!logger.layout || typeof logger.layout !== 'string') {
+                logger.layout = config.layout;
             }
 
-            logger.patternLayout = logger.patternLayout || _DEFAULT_PATTERN_LAYOUT;
+            logger.layout = logger.layout || _DEFAULT_PATTERN_LAYOUT;
             logger.level = logger.level || config.level || LogLevel.ERROR;
 
             addLogger(logger.tag, new Logger(logger.tag, _getAppendersForLogger(logger)));
@@ -105,7 +105,7 @@ const _configureLoggers = (config: IConfiguration): IConfiguration => {
         const mainLoggerConfig: ILoggerConfiguration = {
             tag: MAIN_LOGGER,
             level: config.level || LogLevel.ERROR,
-            patternLayout: config.patternLayout || _DEFAULT_PATTERN_LAYOUT,
+            layout: config.layout || _DEFAULT_PATTERN_LAYOUT,
         };
 
         loggers.push(mainLoggerConfig);
@@ -200,8 +200,8 @@ const _configureAppenders = (config: IConfiguration): IConfiguration => {
 export function configure(config: IConfiguration) {
 
     // set the default layout
-    if (!config.patternLayout) {
-        config.patternLayout = _DEFAULT_PATTERN_LAYOUT;
+    if (!config.layout) {
+        config.layout = _DEFAULT_PATTERN_LAYOUT;
     }
 
     // configure the appenders

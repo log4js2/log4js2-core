@@ -9,6 +9,6 @@ export default interface IAppenderConfiguration<C = any, T extends LogAppender<C
     config?: any;
     filters?: Array<IFilterConfiguration<any, LogFilter<any>>>;
     level?: LogLevel | number;
-    patternLayout?: string;
+    layout?: string;
 
 }

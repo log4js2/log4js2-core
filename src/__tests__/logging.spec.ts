@@ -6,7 +6,7 @@ describe('Message', () => {
 
     configure({
         level: LogLevel.INFO,
-        patternLayout: '%c - %m'
+        layout: '%c - %m'
     });
 
     // create a log stack we can throw logs into

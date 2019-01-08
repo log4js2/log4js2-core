@@ -10,14 +10,14 @@
 
 {% highlight typescript %}
 configure({
-    patternLayout: '%d [%p] %c - %m', // default
+    layout: '%d [%p] %c - %m', // default
     appenders: [{
         appender: 'Console',
-        patternLayout: '%d{ISO8601} [%p] - %m %exception' // appender
+        layout: '%d{ISO8601} [%p] - %m %exception' // appender
     }],
     loggers: [{
         tag: 'App',
-        patternLayout: '%c.%method (%line:%column) %m %ex' // logger
+        layout: '%c.%method (%line:%column) %m %ex' // logger
     }]
 });
 {% endhighlight %}

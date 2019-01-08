@@ -5,7 +5,7 @@ import { configure, getLogger } from '../log4js';
 
 configure({
     level: LogLevel.DEBUG,
-    patternLayout: '%m'
+    layout: '%m'
 });
 
 describe('Logger', () => {

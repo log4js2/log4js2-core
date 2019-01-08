@@ -13,7 +13,7 @@ configure({
     appenders: [{
         appender: CustomAppender
     }],
-    patternLayout: '%c - %m',
+    layout: '%c - %m',
     loggers: [{
         level: LogLevel.INFO
     }, {
@@ -22,19 +22,19 @@ configure({
     }, {
         tag: TEST_LOGGER_2,
         level: LogLevel.INFO,
-        patternLayout: '%c [%p] %m'
+        layout: '%c [%p] %m'
     }, {
         tag: ERROR_LOGGER,
         level: LogLevel.ERROR,
-        patternLayout: '%ex'
+        layout: '%ex'
     }, {
         tag: MAP_LOGGER,
         level: LogLevel.INFO,
-        patternLayout: '%K'
+        layout: '%K'
     }, {
         tag: MARKER_LOGGER,
         level: LogLevel.INFO,
-        patternLayout: '%marker'
+        layout: '%marker'
     }, {
         tag: CUSTOM_LOGGER,
         level: LogLevel.TRACE

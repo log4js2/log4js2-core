@@ -37,7 +37,7 @@ export const getLogger = <T>(context: string, config: ILoggerConfiguration): Log
             .map((appenderWrapper) => {
 
                 appenderWrapper.appender.setLogLevel(config.level);
-                appenderWrapper.appender.setLayout(config.patternLayout);
+                appenderWrapper.appender.setLayout(config.layout);
 
                 return appenderWrapper;
 

@@ -10,7 +10,7 @@ export default interface IConfiguration {
     level?: LogLevel;
     appenders?: AppenderConfigurationItem[] | string[];
     loggers?: ILoggerConfiguration[];
-    patternLayout?: string;
+    layout?: string;
     virtualConsole?: boolean;
 
 }
