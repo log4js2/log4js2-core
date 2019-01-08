@@ -15,24 +15,24 @@ describe('AppenderWrapper', () => {
             filters: [{
                 filter: 'Marker',
                 config: {
-                    onMismatch: LogFilterAction.DENY,
-                    onMatch: LogFilterAction.NEUTRAL,
                     marker: 'sql'
-                }
+                },
+                onMismatch: LogFilterAction.DENY,
+                onMatch: LogFilterAction.NEUTRAL
             }, {
                 filter: 'Marker',
                 config: {
-                    onMismatch: LogFilterAction.NEUTRAL,
-                    onMatch: LogFilterAction.DENY,
                     marker: 'update'
-                }
+                },
+                onMismatch: LogFilterAction.NEUTRAL,
+                onMatch: LogFilterAction.DENY
             }, {
                 filter: 'Marker',
                 config: {
-                    onMismatch: LogFilterAction.NEUTRAL,
-                    onMatch: LogFilterAction.ALLOW,
                     marker: 'save'
-                }
+                },
+                onMismatch: LogFilterAction.NEUTRAL,
+                onMatch: LogFilterAction.ALLOW
             }]
         });
 
