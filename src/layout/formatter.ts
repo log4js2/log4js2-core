@@ -494,7 +494,7 @@ export class Formatter {
             if (typeof define !== 'undefined') {
                 const path = require('path');
                 let appDir = path.dirname(require.main.filename);
-                if (!fileParts[0].startsWith(appDir)) {
+                if (!fileParts[0] || !fileParts[0].startsWith(appDir)) {
                     appDir = '';
                 }
                 logEvent.filename = fileParts.join(':').replace(appDir, '').replace(/^([\\\/])/, '');
