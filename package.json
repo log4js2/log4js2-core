@@ -1,8 +1,9 @@
 {
   "name": "@log4js2/core",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "scripts": {
     "build": "tsc",
+    "build:es5": "webpack --progress --colors --mode production",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "jekyll": "jekyll serve --destination ./docs/",
     "test": "jest",
@@ -23,6 +24,7 @@
   "homepage": "https://github.com/anigenero/log4js2#readme",
   "license": "MIT",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "typings": "dist/index",
   "keywords": [
     "logger",
@@ -33,19 +35,25 @@
     "console"
   ],
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
     "@types/core-js": "^2.5.0",
     "@types/jest": "^23.3.9",
     "@types/lodash": "^4.14.118",
     "@types/node": "^10.12.2",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-loader": "^8.0.5",
     "codecov": "^3.1.0",
     "jest": "^23.6.0",
     "jest-cli": "^23.6.0",
     "ts-jest": "^23.10.4",
-    "ts-loader": "^5.3.0",
+    "ts-loader": "^5.3.3",
     "tslint": "^5.10.0",
     "tslint-loader": "^3.5.4",
     "tslint-sonarts": "^1.8.0",
-    "typescript": "^3.1.6"
+    "typescript": "^3.1.6",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
   },
   "jest": {
     "moduleFileExtensions": [

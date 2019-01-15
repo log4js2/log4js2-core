@@ -5,7 +5,7 @@
     "sourceMap": false,
     "noImplicitAny": true,
     "declaration": true,
-    "module": "es6",
+    "module": "commonjs",
     "target": "es5",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
