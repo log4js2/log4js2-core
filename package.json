@@ -55,6 +55,10 @@
     "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1"
   },
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "reflect-metadata": "^0.1.12"
+  },
   "jest": {
     "moduleFileExtensions": [
       "ts",
@@ -74,9 +78,5 @@
     "transform": {
       "^.+\\.(t|j)s?": "ts-jest"
     }
-  },
-  "dependencies": {
-    "lodash": "^4.17.11",
-    "reflect-metadata": "^0.1.12"
   }
 }
