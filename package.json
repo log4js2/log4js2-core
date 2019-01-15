@@ -1,6 +1,6 @@
 {
   "name": "@log4js2/core",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "scripts": {
     "build": "tsc",
     "build:es5": "webpack --progress --colors --mode production",
@@ -56,7 +56,6 @@
     "webpack-cli": "^3.2.1"
   },
   "dependencies": {
-    "lodash": "^4.17.11",
     "reflect-metadata": "^0.1.12"
   },
   "jest": {

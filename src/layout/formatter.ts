@@ -1,4 +1,3 @@
-import * as define from 'core-js/library/fn/object/define';
 import { LogLevel } from '../const/log.level';
 import { Method } from '../def';
 import { ILogEvent } from '../log.event';
