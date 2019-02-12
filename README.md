@@ -3,11 +3,11 @@ log4js2 is a fast and lightweight logging library that enables logging flexibili
 similar to Apache's [Log4j2 library](https://logging.apache.org/log4j/2.x/). It can also serve as a drop-in replacement for log4js, 
 since the namespace and functions are mostly similar.
 
-[![Build Status](https://travis-ci.org/anigenero/log4js2.svg?branch=master)](https://travis-ci.org/anigenero/log4js2)
-[![codecov](https://codecov.io/gh/anigenero/log4js2/branch/master/graph/badge.svg)](https://codecov.io/gh/anigenero/log4js2)
-[![dependencies](https://david-dm.org/anigenero/log4js2.svg)](https://david-dm.org/anigenero/log4js2.svg)
+[![Build Status](https://travis-ci.org/log4js2/log4js2-core.svg?branch=master)](https://travis-ci.org/log4js2/log4js2-core)
+[![codecov](https://codecov.io/gh/log4js2/log4js2-core/branch/master/graph/badge.svg)](https://codecov.io/gh/log4js2/log4js2-core)
+[![dependencies](https://david-dm.org/log4js2/log4js2-core.svg)](https://david-dm.org/log4js2/log4js2-core.svg)
 
-- [Read the Docs](https://anigenero.github.io/log4js2/)
+- [Read the Docs](https://log4js2.github.io/log4js2-core/)
 
 ## Installing & Building
 
