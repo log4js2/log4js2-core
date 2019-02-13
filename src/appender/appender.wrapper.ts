@@ -21,7 +21,7 @@ export class AppenderWrapper {
 
     constructor(appender: Newable<LogAppender<any>>, private readonly _config: IAppenderConfiguration) {
 
-        this._appender = new (appender as any)(_config);
+        this._appender = new (appender as any)(_config.config);
 
         this._isPassThrough = (!_config || !_config.filters || _config.filters.length === 0);
         if (!this._isPassThrough) {
