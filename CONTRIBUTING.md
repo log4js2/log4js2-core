@@ -13,12 +13,12 @@ better. As a contributor, here are the guidelines we would like you to follow:
 There are several ways how you can ask your question:
 
 * You can create a question on [StackOverflow](https://stackoverflow.com/questions/tagged/log4js2) where the questions should be tagged with tag `log4js2`.
-* You can create issue on [github](https://github.com/anigenero/log4js2/issues)
+* You can create issue on [github](https://github.com/log4js2/log4js2-core/issues)
 
 ## <a name="issue"></a> Found a Bug?
 
 If you find a bug in the source code, you can help us by [submitting an issue](#submit-issue) to our 
-[GitHub Repository](https://github.com/anigenero/log4js2), or you can [submit a Pull Request](#submit-pr) with a fix.
+[GitHub Repository](https://github.com/log4js2/log4js2-core), or you can [submit a Pull Request](#submit-pr) with a fix.
 
 ## <a name="feature"></a> Missing a Feature?
 
@@ -41,12 +41,12 @@ discussion might inform you of solutions, workarounds, or future releases.
 Before fixing a bug, we need to reproduce and confirm it. In order to reproduce bugs we ask you to provide a code 
 snippet that shows a reproduction of the problem. 
 
-You can file new issues by filling out our [new issue form](https://github.com/anigenero/log4js2/issues/new).
+You can file new issues by filling out our [new issue form](https://github.com/log4js2/log4js2-core/issues/new).
 
 ### <a name="submit-pr"></a> Submitting a Pull Request (PR)
 Before you submit your Pull Request (PR) consider the following guidelines:
 
-- Search [GitHub](https://github.com/anigenero/log4js2/pulls) for an open or closed PR that relates to your submission to 
+- Search [GitHub](https://github.com/log4js2/log4js2-core/pulls) for an open or closed PR that relates to your submission to 
 prevent duplicate submission.
 - Make your changes in a new git branch:
      ```shell

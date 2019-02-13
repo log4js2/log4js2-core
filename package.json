@@ -16,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/anigenero/log4js2"
+    "url": "https://github.com/log4js2/log4js2-core"
   },
   "bugs": {
-    "url": "https://github.com/anigenero/log4js2/issues"
+    "url": "https://github.com/log4js2/log4js2-core/issues"
   },
-  "homepage": "https://github.com/anigenero/log4js2#readme",
+  "homepage": "https://github.com/log4js2/log4js2-core#readme",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

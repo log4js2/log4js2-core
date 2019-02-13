@@ -15,6 +15,6 @@ highlighter: rouge
 github:
   is_project_page: true
   repository_name: "log4js2"
-  repository_url: "https://github.com/anigenero/log4js2"
+  repository_url: "https://github.com/log4js2/log4js2-core"
   owner_name: "Robin Schultz"
-  owner_url: "https://github.com/anigenero/"
+  owner_url: "https://github.com/log4js2/"
