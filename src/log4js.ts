@@ -54,10 +54,7 @@ const _getAppendersForLogger = (logConfig: ILoggerConfiguration) => {
 
     getLoggerAppenderInstances(logConfig.appenders).forEach((appenderWrapper) => {
 
-        if (typeof appenderWrapper.appender.getLogLevel() === 'undefined') {
-            appenderWrapper.appender.setLogLevel(logConfig.level);
-        }
-
+        appenderWrapper.appender.setLogLevel(logConfig.level);
         appenderWrapper.appender.setLayout(logConfig.layout);
 
         appenderList.push(appenderWrapper);
@@ -113,8 +110,7 @@ const _configureLoggers = (config: IConfiguration): IConfiguration => {
 
         loggers.push(mainLoggerConfig);
 
-        addLogger(MAIN_LOGGER, new Logger(MAIN_LOGGER,
-            _getAppendersForLogger(mainLoggerConfig)));
+        addLogger(MAIN_LOGGER, new Logger(MAIN_LOGGER, _getAppendersForLogger(mainLoggerConfig)));
 
     }
 
