@@ -27,12 +27,15 @@ export class AppenderWrapper {
         this._isPassThrough = (!_config || !_config.filters || _config.filters.length === 0);
         if (!this._isPassThrough) {
 
-            this._filters = _config.filters.map((filter) => ({
-                filter: new (getFilter(filter.filter as string) as any)(filter.config),
-                config: filter.config,
-                onMatch: filter.onMatch,
-                onMismatch: filter.onMismatch
-            }));
+            this._filters = _config.filters.map((value) => {
+                return {
+                    filter: (value.filter instanceof Function) ? new (value.filter as any)(value.config) :
+                        new (getFilter(value.filter as string) as any)(value.config),
+                    config: value.config,
+                    onMatch: value.onMatch,
+                    onMismatch: value.onMismatch
+                };
+            });
 
         } else {
             this._filters = [];
