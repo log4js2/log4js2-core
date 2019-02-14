@@ -30,7 +30,7 @@ export class AppenderWrapper {
             this._filters = _config.filters.map((value) => {
                 return {
                     filter: (value.filter instanceof Function) ? new (value.filter as any)(value.config) :
-                        new (getFilter(value.filter as string) as any)(value.config),
+                        new (getFilter(value.filter) as any)(value.config),
                     config: value.config,
                     onMatch: value.onMatch,
                     onMismatch: value.onMismatch
