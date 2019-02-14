@@ -54,7 +54,10 @@ const _getAppendersForLogger = (logConfig: ILoggerConfiguration) => {
 
     getLoggerAppenderInstances(logConfig.appenders).forEach((appenderWrapper) => {
 
-        appenderWrapper.appender.setLogLevel(logConfig.level);
+        if (typeof appenderWrapper.appender.getLogLevel() === 'undefined') {
+            appenderWrapper.appender.setLogLevel(logConfig.level);
+        }
+
         appenderWrapper.appender.setLayout(logConfig.layout);
 
         appenderList.push(appenderWrapper);

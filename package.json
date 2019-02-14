@@ -1,6 +1,6 @@
 {
   "name": "@log4js2/core",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "scripts": {
     "build": "tsc",
     "build:es5": "webpack --progress --colors --mode production",

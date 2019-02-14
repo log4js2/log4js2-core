@@ -1,5 +1,5 @@
+import { MarkerFilter } from '../../';
 import { Marker } from '../../marker';
-import { MarkerFilter } from '../marker.filter';
 
 describe('MarkerFilter', () => {
 

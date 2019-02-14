@@ -17,3 +17,4 @@ export { Filter } from './decorator/filter';
 export { LogFilterAction } from './filter/log.filter.action';
 export { LogFilter } from './filter/log.filter';
 export { IMarkerFilterConfiguration, MarkerFilter } from './filter/marker.filter';
+export { IThresholdFilterConfiguration, ThresholdFilter } from './filter/threshold.filter';

@@ -34,7 +34,7 @@ export abstract class LogAppender<C extends {}> {
      * @returns {number}
      */
     public getLogLevel() {
-        return this.logLevel || LogLevel.ERROR;
+        return this.logLevel;
     }
 
     /**
