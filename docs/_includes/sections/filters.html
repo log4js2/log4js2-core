@@ -19,11 +19,33 @@ configure({
         appender: RollingFile,
         filters: [{
             filter: 'Marker',
-            marker: 'MyMarker',
             config: {
-                onMatch: LogFilterAction.ALLOW,
-                onMismatch: LogFilterAction.DENY
+                marker: 'MyMarker'
             }
+            onMatch: LogFilterAction.ALLOW,
+            onMismatch: LogFilterAction.DENY
+        }]
+    }]
+});
+{% endhighlight %}
+
+<h2>Threshold</h2>
+
+<p>
+    Allows you to control what log level the appender accepts.
+</p>
+
+{% highlight typescript %}
+configure({
+    appenders: [{
+        appender: SNSAppender,
+        filters: [{
+            filter: 'Marker',
+            config: {
+                level: LogLevel.FATAL
+            },
+            onMatch: LogFilterAction.ALLOW,
+            onMismatch: LogFilterAction.DENY
         }]
     }]
 });
