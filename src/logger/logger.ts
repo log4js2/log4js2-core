@@ -22,6 +22,19 @@ export class Logger {
     }
 
     /**
+     * Allow passing of a level to a plain log
+     *
+     * @function
+     * @memberOf Logger
+     */
+    public log(level: LogLevel, ...args: any[]): void;
+    public log(level: LogLevel, marker: Marker, ...args: NotMarker[]): void {
+        const passed = arguments;
+        this._appenders.forEach((appender) =>
+            appender.append(this._constructLogEvent(level, passed, 1)));
+    }
+
+    /**
      * Logs an error event
      *
      * @function
@@ -104,10 +117,11 @@ export class Logger {
      *
      * @param {number} level
      * @param {Array.<Object>} args
+     * @param {number} offset
      *
      * @return {ILogEvent}
      */
-    private _constructLogEvent(level: LogLevel, args: IArguments): ILogEvent {
+    private _constructLogEvent(level: LogLevel, args: IArguments, offset: number = 0): ILogEvent {
 
         const logTime = new Date();
         let error = null;
@@ -135,9 +149,9 @@ export class Logger {
         };
 
         const regex = /\{\}/g;
-        for (let i = 0; i < args.length; i++) {
+        for (let i = offset; i < args.length; i++) {
 
-            if (i === 0 || (i === 1 && logEvent.marker)) {
+            if (i === offset || (i === offset + 1 && logEvent.marker)) {
                 if (args[i] instanceof Marker) {
                     logEvent.marker = args[i] as Marker;
                 } else {

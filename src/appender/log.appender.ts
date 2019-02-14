@@ -1,5 +1,5 @@
 import { LogLevel } from '../const/log.level';
-import { Formatter } from '../layout/formatter';
+import { format } from '../layout/formatter';
 import { ILogEvent } from '../log.event';
 
 export abstract class LogAppender<C extends {}> {
@@ -66,7 +66,7 @@ export abstract class LogAppender<C extends {}> {
      * @param {ILogEvent} logEvent
      */
     public format(logEvent: ILogEvent) {
-        return Formatter.format(this.getLayout(), logEvent);
+        return format(this.getLayout(), logEvent);
     }
 
 }

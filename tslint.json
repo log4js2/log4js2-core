@@ -53,6 +53,7 @@
       "single"
     ],
     "radix": true,
+    "space-before-function-paren": false,
     "switch-default": true,
     "trailing-comma": false,
     "triple-equals": [

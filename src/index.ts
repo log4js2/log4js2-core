@@ -13,6 +13,7 @@ export { Marker } from './marker';
 
 export { Appender } from './decorator/appender';
 export { Filter } from './decorator/filter';
+export { Log, LogMarker } from './decorator/log';
 
 export { LogFilterAction } from './filter/log.filter.action';
 export { LogFilter } from './filter/log.filter';
