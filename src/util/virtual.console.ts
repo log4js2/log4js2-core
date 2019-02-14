@@ -38,7 +38,7 @@ export const getVirtualConsole = (logger?: Logger) => {
         public dir(value?: any, ...optionalParams: any[]): void;
         public dir(obj: any, options?: NodeJS.InspectOptions): void;
         public dir(value?: any, ...optionalParams: Array<any | NodeJS.InspectOptions>): void {
-            _virtualConsole.dir.call(arguments);
+            _virtualConsole.dir(value, ...optionalParams);
         }
 
         public dirxml(value: any): void {
@@ -64,7 +64,9 @@ export const getVirtualConsole = (logger?: Logger) => {
         }
 
         public msIsIndependentlyComposed(element: Element): boolean {
-            return false;
+            if (typeof (_virtualConsole as any).msIsIndependentlyComposed === 'function') {
+                return (_virtualConsole as any).msIsIndependentlyComposed(element);
+            }
         }
 
         public profile(reportName?: string): void {
