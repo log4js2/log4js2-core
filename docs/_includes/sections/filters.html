@@ -40,7 +40,7 @@ configure({
     appenders: [{
         appender: SNSAppender,
         filters: [{
-            filter: 'Marker',
+            filter: 'Threshold',
             config: {
                 level: LogLevel.FATAL
             },
