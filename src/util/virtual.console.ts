@@ -1,5 +1,7 @@
 import { Logger } from '..';
 
+// tslint:disable:bool-param-default
+
 let _virtualConsole: Console;
 let _isUseVirtualConsole = true;
 

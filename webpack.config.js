@@ -24,10 +24,10 @@ const browserConfig = {
             use: [{
                 loader: 'babel-loader',
                 options: {
+                    babelrc: false,
                     presets: [['@babel/preset-env', {
                         targets: "> 0.25%, not dead"
-                    }]],
-                    babelrc: true
+                    }]]
                 }
             }, 'ts-loader']
         }]

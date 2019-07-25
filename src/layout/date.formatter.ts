@@ -1,3 +1,5 @@
+// tslint:disable:bool-param-default
+
 type DateFormatFunction = (date: Date, isUTC?: boolean) => string | number;
 
 // tslint:disable-next-line
