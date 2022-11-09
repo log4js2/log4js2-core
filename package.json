@@ -52,7 +52,7 @@
     "tslint-sonarts": "^1.9.0",
     "typescript": "^3.5.3",
     "webpack": "^4.37.0",
-    "webpack-cli": "^3.3.6"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "reflect-metadata": "^0.1.13"
